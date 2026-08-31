@@ -8,8 +8,8 @@ namespace Application.Services
     {
         Task<IEnumerable<EspecialidadDTO>> GetAllAsync();
         Task<EspecialidadDTO?> GetByIdAsync(int id);
-        Task AddAsync(EspecialidadDTO dto);
-        Task<bool> UpdateAsync(int id, EspecialidadDTO dto);
+        Task<EspecialidadDTO> AddAsync(EspecialidadDTO dto);
+        Task<bool> UpdateAsync(EspecialidadDTO dto);
         Task<bool> DeleteAsync(int id);
     }
 }

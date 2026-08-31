@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DTOs;
@@ -48,16 +48,26 @@ namespace Application.Services
             };
         }
 
-        public async Task AddAsync(CursoDTO dto)
+        public async Task<CursoDTO?> AddAsync(CursoDTO dto)
         {
             // Mapeamos de DTO a Entidad.
             var curso = new Curso(0, dto.AnioCalendario, dto.Cupo, dto.Descripcion, dto.IDcomision, dto.IDmateria);
             await _repository.AddAsync(curso);
+            
+            // Actualizamos el ID del DTO con el que se generó en la base de datos
+            dto.ID = curso.ID;
+            
+            return dto;
         }
 
-        public async Task<bool> UpdateAsync(int id, CursoDTO dto)
+        public async Task<bool> UpdateAsync(CursoDTO dto)
         {
-            var curso = new Curso(id, dto.AnioCalendario, dto.Cupo, dto.Descripcion, dto.IDcomision, dto.IDmateria);
+            var existing = await _repository.GetAsync(dto.ID);
+
+            if (existing == null)
+                return false;
+
+            var curso = new Curso(dto.ID, dto.AnioCalendario, dto.Cupo, dto.Descripcion, dto.IDcomision, dto.IDmateria);
             return await _repository.UpdateAsync(curso);
         }
 

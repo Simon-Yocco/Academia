@@ -1,5 +1,6 @@
 using Application.Services;
 using Data;
+using WebAPI;
 var builder = WebApplication.CreateBuilder(args);
 
 //Le decimos a la API qué clase instanciar cuando alguien pide estas interfaces
@@ -9,9 +10,6 @@ builder.Services.AddScoped<ICursoService, CursoService>();
 builder.Services.AddScoped<IEspecialidadRepository, EspecialidadRepository>();
 builder.Services.AddScoped<IEspecialidadService, EspecialidadService>();
 
-// Add services to the container.
-
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -27,8 +25,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
-app.MapControllers();
+app.MapCursoEndpoints();
+app.MapEspecialidadEndpoints();
 
 app.Run();

@@ -38,15 +38,21 @@ namespace Application.Services
             };
         }
 
-        public async Task AddAsync(EspecialidadDTO dto)
+        public async Task<EspecialidadDTO> AddAsync(EspecialidadDTO dto)
         {
+            // Mapeamos de DTO a Entidad.
             var especialidad = new Especialidad(0, dto.Descripcion);
             await _repository.AddAsync(especialidad);
+
+            // Actualizamos el ID del DTO con el que se generó en la base de datos
+            dto.ID = especialidad.ID;
+
+            return dto;
         }
 
-        public async Task<bool> UpdateAsync(int id, EspecialidadDTO dto)
+        public async Task<bool> UpdateAsync(EspecialidadDTO dto)
         {
-            var especialidad = new Especialidad(id, dto.Descripcion);
+            var especialidad = new Especialidad(dto.ID, dto.Descripcion);
             return await _repository.UpdateAsync(especialidad);
         }
 
