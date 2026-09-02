@@ -23,7 +23,7 @@ namespace Application.Services
             {
                 ID = e.ID,
                 Descripcion = e.Descripcion
-            });
+            }).ToList();
         }
 
         public async Task<EspecialidadDTO?> GetByIdAsync(int id)

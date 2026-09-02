@@ -11,7 +11,7 @@ namespace Entidades
 
         public Especialidad(int id, string descripcion)
         {
-            ID = id;
+            SetId(id);
             SetDescripcion(descripcion);
         }
 

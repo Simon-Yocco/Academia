@@ -2,52 +2,62 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Entidades;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
     public class EspecialidadRepository : IEspecialidadRepository
     {
-        private static readonly List<Especialidad> _especialidades = new List<Especialidad>();
-        private static int _nextId = 1;
-
-        public Task AddAsync(Especialidad especialidad)
+        private TPIContext CreateContext()
         {
-            especialidad.ID = _nextId++;
-            _especialidades.Add(especialidad);
-            return Task.CompletedTask;
+            return new TPIContext();
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task AddAsync(Especialidad especialidad)
         {
-            var esp = _especialidades.FirstOrDefault(e => e.ID == id);
+            using var context = CreateContext();
+            context.Especialidades.Add(especialidad);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            using var context = CreateContext();
+            var esp = await context.Especialidades.FindAsync(id);
             if (esp != null)
             {
-                _especialidades.Remove(esp);
-                return Task.FromResult(true);
+                context.Especialidades.Remove(esp);
+                await context.SaveChangesAsync();
+                return true;
             }
-            return Task.FromResult(false);
+            return false;
         }
 
-        public Task<Especialidad?> GetAsync(int id)
+        public async Task<Especialidad?> GetAsync(int id)
         {
-            var esp = _especialidades.FirstOrDefault(e => e.ID == id);
-            return Task.FromResult(esp);
+            using var context = CreateContext();
+            var esp = await context.Especialidades.FindAsync(id);
+            return esp;
         }
 
-        public Task<IEnumerable<Especialidad>> GetAllAsync()
+        public async Task<IEnumerable<Especialidad>> GetAllAsync()
         {
-            return Task.FromResult<IEnumerable<Especialidad>>(_especialidades.ToList());
+            using var context = CreateContext();
+            var esps = await context.Especialidades.ToListAsync();
+            return esps;
         }
 
-        public Task<bool> UpdateAsync(Especialidad especialidad)
+        public async Task<bool> UpdateAsync(Especialidad especialidad)
         {
-            var existing = _especialidades.FirstOrDefault(e => e.ID == especialidad.ID);
-            if (existing != null)
+            using var context = CreateContext();
+            var existingEsp = await context.Especialidades.FindAsync(especialidad.ID);
+            if (existingEsp != null)
             {
-                existing.SetDescripcion(especialidad.Descripcion);
-                return Task.FromResult(true);
+                existingEsp.SetDescripcion(especialidad.Descripcion);
+                await context.SaveChangesAsync();
+                return true;
             }
-            return Task.FromResult(false);
+            return false;
         }
     }
 }

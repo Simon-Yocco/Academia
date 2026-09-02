@@ -2,57 +2,67 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Entidades;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
     public class CursoRepository : ICursoRepository
     {
-        private static readonly List<Curso> _cursos = new List<Curso>();
-        private static int _nextId = 1;
-
-        public Task AddAsync(Curso curso)
+        private TPIContext CreateContext()
         {
-            curso.ID = _nextId++;
-            _cursos.Add(curso);
-            return Task.CompletedTask;
+            return new TPIContext();
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task AddAsync(Curso curso)
         {
-            var curso = _cursos.FirstOrDefault(c => c.ID == id);
+            using var context = CreateContext();
+            context.Cursos.Add(curso);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            using var context = CreateContext();
+            var curso = await context.Cursos.FindAsync(id);
             if (curso != null)
             {
-                _cursos.Remove(curso);
-                return Task.FromResult(true);
+                context.Cursos.Remove(curso);
+                await context.SaveChangesAsync();
+                return true;
             }
-            return Task.FromResult(false);
+            return false;
         }
 
-        public Task<Curso?> GetAsync(int id)
+        public async Task<Curso?> GetAsync(int id)
         {
-            var curso = _cursos.FirstOrDefault(c => c.ID == id);
-            return Task.FromResult(curso);
+            using var context = CreateContext();
+            var curso = await context.Cursos.FindAsync(id);
+            return curso;
         }
 
-        public Task<IEnumerable<Curso>> GetAllAsync()
+        public async Task<IEnumerable<Curso>> GetAllAsync()
         {
-            return Task.FromResult<IEnumerable<Curso>>(_cursos.ToList());
+            using var context = CreateContext();
+            var cursos = await context.Cursos.ToListAsync();
+            return cursos;
         }
 
-        public Task<bool> UpdateAsync(Curso curso)
+        public async Task<bool> UpdateAsync(Curso curso)
         {
-            var existing = _cursos.FirstOrDefault(c => c.ID == curso.ID);
-            if (existing != null)
+            using var context = CreateContext();
+            var existingCurso = await context.Cursos.FindAsync(curso.ID);
+            if (existingCurso != null)
             {
-                existing.SetAnioCalendario(curso.AnioCalendario);
-                existing.SetCupo(curso.Cupo);
-                existing.SetDescripcion(curso.Descripcion);
-                existing.SetIDcomision(curso.IDcomision);
-                existing.SetIDmateria(curso.IDmateria);
+                existingCurso.SetAnioCalendario(curso.AnioCalendario);
+                existingCurso.SetCupo(curso.Cupo);
+                existingCurso.SetDescripcion(curso.Descripcion);
+                existingCurso.SetIDcomision(curso.IDcomision);
+                existingCurso.SetIDmateria(curso.IDmateria);
 
-                return Task.FromResult(true);
+                await context.SaveChangesAsync();
+                return true;
             }
-            return Task.FromResult(false);
+            return false;
         }
     }
 }

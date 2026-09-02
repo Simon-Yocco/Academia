@@ -29,7 +29,7 @@ namespace Application.Services
                 Descripcion = c.Descripcion,
                 IDcomision = c.IDcomision,
                 IDmateria = c.IDmateria
-            });
+            }).ToList();
         }
 
         public async Task<CursoDTO?> GetByIdAsync(int id)
