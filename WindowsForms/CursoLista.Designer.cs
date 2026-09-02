@@ -111,6 +111,7 @@
             Controls.Add(eliminarButton);
             Controls.Add(buscarButton);
             Controls.Add(cursosDataGridView);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "CursoLista";
             Text = "Cursos";
             Load += CursoLista_Load;

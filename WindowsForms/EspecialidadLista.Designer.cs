@@ -111,6 +111,7 @@
             Controls.Add(eliminarButton);
             Controls.Add(buscarButton);
             Controls.Add(especialidadesDataGridView);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "EspecialidadLista";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Especialidades";
