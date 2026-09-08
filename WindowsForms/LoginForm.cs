@@ -1,4 +1,5 @@
 using API.Clients;
+using System.Windows.Forms;
 
 namespace WindowsForms
 {
@@ -16,23 +17,59 @@ namespace WindowsForms
 
         private async void loginButton_Click(object sender, EventArgs e)
         {
-            // 1. Agarramos lo que el usuario escribió en las cajitas de texto
-            string usuario = usernameTextBox.Text;
-            string clave = passwordTextBox.Text;
-            // 2. Le pedimos a nuestro servicio que intente hacer el login
-            var usuarioLogueado = await UsuarioApiClient.LoginAsync(usuario, clave);
-            // 3. Vemos qué pasó
-            if (usuarioLogueado != null)
+            if (ValidateInput())
             {
-                MessageBox.Show($"¡Bienvenido {usuarioLogueado.Nombre}!", "Éxito");
-                this.DialogResult = DialogResult.OK;
-            }
-            else
-            {
-                MessageBox.Show("Usuario o contraseña incorrectos.", "Error");
+                try
+                {
+                    loginButton.Enabled = false;
+                    loginButton.Text = "Iniciando sesión...";
+
+                    string usuario = usernameTextBox.Text;
+                    string clave = passwordTextBox.Text;
+
+                    var usuarioLogueado = await UsuarioApiClient.LoginAsync(usuario, clave);
+
+                    if (usuarioLogueado != null)
+                    {
+                        MessageBox.Show($"¡Bienvenido {usuarioLogueado.Nombre}!", "Éxito");
+                        this.DialogResult = DialogResult.OK;
+                        return;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Usuario o contraseña incorrectos.", "Error");
+                        passwordTextBox.Clear();
+                        passwordTextBox.Focus();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo conectar con el servidor: " + ex.Message, "Error de Conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                // Si llegó hasta acá (falló el login o la conexión), volvemos a la normalidad
+                loginButton.Enabled = true;
+                loginButton.Text = "Iniciar";
             }
         }
+        private bool ValidateInput()
+        {
+            bool isValid = true;
 
+            if (string.IsNullOrWhiteSpace(usernameTextBox.Text))
+            {
+                MessageBox.Show("El usuario es requerido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                isValid = false;
+            }
+
+            if (string.IsNullOrWhiteSpace(passwordTextBox.Text))
+            {
+                MessageBox.Show("La contraseña es requerida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                isValid = false;
+            }
+
+            return isValid;
+        }
         private void cancelButton_Click(object sender, EventArgs e)
         {
             this.Close();

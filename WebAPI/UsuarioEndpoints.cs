@@ -7,7 +7,7 @@ namespace WebAPI
     {
         public static void MapUsuarioEndpoints(this WebApplication app)
         {
-            // Creamos un pequeño DTO "al vuelo" para recibir las credenciales
+            // Creamos un pequeño DTO para recibir las credenciales
             app.MapPost("/usuarios/login", async (LoginRequest request, UsuarioService usuarioService) =>
             {
                 var usuario = await usuarioService.LoginAsync(request.Usuario, request.Clave);

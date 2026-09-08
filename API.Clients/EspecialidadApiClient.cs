@@ -1,9 +1,4 @@
 ﻿using DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net.Http.Json;
 
 namespace API.Clients
@@ -26,7 +21,7 @@ namespace API.Clients
         public static async Task<EspecialidadDTO?> GetByIdAsync(int id)
         {
             using var client = CreateHttpClient();
-            var response = await client.GetAsync($"especialidad/{id}");
+            var response = await client.GetAsync($"especialidades/{id}");
 
             if (response.IsSuccessStatusCode)
             {
