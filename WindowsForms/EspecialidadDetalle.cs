@@ -1,6 +1,4 @@
-﻿using Application.Services;
-using Data;
-using DTOs;
+﻿using DTOs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using API.Clients;
 
 namespace WindowsForms
 {
@@ -23,14 +22,11 @@ namespace WindowsForms
     {
         private EspecialidadDTO _especialidad;
         private FormMode _mode;
-        private IEspecialidadService _especialidadService;
 
         public EspecialidadDetalle(FormMode mode, EspecialidadDTO especialidad)
         {
             InitializeComponent();
-            // Preparamos nuestro servicio
-            _especialidadService = new EspecialidadService(new EspecialidadRepository());
-
+            
             _mode = mode;
             _especialidad = especialidad;
 
@@ -70,11 +66,11 @@ namespace WindowsForms
             // Dependiendo del modo, le decimos al servicio qué hacer
             if (_mode == FormMode.Add)
             {
-                await _especialidadService.AddAsync(_especialidad);
+                await EspecialidadApiClient.AddAsync(_especialidad);
             }
             else if (_mode == FormMode.Update)
             {
-                await _especialidadService.UpdateAsync(_especialidad);
+                await EspecialidadApiClient.UpdateAsync(_especialidad);
             }
             // Cerramos avisando que todo salió bien
             this.DialogResult = DialogResult.OK;

@@ -99,7 +99,6 @@ namespace Data
 
                 // Usuarios iniciales (Actualizados al nuevo constructor con ID)
                 var adminUser = new Entidades.Usuario(1, "AdminApellido", "admin123", true, "AdminNombre", "admin");
-                var vendedorUser = new Entidades.Usuario(2, "VendedorApellido", "vendedor123", true, "VendedorNombre", "vendedor");
                 entity.HasData(
                     new
                     {
@@ -109,16 +108,6 @@ namespace Data
                         Nombre = adminUser.Nombre,
                         Apellido = adminUser.Apellido,
                         Habilitado = adminUser.Habilitado,
-                        State = "Activo"
-                    },
-                    new
-                    {
-                        ID = vendedorUser.ID,
-                        NombreUsuario = vendedorUser.NombreUsuario,
-                        Clave = vendedorUser.Clave,
-                        Nombre = vendedorUser.Nombre,
-                        Apellido = vendedorUser.Apellido,
-                        Habilitado = vendedorUser.Habilitado,
                         State = "Activo"
                     }
                 );

@@ -113,6 +113,7 @@
             Controls.Add(cursosDataGridView);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "CursoLista";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Cursos";
             Load += CursoLista_Load;
             ((System.ComponentModel.ISupportInitialize)cursosDataGridView).EndInit();

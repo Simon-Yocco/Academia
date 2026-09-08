@@ -12,7 +12,7 @@ namespace WindowsForms
             var loginForm = new LoginForm();
             if (loginForm.ShowDialog() == DialogResult.OK)
             {
-                System.Windows.Forms.Application.Run(new Home());
+                Application.Run(new Home());
             }
         }
     }

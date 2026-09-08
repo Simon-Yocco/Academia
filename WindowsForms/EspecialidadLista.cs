@@ -1,4 +1,5 @@
-﻿using System;
+﻿using API.Clients;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,21 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Application.Services;
-using Data;
 
 namespace WindowsForms
 {
     public partial class EspecialidadLista : Form
     {
-        private readonly IEspecialidadService _especialidadService;
         public EspecialidadLista()
         {
             InitializeComponent();
-
-            // Preparamos el servicio
-            var repository = new EspecialidadRepository();
-            _especialidadService = new EspecialidadService(repository);
         }
 
         private async void buscarButton_Click(object sender, EventArgs e)
@@ -46,7 +40,7 @@ namespace WindowsForms
             if (respuesta == DialogResult.Yes)
             {
                 // 4. Le avisamos al servicio que lo borre de la base de datos usando el ID
-                await _especialidadService.DeleteAsync(especialidadSeleccionada.ID);
+                await EspecialidadApiClient.DeleteAsync(especialidadSeleccionada.ID);
 
                 // 5. Refrescar la grilla
                 await CargarGrilla();
@@ -90,7 +84,7 @@ namespace WindowsForms
         private async Task CargarGrilla()
         {
             // 1. Traemos TODAS las especialidades de la base de datos
-            var especialidades = await _especialidadService.GetAllAsync();
+            var especialidades = await EspecialidadApiClient.GetAllAsync();
             // 2. Nos fijamos si el usuario escribió algo en el buscador
             string textoBuscado = buscarTextBox.Text.Trim().ToLower();
 

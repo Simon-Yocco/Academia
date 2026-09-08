@@ -1,7 +1,5 @@
-﻿using Application.Services;
-using Data;
+﻿using API.Clients;
 using DTOs;
-using Entidades;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,13 +17,10 @@ namespace WindowsForms
     {
         private CursoDTO _curso;
         private FormMode _mode;
-        private ICursoService _cursoService;
 
         public CursoDetalle(FormMode mode, CursoDTO curso)
         {
             InitializeComponent();
-            // Preparamos nuestro servicio
-            _cursoService = new CursoService(new CursoRepository());
 
             _mode = mode;
             _curso = curso;
@@ -50,6 +45,8 @@ namespace WindowsForms
                 // Si es editar, mostramos el ID y rellenamos los text boxes.
                 idTextBox.Visible = true;
                 idTextBox.Text = _curso.ID.ToString();
+                anioCalendarioTextBox.Text = _curso.AnioCalendario.ToString();
+                cupoTextBox.Text = _curso.Cupo.ToString();
                 descripcionTextBox.Text = _curso.Descripcion;
             }
         }
@@ -68,11 +65,11 @@ namespace WindowsForms
             // Dependiendo del modo, le decimos al servicio qué hacer
             if (_mode == FormMode.Add)
             {
-                await _cursoService.AddAsync(_curso);
+                await CursoApiClient.AddAsync(_curso);
             }
             else if (_mode == FormMode.Update)
             {
-                await _cursoService.UpdateAsync(_curso);
+                await CursoApiClient.UpdateAsync(_curso);
             }
             // Cerramos avisando que todo salió bien
             this.DialogResult = DialogResult.OK;

@@ -1,5 +1,4 @@
-﻿using Application.Services;
-using Data;
+﻿using API.Clients;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,14 +13,9 @@ namespace WindowsForms
 {
     public partial class CursoLista : Form
     {
-        private readonly ICursoService _cursoService;
         public CursoLista()
         {
             InitializeComponent();
-
-            // Preparamos el servicio
-            var repository = new CursoRepository();
-            _cursoService = new CursoService(repository);
         }
         private async void buscarButton_Click(object sender, EventArgs e)
         {
@@ -62,7 +56,7 @@ namespace WindowsForms
             if (respuesta == DialogResult.Yes)
             {
                 // 4. Le avisamos al servicio que lo borre de la base de datos usando el ID
-                await _cursoService.DeleteAsync(cursoSeleccionado.ID);
+                await CursoApiClient.DeleteAsync(cursoSeleccionado.ID);
 
                 // 5. Refrescar la grilla
                 await CargarGrilla();
@@ -85,19 +79,19 @@ namespace WindowsForms
         }
         private async Task CargarGrilla()
         {
-            // 1. Traemos TODAS las especialidades de la base de datos
-            var especialidades = await _cursoService.GetAllAsync();
-            // 2. Nos fijamos si el usuario escribió algo en el buscador
+            // Traemos TODAS las especialidades de la base de datos
+            var especialidades = await CursoApiClient.GetAllAsync();
+            // Nos fijamos si el usuario escribió algo en el buscador
             string textoBuscado = buscarTextBox.Text.Trim().ToLower();
 
             if (!string.IsNullOrEmpty(textoBuscado))
             {
-                // 3. Filtramos la lista: nos quedamos solo con las que contengan el texto
+                // Filtramos la lista: nos quedamos solo con las que contengan el texto
                 especialidades = especialidades
                     .Where(e => e.Descripcion.ToLower().Contains(textoBuscado))
                     .ToList();
             }
-            // 4. Se las pasamos a la grilla para que las dibuje (ya sean todas o las filtradas)
+            // Se las pasamos a la grilla para que las dibuje (ya sean todas o las filtradas)
             cursosDataGridView.DataSource = especialidades;
         }
     }

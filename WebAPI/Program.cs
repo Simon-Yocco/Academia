@@ -10,6 +10,9 @@ builder.Services.AddScoped<ICursoService, CursoService>();
 builder.Services.AddScoped<IEspecialidadRepository, EspecialidadRepository>();
 builder.Services.AddScoped<IEspecialidadService, EspecialidadService>();
 
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<UsuarioService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -29,5 +32,6 @@ app.UseHttpsRedirection();
 
 app.MapCursoEndpoints();
 app.MapEspecialidadEndpoints();
+app.MapUsuarioEndpoints();
 
 app.Run();
