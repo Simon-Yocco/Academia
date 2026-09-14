@@ -1,9 +1,9 @@
-using Application.Services;
+﻿using Application.Services;
 using Data;
 using WebAPI;
 var builder = WebApplication.CreateBuilder(args);
 
-//Le decimos a la API qu� clase instanciar cuando alguien pide estas interfaces
+//Le decimos a la API qué clase instanciar cuando alguien pide estas interfaces
 builder.Services.AddScoped<ICursoRepository, CursoRepository>();
 builder.Services.AddScoped<ICursoService, CursoService>();
 

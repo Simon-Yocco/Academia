@@ -1,4 +1,4 @@
-using API.Clients;
+ï»¿using API.Clients;
 using System.Windows.Forms;
 
 namespace WindowsForms
@@ -22,7 +22,7 @@ namespace WindowsForms
                 try
                 {
                     loginButton.Enabled = false;
-                    loginButton.Text = "Iniciando sesión...";
+                    loginButton.Text = "Iniciando sesiÃ³n...";
 
                     string usuario = usernameTextBox.Text;
                     string clave = passwordTextBox.Text;
@@ -31,23 +31,23 @@ namespace WindowsForms
 
                     if (usuarioLogueado != null)
                     {
-                        MessageBox.Show($"¡Bienvenido {usuarioLogueado.Nombre}!", "Éxito");
+                        MessageBox.Show($"Â¡Bienvenido {usuarioLogueado.Nombre}!", "Ã‰xito");
                         this.DialogResult = DialogResult.OK;
                         return;
                     }
                     else
                     {
-                        MessageBox.Show("Usuario o contraseña incorrectos.", "Error");
+                        MessageBox.Show("Usuario o contraseÃ±a incorrectos.", "Error");
                         passwordTextBox.Clear();
                         passwordTextBox.Focus();
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("No se pudo conectar con el servidor: " + ex.Message, "Error de Conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("No se pudo conectar con el servidor: " + ex.Message, "Error de ConexiÃ³n", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-                // Si llegó hasta acá (falló el login o la conexión), volvemos a la normalidad
+                // Si llegÃ³ hasta acÃ¡ (fallÃ³ el login o la conexiÃ³n), volvemos a la normalidad
                 loginButton.Enabled = true;
                 loginButton.Text = "Iniciar";
             }
@@ -64,7 +64,7 @@ namespace WindowsForms
 
             if (string.IsNullOrWhiteSpace(passwordTextBox.Text))
             {
-                MessageBox.Show("La contraseña es requerida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("La contraseÃ±a es requerida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 isValid = false;
             }
 
