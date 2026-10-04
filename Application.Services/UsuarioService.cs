@@ -26,7 +26,6 @@ namespace Application.Services
             {
                 ID = u.ID,
                 NombreUsuario = u.NombreUsuario,
-                Clave = u.Clave,
                 Nombre = u.Nombre,
                 Apellido = u.Apellido,
                 Habilitado = u.Habilitado
@@ -42,7 +41,6 @@ namespace Application.Services
             {
                 ID = usuario.ID,
                 NombreUsuario = usuario.NombreUsuario,
-                Clave = usuario.Clave,
                 Nombre = usuario.Nombre,
                 Apellido = usuario.Apellido,
                 Habilitado = usuario.Habilitado
@@ -58,7 +56,6 @@ namespace Application.Services
             {
                 ID = usuario.ID,
                 NombreUsuario = usuario.NombreUsuario,
-                Clave = usuario.Clave,
                 Nombre = usuario.Nombre,
                 Apellido = usuario.Apellido,
                 Habilitado = usuario.Habilitado
@@ -109,7 +106,6 @@ namespace Application.Services
                     Nombre = user.Nombre,
                     Apellido = user.Apellido,
                     Habilitado = user.Habilitado,
-                    Clave = user.Clave
                 };
             }
             return null;

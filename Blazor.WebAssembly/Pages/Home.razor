@@ -1,0 +1,17 @@
+﻿@page "/"
+@using API.Clients
+@inject NavigationManager NavigationManager
+
+@code {
+    protected override void OnInitialized()
+    {
+        if (string.IsNullOrEmpty(BaseApiClient.Token))
+        {
+            NavigationManager.NavigateTo("/login");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/cursos");
+        }
+    }
+}

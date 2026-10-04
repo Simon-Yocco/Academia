@@ -11,5 +11,6 @@ namespace Data
         Task<Curso?> GetAsync(int id);
         Task<IEnumerable<Curso>> GetAllAsync();
         Task<bool> UpdateAsync(Curso curso);
+        Task<IEnumerable<Curso>> GetByCriteriaAsync(string texto);
     }
 }

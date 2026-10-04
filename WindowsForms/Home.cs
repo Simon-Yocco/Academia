@@ -19,25 +19,35 @@ namespace WindowsForms
 
         private void cursosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // 1. Creamos una "instancia" (una copia en memoria) de la pantalla
+            // Instanciamos el formulario correspondiente
             var ventanaCursos = new CursoLista();
-
+            ventanaCursos.MdiParent = this;
             // 2. Le decimos que se muestre en pantalla
-            ventanaCursos.ShowDialog();
+            ventanaCursos.Show();
         }
 
         private void especialidadesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // 1. Creamos una "instancia" (una copia en memoria) de la pantalla
+            // Instanciamos el formulario correspondiente
             var ventanaEspecialidades = new EspecialidadLista();
-
+            ventanaEspecialidades.MdiParent = this;
             // 2. Le decimos que se muestre en pantalla
-            ventanaEspecialidades.ShowDialog();
+            ventanaEspecialidades.Show();
         }
 
-        private void Home_Load(object sender, EventArgs e)
+        private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Application.Restart();
+        }
 
+        private void cursosPorMateriaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Instanciamos el formulario correspondiente
+            var ventanaMateriaCursos = new MateriaCursos();
+            ventanaMateriaCursos.MdiParent = this;
+            // 2. Le decimos que se muestre en pantalla
+            ventanaMateriaCursos.Show();
         }
     }
 }
+

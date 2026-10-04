@@ -1,13 +1,5 @@
 ﻿using API.Clients;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using DTOs;
 
 namespace WindowsForms
 {
@@ -16,57 +8,104 @@ namespace WindowsForms
         public CursoLista()
         {
             InitializeComponent();
+            ConfigurarColumnas();
         }
+
+        private void ConfigurarColumnas()
+        {
+            cursosDataGridView.AutoGenerateColumns = false;
+            cursosDataGridView.Columns.Clear(); // Reiniciamos las columnas del DataGridView
+
+            cursosDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "ID",
+                HeaderText = "ID",
+                DataPropertyName = "ID",
+                Visible = false // Ocultamos la columna ID por motivos estéticos
+            });
+
+            cursosDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Descripcion",
+                HeaderText = "Curso",
+                DataPropertyName = "Descripcion",
+            });
+
+            cursosDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "MateriaDescripcion",
+                HeaderText = "Materia",
+                DataPropertyName = "MateriaDescripcion",
+            });
+
+            cursosDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "ComisionDescripcion",
+                HeaderText = "Comisión",
+                DataPropertyName = "ComisionDescripcion",
+            });
+
+            cursosDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "AnioCalendario",
+                HeaderText = "Año",
+                DataPropertyName = "AnioCalendario",
+            });
+
+            cursosDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Cupo",
+                HeaderText = "Cupo",
+                DataPropertyName = "Cupo",
+            });
+        }
+
         private async void buscarButton_Click(object sender, EventArgs e)
         {
             await CargarGrilla();
         }
+
         private async void actualizarButton_Click(object sender, EventArgs e)
         {
-            // Verificamos que el usuario haya seleccionado una fila
             if (cursosDataGridView.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Por favor seleccioná una especialidad de la lista.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Por favor seleccioná un curso de la lista.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            // Extraemos el DTO de la fila seleccionada
+
             var filaSeleccionada = cursosDataGridView.SelectedRows[0];
             var cursoSeleccionado = (DTOs.CursoDTO)filaSeleccionada.DataBoundItem;
-            // Le pasamos FormMode.Update y el DTO con datos
+
             var formDetalle = new CursoDetalle(FormMode.Update, cursoSeleccionado);
             if (formDetalle.ShowDialog() == DialogResult.OK)
             {
                 await CargarGrilla();
             }
         }
+
         private async void eliminarButton_Click(object sender, EventArgs e)
         {
-            // 1. Verificamos que haya seleccionado algo
             if (cursosDataGridView.SelectedRows.Count == 0)
             {
                 MessageBox.Show("Por favor seleccioná un curso de la lista.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            // 2. Extraemos el DTO
+
             var filaSeleccionada = cursosDataGridView.SelectedRows[0];
             var cursoSeleccionado = (DTOs.CursoDTO)filaSeleccionada.DataBoundItem;
-            // 3. Le preguntamos si está seguro
+
             var respuesta = MessageBox.Show($"¿Seguro que querés eliminar el curso '{cursoSeleccionado.Descripcion}'?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (respuesta == DialogResult.Yes)
             {
-                // 4. Le avisamos al servicio que lo borre de la base de datos usando el ID
                 await CursoApiClient.DeleteAsync(cursoSeleccionado.ID);
-
-                // 5. Refrescar la grilla
                 await CargarGrilla();
             }
         }
+
         private async void agregarButton_Click(object sender, EventArgs e)
         {
-            // Le pasamos FormMode.Add y un DTO vacío
             var formDetalle = new CursoDetalle(FormMode.Add, new DTOs.CursoDTO());
-
             if (formDetalle.ShowDialog() == DialogResult.OK)
             {
                 await CargarGrilla();
@@ -77,22 +116,21 @@ namespace WindowsForms
         {
             await CargarGrilla();
         }
+
         private async Task CargarGrilla()
         {
-            // Traemos TODAS las especialidades de la base de datos
-            var especialidades = await CursoApiClient.GetAllAsync();
-            // Nos fijamos si el usuario escribió algo en el buscador
-            string textoBuscado = buscarTextBox.Text.Trim().ToLower();
+            IEnumerable<CursoDTO> cursos;
 
-            if (!string.IsNullOrEmpty(textoBuscado))
+            if (string.IsNullOrWhiteSpace(buscarTextBox.Text))
             {
-                // Filtramos la lista: nos quedamos solo con las que contengan el texto
-                especialidades = especialidades
-                    .Where(e => e.Descripcion.ToLower().Contains(textoBuscado))
-                    .ToList();
+                cursos = await CursoApiClient.GetAllAsync();
             }
-            // Se las pasamos a la grilla para que las dibuje (ya sean todas o las filtradas)
-            cursosDataGridView.DataSource = especialidades;
+            else
+            {
+                cursos = await CursoApiClient.GetByCriteriaAsync(buscarTextBox.Text);
+            }
+
+            cursosDataGridView.DataSource = cursos;
         }
     }
 }

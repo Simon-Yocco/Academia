@@ -1,4 +1,4 @@
-using Data;
+﻿using Data;
 using Application.Services;
 using DTOs;
 
@@ -13,9 +13,10 @@ namespace WebAPI
                 var dtos = await cursoService.GetAllAsync();
                 return Results.Ok(dtos);
             })
-            .WithName("GetAllCursos") // Le asigna un nombre único interno a este endpoint
+            .WithName("GetAllCursos") // Le asigna un nombre Ãºnico interno a este endpoint
             .Produces<List<CursoDTO>>(StatusCodes.Status200OK) // Codigo para Swagger
-            .WithOpenApi();
+            .WithOpenApi()
+            ;
 
             app.MapGet("/cursos/{id}", async (int id, ICursoService cursoService) =>
             {
@@ -29,7 +30,16 @@ namespace WebAPI
             .WithName("GetCurso")
             .Produces<CursoDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
-            .WithOpenApi();
+            .WithOpenApi().RequireAuthorization();
+
+            app.MapGet("/cursos/{criteria}", async (string criteria, ICursoService cursoService) =>
+            {
+                var dtos = await cursoService.GetByCriteriaAsync(criteria);
+                return Results.Ok(dtos);
+            })
+            .WithName("GetByCriteria") // Le asigna un nombre Ãºnico interno a este endpoint
+            .Produces<List<CursoDTO>>(StatusCodes.Status200OK) // Codigo para Swagger
+            .WithOpenApi().RequireAuthorization();
 
             app.MapPost("/cursos", async (CursoDTO dto, ICursoService cursoService) =>
             {
@@ -38,7 +48,7 @@ namespace WebAPI
             })
             .WithName("AddCurso")
             .Produces<CursoDTO>(StatusCodes.Status201Created)
-            .WithOpenApi();
+            .WithOpenApi().RequireAuthorization();
 
             app.MapPut("/cursos", async (CursoDTO dto, ICursoService cursoService) =>
             {
@@ -55,7 +65,7 @@ namespace WebAPI
             .WithName("UpdateCurso")
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status204NoContent)
-            .WithOpenApi();
+            .WithOpenApi().RequireAuthorization();
 
             app.MapDelete("/cursos/{id}", async (int id, ICursoService cursoService) =>
             {
@@ -70,7 +80,8 @@ namespace WebAPI
             .WithName("DeleteCurso")
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status204NoContent)
-            .WithOpenApi();
+            .WithOpenApi().RequireAuthorization();
         }
     }
 }
+

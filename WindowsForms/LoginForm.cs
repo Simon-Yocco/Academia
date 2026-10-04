@@ -1,4 +1,5 @@
 ﻿using API.Clients;
+using DTOs;
 using System.Windows.Forms;
 
 namespace WindowsForms
@@ -23,15 +24,19 @@ namespace WindowsForms
                 {
                     loginButton.Enabled = false;
                     loginButton.Text = "Iniciando sesión...";
-
-                    string usuario = usernameTextBox.Text;
-                    string clave = passwordTextBox.Text;
-
-                    var usuarioLogueado = await UsuarioApiClient.LoginAsync(usuario, clave);
-
-                    if (usuarioLogueado != null)
+                    var authClient = new AuthApiClient();
+                    var request = new LoginRequest
                     {
-                        MessageBox.Show($"¡Bienvenido {usuarioLogueado.Nombre}!", "Éxito");
+                        Username = usernameTextBox.Text,
+                        Password = passwordTextBox.Text
+                    };
+                    // Ejecutamos la solicitud de autenticación al servidor
+                    var response = await authClient.LoginAsync(request);
+                    if (response != null && !string.IsNullOrEmpty(response.Token))
+                    {
+                        // Almacenamos el token JWT en el cliente base para las siguientes peticiones
+                        BaseApiClient.Token = response.Token;
+                        MessageBox.Show($"¡Bienvenido {response.Username}!", "Éxito");
                         this.DialogResult = DialogResult.OK;
                         return;
                     }
@@ -46,8 +51,6 @@ namespace WindowsForms
                 {
                     MessageBox.Show("No se pudo conectar con el servidor: " + ex.Message, "Error de Conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
-                // Si llegó hasta acá (falló el login o la conexión), volvemos a la normalidad
                 loginButton.Enabled = true;
                 loginButton.Text = "Iniciar";
             }
@@ -76,3 +79,5 @@ namespace WindowsForms
         }
     }
 }
+
+

@@ -1,0 +1,138 @@
+﻿@using DTOs
+@using API.Clients
+
+@if (showModal)
+{
+    <div class="modal fade show" tabindex="-1" style="display:block; background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(mode == FormMode.Add ? "Agregar" : "Editar") Especialidad</h5>
+                    <button type="button" class="btn-close" @onclick="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="@current" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+                        
+                        @if (mode == FormMode.Update)
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">Id</label>
+                                <input type="text" class="form-control" value="@current.ID" readonly />
+                            </div>
+                        }
+
+                        <div class="mb-3">
+                            <label class="form-label">Descripción *</label>
+                            <InputText @bind-Value="current.Descripcion" class="form-control" />
+                            @if (validationErrors.ContainsKey("Descripcion"))
+                            {
+                                <div class="text-danger small">@validationErrors["Descripcion"]</div>
+                            }
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            <div class="alert alert-danger">@errorMessage</div>
+                        }
+
+                        <div class="modal-footer px-0 pb-0">
+                            <button type="button" class="btn btn-secondary" @onclick="Close">Cancelar</button>
+                            <button type="submit" class="btn btn-primary" disabled="@saving">
+                                @if (saving)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                }
+                                @(mode == FormMode.Add ? "Agregar" : "Actualizar")
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public EventCallback OnChanged { get; set; }
+    
+    private bool showModal = false;
+    private FormMode mode = FormMode.Add;
+    private EspecialidadDTO current = new EspecialidadDTO();
+    private bool saving = false;
+    private string errorMessage = string.Empty;
+    private Dictionary<string, string> validationErrors = new Dictionary<string, string>();
+
+    public enum FormMode { Add, Update }
+
+    public void ShowAddModal()
+    {
+        mode = FormMode.Add;
+        current = new EspecialidadDTO();
+        ClearValidationErrors();
+        showModal = true;
+        StateHasChanged();
+    }
+
+    public void ShowEditModal(EspecialidadDTO item)
+    {
+        mode = FormMode.Update;
+        current = new EspecialidadDTO { ID = item.ID, Descripcion = item.Descripcion };
+        ClearValidationErrors();
+        showModal = true;
+        StateHasChanged();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (!Validate()) return;
+
+        try
+        {
+            saving = true;
+            errorMessage = string.Empty;
+
+            if (mode == FormMode.Add)
+                await EspecialidadApiClient.AddAsync(current);
+            else
+                await EspecialidadApiClient.UpdateAsync(current);
+
+            await OnChanged.InvokeAsync();
+            Close();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            saving = false;
+        }
+    }
+
+    private bool Validate()
+    {
+        ClearValidationErrors();
+        bool isValid = true;
+        if (string.IsNullOrWhiteSpace(current.Descripcion))
+        {
+            validationErrors["Descripcion"] = "La Descripción es requerida";
+            isValid = false;
+        }
+        StateHasChanged();
+        return isValid;
+    }
+
+    private void ClearValidationErrors()
+    {
+        validationErrors.Clear();
+        errorMessage = string.Empty;
+    }
+
+    private void Close()
+    {
+        showModal = false;
+        ClearValidationErrors();
+        StateHasChanged();
+    }
+}

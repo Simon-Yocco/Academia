@@ -1,0 +1,100 @@
+﻿@page "/materiacursos"
+@using DTOs
+@using API.Clients
+
+<PageTitle>Cursos por Materia</PageTitle>
+
+<div class="card shadow-sm mt-3">
+    <div class="card-header bg-white">
+        <h4 class="mb-0">Cursos por Materia (Maestro/Detalle)</h4>
+    </div>
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Seleccione una materia (Maestro):</label>
+                <select class="form-select" @onchange="OnMateriaChanged">
+                    <option value="0">-- Seleccione --</option>
+                    @if (materias != null)
+                    {
+                        @foreach (var mat in materias)
+                        {
+                            <option value="@mat.ID">@mat.Descripcion</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        @if (materiaSeleccionadaId > 0)
+        {
+            <h5 class="mt-4 mb-3 border-bottom pb-2">Cursos asignados (Detalle):</h5>
+            
+            @if (cursosFiltrados == null)
+            {
+                <div class="text-center"><div class="spinner-border text-secondary" role="status"></div></div>
+            }
+            else if (!cursosFiltrados.Any())
+            {
+                <div class="alert alert-info">No hay cursos registrados para esta materia.</div>
+            }
+            else
+            {
+                <table class="table table-bordered table-hover">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>ID</th>
+                            <th>Año</th>
+                            <th>Cupo</th>
+                            <th>Descripción</th>
+                            <th>Comisión</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var curso in cursosFiltrados)
+                        {
+                            <tr>
+                                <td>@curso.ID</td>
+                                <td>@curso.AnioCalendario</td>
+                                <td>@curso.Cupo</td>
+                                <td>@curso.Descripcion</td>
+                                <td>@curso.ComisionDescripcion</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    private IEnumerable<MateriaDTO>? materias;
+    private IEnumerable<CursoDTO>? todosLosCursos;
+    private IEnumerable<CursoDTO>? cursosFiltrados;
+    private int materiaSeleccionadaId = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try 
+        {
+            materias = await MateriaApiClient.GetAllAsync();
+            todosLosCursos = await CursoApiClient.GetAllAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
+
+    private void OnMateriaChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out int id))
+        {
+            materiaSeleccionadaId = id;
+            if (id > 0 && todosLosCursos != null)
+            {
+                cursosFiltrados = todosLosCursos.Where(c => c.IDmateria == id).ToList();
+            }
+        }
+    }
+}

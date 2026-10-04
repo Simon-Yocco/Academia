@@ -1,0 +1,31 @@
+﻿using DTOs;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+namespace API.Clients
+{
+    public class AuthApiClient : BaseApiClient
+    {
+        public async Task<LoginResponse?> LoginAsync(LoginRequest request)
+        {
+            var httpClient = CreateHttpClient(); // Usa el método que armamos en tu BaseApiClient
+            var json = JsonSerializer.Serialize(request);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync("/auth/login", content);
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<LoginResponse>(responseContent, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+            }
+            // Si no es successful, devolver null (credenciales incorrectas)
+            return null;
+        }
+    }
+}

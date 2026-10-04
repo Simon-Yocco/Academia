@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Entidades;
 
@@ -10,6 +10,7 @@ namespace Data
         Task<bool> DeleteAsync(int id);
         Task<Especialidad?> GetAsync(int id);
         Task<IEnumerable<Especialidad>> GetAllAsync();
+        Task<IEnumerable<Especialidad>> GetByCriteriaAsync(string texto);
         Task<bool> UpdateAsync(Especialidad especialidad);
     }
 }

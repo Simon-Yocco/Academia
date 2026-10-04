@@ -1,0 +1,39 @@
+﻿@inherits LayoutComponentBase
+@using API.Clients
+@inject NavigationManager Navigation
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4 d-flex justify-content-end">
+            @if (!string.IsNullOrEmpty(BaseApiClient.Token))
+            {
+                <button class="btn btn-primary btn-sm" @onclick="Logout">Cerrar Sesión</button>
+            }
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code {
+    protected override void OnParametersSet()
+    {
+        // Forzamos la redirección automática si no hay token (igual que el ejemplo)
+        if (string.IsNullOrEmpty(BaseApiClient.Token) && !Navigation.Uri.EndsWith("/login"))
+        {
+            Navigation.NavigateTo("/login");
+        }
+    }
+
+    private void Logout()
+    {
+        BaseApiClient.Token = "";
+        Navigation.NavigateTo("/login");
+    }
+}

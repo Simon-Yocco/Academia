@@ -1,4 +1,5 @@
 ﻿using DTOs;
+using Entidades;
 
 namespace Application.Services
 {
@@ -9,5 +10,6 @@ namespace Application.Services
         Task<CursoDTO?> AddAsync(CursoDTO cursoDto);
         Task<bool> UpdateAsync(CursoDTO cursoDto);
         Task<bool> DeleteAsync(int id);
+        Task<IEnumerable<CursoDTO>> GetByCriteriaAsync(string texto);
     }
 }

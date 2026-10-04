@@ -29,6 +29,19 @@ namespace API.Clients
             }
             return null;
         }
+        public static async Task<IEnumerable<CursoDTO>> GetByCriteriaAsync(string criteria)
+        {
+            using var client = CreateHttpClient();
+
+            // Llamamos a la ruta específica de búsqueda que ya tenés en la API
+            var response = await client.GetAsync($"cursos/{Uri.EscapeDataString(criteria)}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<IEnumerable<CursoDTO>>()
+                       ?? new List<CursoDTO>();
+            }
+            throw new Exception("Error al obtener los cursos filtrados");
+        }
         public static async Task<CursoDTO?> AddAsync(CursoDTO curso)
         {
             using var client = CreateHttpClient();

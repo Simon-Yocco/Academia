@@ -31,12 +31,14 @@
             menuStrip1 = new MenuStrip();
             cursosToolStripMenuItem = new ToolStripMenuItem();
             especialidadesToolStripMenuItem = new ToolStripMenuItem();
+            cerrarSesionToolStripMenuItem = new ToolStripMenuItem();
+            cursosPorMateriaToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { cursosToolStripMenuItem, especialidadesToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { cursosToolStripMenuItem, especialidadesToolStripMenuItem, cursosPorMateriaToolStripMenuItem, cerrarSesionToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(542, 24);
@@ -57,17 +59,31 @@
             especialidadesToolStripMenuItem.Text = "Especialidades";
             especialidadesToolStripMenuItem.Click += especialidadesToolStripMenuItem_Click;
             // 
+            // cerrarSesionToolStripMenuItem
+            // 
+            cerrarSesionToolStripMenuItem.Name = "cerrarSesionToolStripMenuItem";
+            cerrarSesionToolStripMenuItem.Size = new Size(88, 20);
+            cerrarSesionToolStripMenuItem.Text = "Cerrar Sesion";
+            cerrarSesionToolStripMenuItem.Click += cerrarSesionToolStripMenuItem_Click;
+            // 
+            // cursosPorMateriaToolStripMenuItem
+            // 
+            cursosPorMateriaToolStripMenuItem.Name = "cursosPorMateriaToolStripMenuItem";
+            cursosPorMateriaToolStripMenuItem.Size = new Size(119, 20);
+            cursosPorMateriaToolStripMenuItem.Text = "Cursos por materia";
+            cursosPorMateriaToolStripMenuItem.Click += cursosPorMateriaToolStripMenuItem_Click;
+            // 
             // Home
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(542, 302);
             Controls.Add(menuStrip1);
+            IsMdiContainer = true;
             MainMenuStrip = menuStrip1;
             Name = "Home";
             Text = "Home";
             WindowState = FormWindowState.Maximized;
-            Load += Home_Load;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ResumeLayout(false);
@@ -79,5 +95,7 @@
         private MenuStrip menuStrip1;
         private ToolStripMenuItem cursosToolStripMenuItem;
         private ToolStripMenuItem especialidadesToolStripMenuItem;
+        private ToolStripMenuItem cerrarSesionToolStripMenuItem;
+        private ToolStripMenuItem cursosPorMateriaToolStripMenuItem;
     }
 }

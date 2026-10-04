@@ -1,4 +1,4 @@
-﻿namespace DTOs
+namespace DTOs
 {
     public class CursoDTO
     {
@@ -8,5 +8,7 @@
         public string Descripcion { get; set; } = string.Empty;
         public int IDcomision { get; set; }
         public int IDmateria { get; set; }
+        public string MateriaDescripcion { get; set; } = string.Empty;
+        public string ComisionDescripcion { get; set; } = string.Empty;
     }
 }

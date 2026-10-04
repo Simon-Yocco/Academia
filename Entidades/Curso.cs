@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Entidades
 {
@@ -9,6 +9,8 @@ namespace Entidades
         public string Descripcion { get; private set; } = string.Empty;
         public int IDcomision { get; private set; }
         public int IDmateria { get; private set; }
+        public Materia? Materia { get; private set; }
+        public Comision? Comision { get; private set; }
 
         public Curso() { }
 
@@ -50,6 +52,20 @@ namespace Entidades
         {
             if (idMateria < 0) throw new ArgumentException("El ID de la materia debe ser válido.");
             IDmateria = idMateria;
+        }
+
+        public void SetMateria(Materia materia)
+        {
+            ArgumentNullException.ThrowIfNull(materia);
+            Materia = materia;
+            IDmateria = materia.ID;
+        }
+
+        public void SetComision(Comision comision)
+        {
+            ArgumentNullException.ThrowIfNull(comision);
+            Comision = comision;
+            IDcomision = comision.ID;
         }
     }
 }

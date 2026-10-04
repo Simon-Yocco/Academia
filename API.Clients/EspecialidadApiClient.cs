@@ -1,4 +1,4 @@
-﻿using DTOs;
+using DTOs;
 using System.Net.Http.Json;
 
 namespace API.Clients
@@ -28,6 +28,18 @@ namespace API.Clients
                 return await response.Content.ReadFromJsonAsync<EspecialidadDTO>();
             }
             return null;
+        }
+        public static async Task<IEnumerable<EspecialidadDTO>> GetByCriteriaAsync(string criteria)
+        {
+            using var client = CreateHttpClient();
+
+            var response = await client.GetAsync($"especialidades/buscar/{Uri.EscapeDataString(criteria)}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<IEnumerable<EspecialidadDTO>>()
+                       ?? new List<EspecialidadDTO>();
+            }
+            throw new Exception("Error al obtener las especialidades filtradas");
         }
         public static async Task<EspecialidadDTO?> AddAsync(EspecialidadDTO especialiadad)
         {

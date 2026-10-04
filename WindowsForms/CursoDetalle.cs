@@ -1,15 +1,9 @@
-﻿using API.Clients;
+using API.Clients;
 using DTOs;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace WindowsForms
 {
@@ -18,61 +12,109 @@ namespace WindowsForms
         private CursoDTO _curso;
         private FormMode _mode;
 
-        public CursoDetalle(FormMode mode, CursoDTO curso)
+        public CursoDetalle(FormMode mode, CursoDTO curso) : this()
         {
-            InitializeComponent();
-
-            _mode = mode;
-            _curso = curso;
-
-            ConfigurarPantalla();
+            Init(mode, curso);
         }
-        // Este constructor vacío lo necesita Visual Studio para el diseñador visual.
+
         public CursoDetalle()
         {
             InitializeComponent();
         }
+
+        private async void Init(FormMode mode, CursoDTO curso)
+        {
+            _mode = mode;
+            _curso = curso;
+
+            aceptarButton.Enabled = false; // Bloqueamos para evitar errores mientras carga
+
+            await LoadCombos();
+            ConfigurarPantalla();
+
+            aceptarButton.Enabled = true;
+        }
+
+        private async Task LoadCombos()
+        {
+            try
+            {
+                var materias = await MateriaApiClient.GetAllAsync();
+                materiaComboBox.DataSource = materias.ToList();
+                materiaComboBox.DisplayMember = "Descripcion";
+                materiaComboBox.ValueMember = "ID";
+                materiaComboBox.SelectedIndex = -1; // Por defecto vacío
+
+                var comisiones = await ComisionApiClient.GetAllAsync();
+                comisionComboBox.DataSource = comisiones.ToList();
+                comisionComboBox.DisplayMember = "Descripcion";
+                comisionComboBox.ValueMember = "ID";
+                comisionComboBox.SelectedIndex = -1; // Por defecto vacío
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar los desplegables: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void ConfigurarPantalla()
         {
             if (_mode == FormMode.Add)
             {
-                // Si es agregar, ocultamos el ID porque la BD lo genera solo
                 idTextBox.Visible = false;
                 idLabel.Visible = false;
             }
             else if (_mode == FormMode.Update)
             {
-                // Si es editar, mostramos el ID y rellenamos los text boxes.
                 idTextBox.Visible = true;
                 idTextBox.Text = _curso.ID.ToString();
                 anioCalendarioTextBox.Text = _curso.AnioCalendario.ToString();
                 cupoTextBox.Text = _curso.Cupo.ToString();
                 descripcionTextBox.Text = _curso.Descripcion;
+                
             }
+
+            if (_curso.IDmateria > 0) materiaComboBox.SelectedValue = _curso.IDmateria;
+            if (_curso.IDcomision > 0) comisionComboBox.SelectedValue = _curso.IDcomision;
         }
+
         private async void aceptarButton_Click(object sender, EventArgs e)
         {
-            // Validamos que no esté vacío
             if (string.IsNullOrWhiteSpace(descripcionTextBox.Text))
             {
-                MessageBox.Show("La descripción es requerida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("La descripción es requerida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            // Pasamos lo que escribió el usuario a nuestro DTO
+            if (materiaComboBox.SelectedValue == null || comisionComboBox.SelectedValue == null)
+            {
+                MessageBox.Show("Debe seleccionar una Materia y una Comisión.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             _curso.AnioCalendario = int.Parse(anioCalendarioTextBox.Text);
             _curso.Cupo = int.Parse(cupoTextBox.Text);
             _curso.Descripcion = descripcionTextBox.Text;
-            // Dependiendo del modo, le decimos al servicio qué hacer
-            if (_mode == FormMode.Add)
+            _curso.IDmateria = (int)materiaComboBox.SelectedValue;
+            _curso.IDcomision = (int)comisionComboBox.SelectedValue;
+
+            try
             {
-                await CursoApiClient.AddAsync(_curso);
+                aceptarButton.Enabled = false;
+                if (_mode == FormMode.Add)
+                {
+                    await CursoApiClient.AddAsync(_curso);
+                }
+                else if (_mode == FormMode.Update)
+                {
+                    await CursoApiClient.UpdateAsync(_curso);
+                }
+                this.DialogResult = DialogResult.OK;
             }
-            else if (_mode == FormMode.Update)
+            catch (Exception ex)
             {
-                await CursoApiClient.UpdateAsync(_curso);
+                MessageBox.Show($"Error al guardar: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                aceptarButton.Enabled = true;
             }
-            // Cerramos avisando que todo salió bien
-            this.DialogResult = DialogResult.OK;
         }
 
         private void cancelarButton_Click(object sender, EventArgs e)
