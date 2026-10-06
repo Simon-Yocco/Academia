@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,22 +17,31 @@ namespace WindowsForms
             InitializeComponent();
         }
 
+        private void AbrirFormulario<T>() where T : Form, new()
+        {
+            var formulario = this.MdiChildren.OfType<T>().FirstOrDefault();
+
+            if (formulario != null)
+            {
+                formulario.BringToFront();
+                formulario.Activate();
+            }
+            else
+            {
+                formulario = new T();
+                formulario.MdiParent = this;
+                formulario.Show();
+            }
+        }
+
         private void cursosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Instanciamos el formulario correspondiente
-            var ventanaCursos = new CursoLista();
-            ventanaCursos.MdiParent = this;
-            // 2. Le decimos que se muestre en pantalla
-            ventanaCursos.Show();
+            AbrirFormulario<CursoLista>();
         }
 
         private void especialidadesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Instanciamos el formulario correspondiente
-            var ventanaEspecialidades = new EspecialidadLista();
-            ventanaEspecialidades.MdiParent = this;
-            // 2. Le decimos que se muestre en pantalla
-            ventanaEspecialidades.Show();
+            AbrirFormulario<EspecialidadLista>();
         }
 
         private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -42,11 +51,7 @@ namespace WindowsForms
 
         private void cursosPorMateriaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Instanciamos el formulario correspondiente
-            var ventanaMateriaCursos = new MateriaCursos();
-            ventanaMateriaCursos.MdiParent = this;
-            // 2. Le decimos que se muestre en pantalla
-            ventanaMateriaCursos.Show();
+            AbrirFormulario<MateriaCursos>();
         }
     }
 }

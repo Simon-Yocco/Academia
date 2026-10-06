@@ -38,9 +38,10 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(31, 23);
+            label1.Location = new Point(58, 49);
+            label1.Margin = new Padding(6, 0, 6, 0);
             label1.Name = "label1";
-            label1.Size = new Size(132, 15);
+            label1.Size = new Size(267, 32);
             label1.TabIndex = 0;
             label1.Text = "Seleccione una materia:";
             // 
@@ -48,25 +49,29 @@
             // 
             materiaComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             materiaComboBox.FormattingEnabled = true;
-            materiaComboBox.Location = new Point(169, 15);
+            materiaComboBox.Location = new Point(324, 49);
+            materiaComboBox.Margin = new Padding(6, 6, 6, 6);
             materiaComboBox.Name = "materiaComboBox";
-            materiaComboBox.Size = new Size(266, 23);
+            materiaComboBox.Size = new Size(491, 40);
             materiaComboBox.TabIndex = 1;
             // 
             // cursosDataGridView
             // 
             cursosDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            cursosDataGridView.Location = new Point(31, 60);
+            cursosDataGridView.Location = new Point(58, 128);
+            cursosDataGridView.Margin = new Padding(6, 6, 6, 6);
             cursosDataGridView.Name = "cursosDataGridView";
             cursosDataGridView.ReadOnly = true;
-            cursosDataGridView.Size = new Size(730, 289);
+            cursosDataGridView.RowHeadersWidth = 82;
+            cursosDataGridView.Size = new Size(1356, 617);
             cursosDataGridView.TabIndex = 2;
             // 
             // agregarCursobutton
             // 
-            agregarCursobutton.Location = new Point(642, 365);
+            agregarCursobutton.Location = new Point(1192, 779);
+            agregarCursobutton.Margin = new Padding(6, 6, 6, 6);
             agregarCursobutton.Name = "agregarCursobutton";
-            agregarCursobutton.Size = new Size(119, 23);
+            agregarCursobutton.Size = new Size(221, 49);
             agregarCursobutton.TabIndex = 3;
             agregarCursobutton.Text = "Agregar curso";
             agregarCursobutton.UseVisualStyleBackColor = true;
@@ -74,15 +79,16 @@
             // 
             // MateriaCursos
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(792, 400);
+            ClientSize = new Size(1471, 853);
             Controls.Add(agregarCursobutton);
             Controls.Add(cursosDataGridView);
             Controls.Add(materiaComboBox);
             Controls.Add(label1);
+            Margin = new Padding(6, 6, 6, 6);
             Name = "MateriaCursos";
-            Text = "Form1";
+            Text = "Cursos por Materia";
             ((System.ComponentModel.ISupportInitialize)cursosDataGridView).EndInit();
             ResumeLayout(false);
             PerformLayout();
