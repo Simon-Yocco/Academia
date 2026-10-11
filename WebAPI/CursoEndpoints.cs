@@ -13,12 +13,12 @@ namespace WebAPI
                 var dtos = await cursoService.GetAllAsync();
                 return Results.Ok(dtos);
             })
-            .WithName("GetAllCursos") // Le asigna un nombre Ãºnico interno a este endpoint
+            .WithName("GetAllCursos") // Le asigna un nombre único interno a este endpoint
             .Produces<List<CursoDTO>>(StatusCodes.Status200OK) // Codigo para Swagger
             .WithOpenApi()
             .RequireAuthorization();
 
-            app.MapGet("/cursos/{id}", async (int id, ICursoService cursoService) =>
+            app.MapGet("/cursos/{id:int}", async (int id, ICursoService cursoService) =>
             {
                 CursoDTO? dto = await cursoService.GetByIdAsync(id);
                 if (dto != null)
@@ -33,57 +33,92 @@ namespace WebAPI
             .WithOpenApi()
             .RequireAuthorization();
 
-            app.MapGet("/cursos/{criteria}", async (string criteria, ICursoService cursoService) =>
+            app.MapGet("/cursos/buscar/{criteria}", async (string criteria, ICursoService cursoService) =>
             {
                 var dtos = await cursoService.GetByCriteriaAsync(criteria);
                 return Results.Ok(dtos);
             })
-            .WithName("GetByCriteria") // Le asigna un nombre Ãºnico interno a este endpoint
+            .WithName("GetByCriteria") // Le asigna un nombre único interno a este endpoint
             .Produces<List<CursoDTO>>(StatusCodes.Status200OK) // Codigo para Swagger
             .WithOpenApi()
             .RequireAuthorization();
 
             app.MapPost("/cursos", async (CursoDTO dto, ICursoService cursoService) =>
             {
-                CursoDTO? cursoDTO = await cursoService.AddAsync(dto);
-                return Results.Created($"/cursos/{cursoDTO?.ID}", cursoDTO);
+                try
+                {
+                    CursoDTO? cursoDTO = await cursoService.AddAsync(dto);
+                    return Results.Created($"/cursos/{cursoDTO?.ID}", cursoDTO);
+                }
+                catch (ArgumentException ex)
+                {
+                    return Results.BadRequest(new { error = ex.Message });
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem(ex.Message);
+                }
             })
             .WithName("AddCurso")
             .Produces<CursoDTO>(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
             .RequireAuthorization();
 
             app.MapPut("/cursos", async (CursoDTO dto, ICursoService cursoService) =>
             {
-                var found = await cursoService.UpdateAsync(dto);
-
-                if (!found)
+                try
                 {
-                    return Results.NotFound();
+                    var found = await cursoService.UpdateAsync(dto);
+
+                    if (!found)
+                    {
+                        return Results.NotFound();
+                    }
+
+                    return Results.NoContent();
                 }
-
-                return Results.NoContent();
-
+                catch (ArgumentException ex)
+                {
+                    return Results.BadRequest(new { error = ex.Message });
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem(ex.Message);
+                }
             })
             .WithName("UpdateCurso")
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
             .RequireAuthorization();
 
             app.MapDelete("/cursos/{id}", async (int id, ICursoService cursoService) =>
             {
-                var deleted = await cursoService.DeleteAsync(id);
-                if (!deleted)
+                try
                 {
-                    return Results.NotFound();
-                }
+                    var deleted = await cursoService.DeleteAsync(id);
+                    if (!deleted)
+                    {
+                        return Results.NotFound();
+                    }
 
-                return Results.NoContent();
+                    return Results.NoContent();
+                }
+                catch (ArgumentException ex)
+                {
+                    return Results.BadRequest(new { error = ex.Message });
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem(ex.Message);
+                }
             })
             .WithName("DeleteCurso")
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
             .RequireAuthorization();
         }

@@ -34,7 +34,7 @@ namespace API.Clients
             using var client = CreateHttpClient();
 
             // Llamamos a la ruta específica de búsqueda que ya tenés en la API
-            var response = await client.GetAsync($"cursos/{Uri.EscapeDataString(criteria)}");
+            var response = await client.GetAsync($"cursos/buscar/{Uri.EscapeDataString(criteria)}");
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadFromJsonAsync<IEnumerable<CursoDTO>>()

@@ -91,9 +91,21 @@ namespace WindowsForms
                 return;
             }
 
-            _curso.AnioCalendario = int.Parse(anioCalendarioTextBox.Text);
-            _curso.Cupo = int.Parse(cupoTextBox.Text);
-            _curso.Descripcion = descripcionTextBox.Text;
+            if (!int.TryParse(anioCalendarioTextBox.Text, out int anio) || anio < 2000)
+            {
+                MessageBox.Show("El año calendario debe ser un número válido (mayor o igual a 2000).", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!int.TryParse(cupoTextBox.Text, out int cupo) || cupo <= 0)
+            {
+                MessageBox.Show("El cupo debe ser un número entero mayor a 0.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            _curso.AnioCalendario = anio;
+            _curso.Cupo = cupo;
+            _curso.Descripcion = descripcionTextBox.Text.Trim();
             _curso.IDmateria = (int)materiaComboBox.SelectedValue;
             _curso.IDcomision = (int)comisionComboBox.SelectedValue;
 
@@ -106,7 +118,8 @@ namespace WindowsForms
                 }
                 else if (_mode == FormMode.Update)
                 {
-                    await CursoApiClient.UpdateAsync(_curso);
+                    var ok = await CursoApiClient.UpdateAsync(_curso);
+                    if (!ok) throw new Exception("No se pudo actualizar el curso.");
                 }
                 this.DialogResult = DialogResult.OK;
             }

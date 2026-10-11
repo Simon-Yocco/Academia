@@ -9,26 +9,26 @@ namespace Data
 {
     public class EspecialidadRepository : IEspecialidadRepository
     {
-        private TPIContext CreateContext()
+        private readonly TPIContext _context;
+
+        public EspecialidadRepository(TPIContext context)
         {
-            return new TPIContext();
+            _context = context;
         }
 
         public async Task AddAsync(Especialidad especialidad)
         {
-            using var context = CreateContext();
-            context.Especialidades.Add(especialidad);
-            await context.SaveChangesAsync();
+            _context.Especialidades.Add(especialidad);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            using var context = CreateContext();
-            var esp = await context.Especialidades.FindAsync(id);
+            var esp = await _context.Especialidades.FindAsync(id);
             if (esp != null)
             {
-                context.Especialidades.Remove(esp);
-                await context.SaveChangesAsync();
+                _context.Especialidades.Remove(esp);
+                await _context.SaveChangesAsync();
                 return true;
             }
             return false;
@@ -36,15 +36,13 @@ namespace Data
 
         public async Task<Especialidad?> GetAsync(int id)
         {
-            using var context = CreateContext();
-            var esp = await context.Especialidades.FindAsync(id);
+            var esp = await _context.Especialidades.FindAsync(id);
             return esp;
         }
 
         public async Task<IEnumerable<Especialidad>> GetAllAsync()
         {
-            using var context = CreateContext();
-            var esps = await context.Especialidades.ToListAsync();
+            var esps = await _context.Especialidades.ToListAsync();
             return esps;
         }
 
@@ -57,8 +55,7 @@ namespace Data
                 ORDER BY Descripcion";
 
             var especialidades = new List<Especialidad>();
-            using var context = CreateContext();
-            string connectionString = context.Database.GetConnectionString();
+            string connectionString = _context.Database.GetConnectionString();
             
             string searchPattern = $"%{texto}%";
 
@@ -83,12 +80,11 @@ namespace Data
 
         public async Task<bool> UpdateAsync(Especialidad especialidad)
         {
-            using var context = CreateContext();
-            var existingEsp = await context.Especialidades.FindAsync(especialidad.ID);
+            var existingEsp = await _context.Especialidades.FindAsync(especialidad.ID);
             if (existingEsp != null)
             {
                 existingEsp.SetDescripcion(especialidad.Descripcion);
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return true;
             }
             return false;

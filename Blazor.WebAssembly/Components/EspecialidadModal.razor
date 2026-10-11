@@ -1,4 +1,4 @@
-﻿@using DTOs
+@using DTOs
 @using API.Clients
 
 @if (showModal)
@@ -93,9 +93,17 @@
             errorMessage = string.Empty;
 
             if (mode == FormMode.Add)
+            {
                 await EspecialidadApiClient.AddAsync(current);
+            }
             else
-                await EspecialidadApiClient.UpdateAsync(current);
+            {
+                var ok = await EspecialidadApiClient.UpdateAsync(current);
+                if (!ok)
+                {
+                    throw new Exception("No se pudo actualizar la especialidad.");
+                }
+            }
 
             await OnChanged.InvokeAsync();
             Close();

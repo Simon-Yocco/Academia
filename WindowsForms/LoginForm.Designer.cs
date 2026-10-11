@@ -1,4 +1,4 @@
-﻿namespace WindowsForms
+namespace WindowsForms
 {
     partial class LoginForm
     {
@@ -119,7 +119,7 @@
             MinimizeBox = false;
             Name = "LoginForm";
             ShowIcon = false;
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "TPI - Login";
             Load += LoginForm_Load;
             ResumeLayout(false);

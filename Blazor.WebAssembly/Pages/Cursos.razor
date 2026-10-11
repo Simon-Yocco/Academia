@@ -1,4 +1,4 @@
-﻿@page "/cursos"
+@page "/cursos"
 @using DTOs
 @using API.Clients
 @using Blazor.WebAssembly.Components
@@ -13,10 +13,11 @@
 
             <div class="mb-3 mt-3 d-flex justify-content-between">
                 <button class="btn btn-primary" @onclick="OpenAddModal">
-                    Agregar
+                    + Nuevo Curso
                 </button>
-                <div style="width: 300px;">
-                    <input type="text" class="form-control" placeholder="Buscar curso..." @bind="filtro" @bind:event="oninput" />
+                <div class="d-flex" style="width: 350px;">
+                    <input type="text" class="form-control me-2" placeholder="Buscar curso..." @bind="filtro" @bind:event="oninput" @onkeyup="HandleKeyUp" />
+                    <button class="btn btn-outline-primary" type="button" @onclick="Buscar">Buscar</button>
                 </div>
             </div>
 
@@ -39,13 +40,13 @@
                                 <th>Cupo</th>
                                 <th>Descripción</th>
                                 <th>Materia</th>
-                                <th></th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if (listaFiltrada != null && listaFiltrada.Any())
+                            @if (lista != null && lista.Any())
                             {
-                                @foreach (var item in listaFiltrada)
+                                @foreach (var item in lista)
                                 {
                                     <tr>
                                         <td>@item.ID</td>
@@ -64,6 +65,14 @@
                                     </tr>
                                 }
                             }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-3">
+                                        No se encontraron cursos.
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -72,37 +81,51 @@
     </div>
 </div>
 
-<CursoModal @ref="modal" OnChanged="LoadData" />
+<CursoModal @ref="modal" OnChanged="Buscar" />
 
 @code {
     private List<CursoDTO>? lista;
     private bool loading = true;
     private CursoModal modal = null!;
-
     private string filtro = "";
-    private IEnumerable<CursoDTO>? listaFiltrada => 
-        string.IsNullOrEmpty(filtro) ? lista : lista?.Where(c => c.Descripcion != null && c.Descripcion.Contains(filtro, StringComparison.OrdinalIgnoreCase));
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadData();
+        await Buscar();
     }
 
-    private async Task LoadData()
+    private async Task Buscar()
     {
         try
         {
             loading = true;
-            var res = await CursoApiClient.GetAllAsync();
-            lista = res?.ToList();
+            if (string.IsNullOrWhiteSpace(filtro))
+            {
+                var res = await CursoApiClient.GetAllAsync();
+                lista = res?.ToList();
+            }
+            else
+            {
+                // Consulta al endpoint de búsqueda de la Web API
+                var res = await CursoApiClient.GetByCriteriaAsync(filtro);
+                lista = res?.ToList();
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            Console.WriteLine($"Error al buscar cursos: {ex.Message}");
         }
         finally
         {
             loading = false;
+        }
+    }
+
+    private async Task HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await Buscar();
         }
     }
 
@@ -119,12 +142,12 @@
     private async Task ConfirmDelete(CursoDTO item)
     {
         var confirm = await JSRuntime.InvokeAsync<bool>("confirm", 
-            $"¿Está seguro que desea eliminar el curso {item.Descripcion}?");
+            $"¿Está seguro que desea eliminar el curso '{item.Descripcion}'?");
         
         if (confirm)
         {
             await CursoApiClient.DeleteAsync(item.ID);
-            await LoadData();
+            await Buscar();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Application.Services;
+using Microsoft.EntityFrameworkCore;
+using Application.Services;
 using Data;
 using WebAPI;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,6 +13,12 @@ var builder = WebApplication.CreateBuilder(args);
 // 1. INYECCIÓN DE DEPENDENCIAS (Servicios Base)
 // =========================================================================
 // Le decimos a la API qué clase concreta instanciar cuando alguien pide una interfaz
+builder.Services.AddDbContext<TPIContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IPlanRepository, PlanRepository>();
+builder.Services.AddScoped<IPlanService, PlanService>();
+
 builder.Services.AddScoped<ICursoRepository, CursoRepository>();
 builder.Services.AddScoped<ICursoService, CursoService>();
 
@@ -128,6 +135,7 @@ app.UseAuthorization();  // 2do: "Qué podés hacer" (Verifica permisos)
 // 5. MAPEO DE ENDPOINTS (Rutas de la API)
 // =========================================================================
 // Aquí conectamos cada ruta (ej. /api/cursos) con su lógica
+app.MapPlanEndpoints();
 app.MapCursoEndpoints();
 app.MapEspecialidadEndpoints();
 app.MapMateriaEndpoints();

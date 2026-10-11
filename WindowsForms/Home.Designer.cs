@@ -31,17 +31,17 @@
             menuStrip1 = new MenuStrip();
             cursosToolStripMenuItem = new ToolStripMenuItem();
             especialidadesToolStripMenuItem = new ToolStripMenuItem();
+            planesToolStripMenuItem = new ToolStripMenuItem();
             cerrarSesionToolStripMenuItem = new ToolStripMenuItem();
-            cursosPorMateriaToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { cursosToolStripMenuItem, especialidadesToolStripMenuItem, cursosPorMateriaToolStripMenuItem, cerrarSesionToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { cursosToolStripMenuItem, especialidadesToolStripMenuItem, planesToolStripMenuItem, cerrarSesionToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(542, 24);
+            menuStrip1.Size = new Size(698, 24);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -59,6 +59,13 @@
             especialidadesToolStripMenuItem.Text = "Especialidades";
             especialidadesToolStripMenuItem.Click += especialidadesToolStripMenuItem_Click;
             // 
+            // planesToolStripMenuItem
+            // 
+            planesToolStripMenuItem.Name = "planesToolStripMenuItem";
+            planesToolStripMenuItem.Size = new Size(53, 20);
+            planesToolStripMenuItem.Text = "Planes";
+            planesToolStripMenuItem.Click += planesToolStripMenuItem_Click;
+            // 
             // cerrarSesionToolStripMenuItem
             // 
             cerrarSesionToolStripMenuItem.Name = "cerrarSesionToolStripMenuItem";
@@ -66,18 +73,11 @@
             cerrarSesionToolStripMenuItem.Text = "Cerrar Sesion";
             cerrarSesionToolStripMenuItem.Click += cerrarSesionToolStripMenuItem_Click;
             // 
-            // cursosPorMateriaToolStripMenuItem
-            // 
-            cursosPorMateriaToolStripMenuItem.Name = "cursosPorMateriaToolStripMenuItem";
-            cursosPorMateriaToolStripMenuItem.Size = new Size(119, 20);
-            cursosPorMateriaToolStripMenuItem.Text = "Cursos por materia";
-            cursosPorMateriaToolStripMenuItem.Click += cursosPorMateriaToolStripMenuItem_Click;
-            // 
             // Home
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(542, 302);
+            ClientSize = new Size(698, 302);
             Controls.Add(menuStrip1);
             IsMdiContainer = true;
             MainMenuStrip = menuStrip1;
@@ -96,6 +96,6 @@
         private ToolStripMenuItem cursosToolStripMenuItem;
         private ToolStripMenuItem especialidadesToolStripMenuItem;
         private ToolStripMenuItem cerrarSesionToolStripMenuItem;
-        private ToolStripMenuItem cursosPorMateriaToolStripMenuItem;
+        private ToolStripMenuItem planesToolStripMenuItem;
     }
 }

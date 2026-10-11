@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,7 +38,7 @@ namespace Entidades
         }
         public void SetIDPlan(int idPlan)
         {
-            if (idPlan <= 0) throw new ArgumentException("El ID del plan debe ser válido.");
+            if (idPlan < 0) throw new ArgumentException("El ID del plan no puede ser negativo.");
             IDPlan = idPlan;
         }
     }

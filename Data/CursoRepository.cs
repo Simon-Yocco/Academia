@@ -1,31 +1,34 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Entidades;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
+using System.Linq;
 
 namespace Data
 {
     public class CursoRepository : ICursoRepository
     {
-        private TPIContext CreateContext()
+        private readonly TPIContext _context;
+
+        public CursoRepository(TPIContext context)
         {
-            return new TPIContext();
+            _context = context;
         }
 
         public async Task AddAsync(Curso curso)
         {
-            using var context = CreateContext();
-            context.Cursos.Add(curso);
-            await context.SaveChangesAsync();
+            _context.Cursos.Add(curso);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            using var context = CreateContext();
-            var curso = await context.Cursos.FindAsync(id);
+            var curso = await _context.Cursos.FindAsync(id);
             if (curso != null)
             {
-                context.Cursos.Remove(curso);
-                await context.SaveChangesAsync();
+                _context.Cursos.Remove(curso);
+                await _context.SaveChangesAsync();
                 return true;
             }
             return false;
@@ -33,15 +36,13 @@ namespace Data
 
         public async Task<Curso?> GetAsync(int id)
         {
-            using var context = CreateContext();
-            var curso = await context.Cursos.FindAsync(id);
+            var curso = await _context.Cursos.FindAsync(id);
             return curso;
         }
 
         public async Task<IEnumerable<Curso>> GetAllAsync()
         {
-            using var context = CreateContext();
-            var cursos = await context.Cursos
+            var cursos = await _context.Cursos
                 .Include(c => c.Materia)
                 .Include(c => c.Comision)
                 .OrderByDescending(c => c.AnioCalendario)
@@ -51,8 +52,7 @@ namespace Data
 
         public async Task<bool> UpdateAsync(Curso curso)
         {
-            using var context = CreateContext();
-            var existingCurso = await context.Cursos.FindAsync(curso.ID);
+            var existingCurso = await _context.Cursos.FindAsync(curso.ID);
             if (existingCurso != null)
             {
                 existingCurso.SetAnioCalendario(curso.AnioCalendario);
@@ -61,11 +61,12 @@ namespace Data
                 existingCurso.SetIDcomision(curso.IDcomision);
                 existingCurso.SetIDmateria(curso.IDmateria);
 
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return true;
             }
             return false;
         }
+        
         public async Task<IEnumerable<Curso>> GetByCriteriaAsync(string texto)
         {
             const string sql = @"
@@ -82,10 +83,9 @@ namespace Data
                 ORDER BY c.AnioCalendario DESC";
 
             var cursos = new List<Curso>();
-            using var context = CreateContext();
-            string connectionString = context.Database.GetConnectionString();
+            string connectionString = _context.Database.GetConnectionString();
 
-            // Asignamos el patrón de búsqueda directamente
+            // Asignamos el patron de busqueda directamente
             string searchPattern = $"%{texto}%";
             using var connection = new SqlConnection(connectionString);
             using var command = new SqlCommand(sql, connection);
@@ -105,7 +105,7 @@ namespace Data
                 // Crear y asignar la Materia
                 var materia = new Materia(reader.GetInt32(5), reader.GetString(6), 1, 1, 1);
                 curso.SetMateria(materia);
-                // Crear y asignar la Comisión
+                // Crear y asignar la Comision
                 var comision = new Comision(reader.GetInt32(4), 2000, reader.GetString(7), 1);
                 curso.SetComision(comision);
                 cursos.Add(curso);

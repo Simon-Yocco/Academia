@@ -1,0 +1,346 @@
+@using DTOs
+@using API.Clients
+
+@if (showModal)
+{
+    <div class="modal fade show" tabindex="-1" style="display:block; background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(mode == FormMode.Add ? "Agregar" : "Editar") Plan de Estudio</h5>
+                    <button type="button" class="btn-close" @onclick="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger">@errorMessage</div>
+                    }
+
+                    @if (mode == FormMode.Update)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">ID</label>
+                            <input type="text" class="form-control" value="@current.ID" readonly />
+                        </div>
+                    }
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Descripción del Plan *</label>
+                            <input type="text" class="form-control" placeholder="Ej: Plan 2024" @bind="current.Descripcion" />
+                            @if (validationErrors.ContainsKey("Descripcion"))
+                            {
+                                <div class="text-danger small">@validationErrors["Descripcion"]</div>
+                            }
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Especialidad *</label>
+                            <select class="form-select" @bind="current.IDEspecialidad">
+                                <option value="0">-- Seleccione Especialidad --</option>
+                                @if (especialidades != null)
+                                {
+                                    @foreach (var esp in especialidades)
+                                    {
+                                        <option value="@esp.ID">@esp.Descripcion</option>
+                                    }
+                                }
+                            </select>
+                            @if (validationErrors.ContainsKey("Especialidad"))
+                            {
+                                <div class="text-danger small">@validationErrors["Especialidad"]</div>
+                            }
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <!-- Sección Maestro/Detalle: Materias -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light fw-bold">
+                            Materias del Plan (Detalle)
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-2 align-items-end mb-3">
+                                <div class="col-md-5">
+                                    <label class="form-label small">Nombre de la Materia</label>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Ej: Álgebra" @bind="nuevaMateriaDesc" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small">Hs Semanales</label>
+                                    <input type="number" class="form-control form-control-sm" min="1" @bind="nuevaMateriaHsSemanales" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small">Hs Totales</label>
+                                    <input type="number" class="form-control form-control-sm" min="1" @bind="nuevaMateriaHsTotales" />
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-sm btn-success w-100" title="Agregar a la lista" @onclick="AgregarMateriaALista">
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                            @if (!string.IsNullOrEmpty(materiaError))
+                            {
+                                <div class="text-danger small mb-2">@materiaError</div>
+                            }
+
+                            @if (validationErrors.ContainsKey("Materias"))
+                            {
+                                <div class="text-danger small mb-2">@validationErrors["Materias"]</div>
+                            }
+
+                            <!-- Grilla temporal de materias -->
+                            @if (current.Materias == null || !current.Materias.Any())
+                            {
+                                <div class="alert alert-warning py-2 mb-0 small">
+                                    No hay materias agregadas aún. Ingrese una materia arriba y presione el botón (+).
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-bordered table-hover mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Materia</th>
+                                                <th style="width: 120px;">Hs Semanales</th>
+                                                <th style="width: 120px;">Hs Totales</th>
+                                                <th style="width: 80px;" class="text-center">Quitar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var m in current.Materias)
+                                            {
+                                                <tr>
+                                                    <td>@m.Descripcion</td>
+                                                    <td>@m.HSSemanales</td>
+                                                    <td>@m.HSTotales</td>
+                                                    <td class="text-center">
+                                                        <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" @onclick="() => QuitarMateria(m)">
+                                                            &times;
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="Close">Cancelar</button>
+                    <button type="button" class="btn btn-primary" disabled="@saving" @onclick="HandleValidSubmit">
+                        @if (saving)
+                        {
+                            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                            <span>Guardando...</span>
+                        }
+                        else
+                        {
+                            <span>Guardar Plan</span>
+                        }
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public EventCallback OnChanged { get; set; }
+
+    private bool showModal = false;
+    private FormMode mode = FormMode.Add;
+    private PlanDTO current = new PlanDTO();
+    private bool saving = false;
+    private string errorMessage = string.Empty;
+    private string materiaError = string.Empty;
+    private Dictionary<string, string> validationErrors = new Dictionary<string, string>();
+
+    private List<EspecialidadDTO>? especialidades;
+
+    // Campos temporales para agregar materia
+    private string nuevaMateriaDesc = "";
+    private int nuevaMateriaHsSemanales = 4;
+    private int nuevaMateriaHsTotales = 64;
+
+    public enum FormMode { Add, Update }
+
+    public async Task ShowAddModal()
+    {
+        mode = FormMode.Add;
+        current = new PlanDTO { Materias = new List<MateriaDTO>() };
+        ResetMateriaInputs();
+        await LoadEspecialidades();
+        ClearValidationErrors();
+        showModal = true;
+        StateHasChanged();
+    }
+
+    public async Task ShowEditModal(PlanDTO item)
+    {
+        mode = FormMode.Update;
+        // Clonamos para no alterar la lista principal si cancela
+        current = new PlanDTO
+        {
+            ID = item.ID,
+            Descripcion = item.Descripcion,
+            IDEspecialidad = item.IDEspecialidad,
+            Materias = item.Materias != null
+                ? item.Materias.Select(m => new MateriaDTO
+                {
+                    ID = m.ID,
+                    Descripcion = m.Descripcion,
+                    HSSemanales = m.HSSemanales,
+                    HSTotales = m.HSTotales,
+                    IDPlan = m.IDPlan
+                }).ToList()
+                : new List<MateriaDTO>()
+        };
+
+        ResetMateriaInputs();
+        await LoadEspecialidades();
+        ClearValidationErrors();
+        showModal = true;
+        StateHasChanged();
+    }
+
+    private async Task LoadEspecialidades()
+    {
+        try
+        {
+            var res = await EspecialidadApiClient.GetAllAsync();
+            especialidades = res?.ToList();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error al cargar especialidades: {ex.Message}";
+        }
+    }
+
+    private void AgregarMateriaALista()
+    {
+        materiaError = string.Empty;
+
+        if (string.IsNullOrWhiteSpace(nuevaMateriaDesc))
+        {
+            materiaError = "Ingrese la descripción de la materia.";
+            return;
+        }
+
+        if (nuevaMateriaHsSemanales <= 0)
+        {
+            materiaError = "Las horas semanales deben ser mayores a 0.";
+            return;
+        }
+
+        if (nuevaMateriaHsTotales <= 0)
+        {
+            materiaError = "Las horas totales deben ser mayores a 0.";
+            return;
+        }
+
+        current.Materias ??= new List<MateriaDTO>();
+        current.Materias.Add(new MateriaDTO
+        {
+            ID = 0,
+            Descripcion = nuevaMateriaDesc.Trim(),
+            HSSemanales = nuevaMateriaHsSemanales,
+            HSTotales = nuevaMateriaHsTotales,
+            IDPlan = current.ID
+        });
+
+        ResetMateriaInputs();
+    }
+
+    private void QuitarMateria(MateriaDTO m)
+    {
+        current.Materias?.Remove(m);
+    }
+
+    private void ResetMateriaInputs()
+    {
+        nuevaMateriaDesc = "";
+        nuevaMateriaHsSemanales = 4;
+        nuevaMateriaHsTotales = 64;
+        materiaError = string.Empty;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (!Validate()) return;
+
+        try
+        {
+            saving = true;
+            errorMessage = string.Empty;
+
+            if (mode == FormMode.Add)
+            {
+                await PlanApiClient.AddAsync(current);
+            }
+            else
+            {
+                var ok = await PlanApiClient.UpdateAsync(current);
+                if (!ok)
+                {
+                    throw new Exception("No se pudo actualizar el plan.");
+                }
+            }
+
+            await OnChanged.InvokeAsync();
+            Close();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            saving = false;
+        }
+    }
+
+    private bool Validate()
+    {
+        ClearValidationErrors();
+        bool isValid = true;
+
+        if (string.IsNullOrWhiteSpace(current.Descripcion))
+        {
+            validationErrors["Descripcion"] = "La descripción del plan es requerida.";
+            isValid = false;
+        }
+
+        if (current.IDEspecialidad <= 0)
+        {
+            validationErrors["Especialidad"] = "Debe seleccionar una especialidad.";
+            isValid = false;
+        }
+
+        if (current.Materias == null || !current.Materias.Any())
+        {
+            validationErrors["Materias"] = "Debe agregar al menos una materia al plan.";
+            isValid = false;
+        }
+
+        StateHasChanged();
+        return isValid;
+    }
+
+    private void ClearValidationErrors()
+    {
+        validationErrors.Clear();
+        errorMessage = string.Empty;
+        materiaError = string.Empty;
+    }
+
+    private void Close()
+    {
+        showModal = false;
+        ClearValidationErrors();
+        StateHasChanged();
+    }
+}

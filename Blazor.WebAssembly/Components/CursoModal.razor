@@ -1,4 +1,4 @@
-﻿@using DTOs
+@using DTOs
 @using API.Clients
 
 @if (showModal)
@@ -165,9 +165,17 @@
             errorMessage = string.Empty;
 
             if (mode == FormMode.Add)
+            {
                 await CursoApiClient.AddAsync(current);
+            }
             else
-                await CursoApiClient.UpdateAsync(current);
+            {
+                var ok = await CursoApiClient.UpdateAsync(current);
+                if (!ok)
+                {
+                    throw new Exception("No se pudo actualizar el curso.");
+                }
+            }
 
             await OnChanged.InvokeAsync();
             Close();

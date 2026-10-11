@@ -1,4 +1,4 @@
-﻿using API.Clients;
+using API.Clients;
 using DTOs;
 
 namespace WindowsForms
@@ -77,7 +77,7 @@ namespace WindowsForms
             var cursoSeleccionado = (DTOs.CursoDTO)filaSeleccionada.DataBoundItem;
 
             var formDetalle = new CursoDetalle(FormMode.Update, cursoSeleccionado);
-            if (formDetalle.ShowDialog() == DialogResult.OK)
+            if (formDetalle.ShowDialog(this) == DialogResult.OK)
             {
                 await CargarGrilla();
             }
@@ -106,7 +106,7 @@ namespace WindowsForms
         private async void agregarButton_Click(object sender, EventArgs e)
         {
             var formDetalle = new CursoDetalle(FormMode.Add, new DTOs.CursoDTO());
-            if (formDetalle.ShowDialog() == DialogResult.OK)
+            if (formDetalle.ShowDialog(this) == DialogResult.OK)
             {
                 await CargarGrilla();
             }

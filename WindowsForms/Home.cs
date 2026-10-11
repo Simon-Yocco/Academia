@@ -1,12 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace WindowsForms
 {
@@ -49,9 +40,9 @@ namespace WindowsForms
             Application.Restart();
         }
 
-        private void cursosPorMateriaToolStripMenuItem_Click(object sender, EventArgs e)
+        private void planesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AbrirFormulario<MateriaCursos>();
+            AbrirFormulario<PlanLista>();
         }
     }
 }

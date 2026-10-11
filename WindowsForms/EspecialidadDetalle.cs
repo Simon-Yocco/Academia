@@ -1,4 +1,4 @@
-﻿using DTOs;
+using DTOs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -64,16 +64,29 @@ namespace WindowsForms
             // Pasamos lo que escribió el usuario a nuestro DTO
             _especialidad.Descripcion = descripcionTextBox.Text;
             // Dependiendo del modo, le decimos al servicio qué hacer
-            if (_mode == FormMode.Add)
+            try
             {
-                await EspecialidadApiClient.AddAsync(_especialidad);
+                aceptarButton.Enabled = false;
+                if (_mode == FormMode.Add)
+                {
+                    await EspecialidadApiClient.AddAsync(_especialidad);
+                }
+                else if (_mode == FormMode.Update)
+                {
+                    var ok = await EspecialidadApiClient.UpdateAsync(_especialidad);
+                    if (!ok)
+                    {
+                        throw new Exception("No se pudo actualizar la especialidad.");
+                    }
+                }
+                // Cerramos avisando que todo salió bien
+                this.DialogResult = DialogResult.OK;
             }
-            else if (_mode == FormMode.Update)
+            catch (Exception ex)
             {
-                await EspecialidadApiClient.UpdateAsync(_especialidad);
+                MessageBox.Show($"Error al guardar: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                aceptarButton.Enabled = true;
             }
-            // Cerramos avisando que todo salió bien
-            this.DialogResult = DialogResult.OK;
         }
 
         private void cancelarButton_Click(object sender, EventArgs e)

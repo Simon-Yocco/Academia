@@ -1,4 +1,4 @@
-﻿using API.Clients;
+using API.Clients;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -78,7 +78,7 @@ namespace WindowsForms
             var especialidadSeleccionada = (DTOs.EspecialidadDTO)filaSeleccionada.DataBoundItem;
             
             var formDetalle = new EspecialidadDetalle(FormMode.Update, especialidadSeleccionada);
-            if (formDetalle.ShowDialog() == DialogResult.OK)
+            if (formDetalle.ShowDialog(this) == DialogResult.OK)
             {
                 await CargarGrilla();
             }
@@ -88,7 +88,7 @@ namespace WindowsForms
         {
             var formDetalle = new EspecialidadDetalle(FormMode.Add, new DTOs.EspecialidadDTO());
 
-            if (formDetalle.ShowDialog() == DialogResult.OK)
+            if (formDetalle.ShowDialog(this) == DialogResult.OK)
             {
                 await CargarGrilla();
             }

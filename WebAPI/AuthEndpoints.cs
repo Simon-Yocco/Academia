@@ -1,4 +1,4 @@
-﻿using DTOs;
+using DTOs;
 using Application.Services;
 
 namespace WebAPI
@@ -20,8 +20,8 @@ namespace WebAPI
                     return Results.Unauthorized();
                 }
 
-                // Respuesta exitosa incluyendo el token generado
-                var response = new LoginResponse { Token = token };
+                // Respuesta exitosa incluyendo el token generado y el nombre de usuario
+                var response = new LoginResponse { Token = token, Username = request.Username };
                 return Results.Ok(response);
             })
             // Endpoint público sin autenticación requerida

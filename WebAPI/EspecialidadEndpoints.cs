@@ -1,4 +1,4 @@
-﻿using Application.Services;
+using Application.Services;
 using DTOs;
 
 namespace WebAPI
@@ -41,43 +41,78 @@ namespace WebAPI
 
             app.MapPost("/especialidades", async (EspecialidadDTO dto, IEspecialidadService especialidadService) =>
             {
-                EspecialidadDTO especialidadDTO = await especialidadService.AddAsync(dto);
-                return Results.Created($"/especialidades/{especialidadDTO.ID}", especialidadDTO);
+                try
+                {
+                    EspecialidadDTO especialidadDTO = await especialidadService.AddAsync(dto);
+                    return Results.Created($"/especialidades/{especialidadDTO.ID}", especialidadDTO);
+                }
+                catch (ArgumentException ex)
+                {
+                    return Results.BadRequest(new { error = ex.Message });
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem(ex.Message);
+                }
             })
             .WithName("AddEspecialidad")
             .Produces<EspecialidadDTO>(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi().RequireAuthorization();
 
             app.MapPut("/especialidades", async (EspecialidadDTO dto, IEspecialidadService especialidadService) =>
             {
-                var found = await especialidadService.UpdateAsync(dto);
-
-                if (!found)
+                try
                 {
-                    return Results.NotFound();
+                    var found = await especialidadService.UpdateAsync(dto);
+
+                    if (!found)
+                    {
+                        return Results.NotFound();
+                    }
+
+                    return Results.NoContent();
                 }
-
-                return Results.NoContent();
-
+                catch (ArgumentException ex)
+                {
+                    return Results.BadRequest(new { error = ex.Message });
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem(ex.Message);
+                }
             })
             .WithName("UpdateEspecialidad")
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi().RequireAuthorization();
 
             app.MapDelete("/especialidades/{id}", async (int id, IEspecialidadService especialidadService) =>
             {
-                var deleted = await especialidadService.DeleteAsync(id);
-                if (!deleted)
+                try
                 {
-                    return Results.NotFound();
-                }
+                    var deleted = await especialidadService.DeleteAsync(id);
+                    if (!deleted)
+                    {
+                        return Results.NotFound();
+                    }
 
-                return Results.NoContent();
+                    return Results.NoContent();
+                }
+                catch (ArgumentException ex)
+                {
+                    return Results.BadRequest(new { error = ex.Message });
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem(ex.Message);
+                }
             })
             .WithName("DeleteEspecialidad")
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi().RequireAuthorization();
         }
     }
