@@ -17,5 +17,7 @@ namespace DTOs
         public string Nombre => Persona?.Nombre ?? string.Empty;
         public string Apellido => Persona?.Apellido ?? string.Empty;
         public string Rol => Persona?.TipoPersona ?? string.Empty;
+        public int Legajo => Persona?.Legajo ?? 0;
+        public string Email => Persona?.Email ?? string.Empty;
     }
 }

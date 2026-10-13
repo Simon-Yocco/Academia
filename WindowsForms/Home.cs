@@ -16,6 +16,7 @@ namespace WindowsForms
                 planesToolStripMenuItem.Visible = false;
                 especialidadesToolStripMenuItem.Visible = false;
                 comisionesToolStripMenuItem.Visible = false;
+                usuariosToolStripMenuItem.Visible = false;
             }
         }
 
@@ -62,6 +63,11 @@ namespace WindowsForms
         private void comisionesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AbrirFormulario<ComisionLista>();
+        }
+
+        private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<UsuarioLista>();
         }
     }
 }
