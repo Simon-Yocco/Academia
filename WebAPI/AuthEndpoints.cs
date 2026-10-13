@@ -13,15 +13,14 @@ namespace WebAPI
             group.MapPost("/login", async (LoginRequest request, AuthService authService) =>
             {
                 // Procesamiento de las credenciales vía servicio de aplicación
-                var token = await authService.LoginAsync(request);
+                var response = await authService.LoginAsync(request);
                 
-                if (string.IsNullOrEmpty(token))
+                if (response == null)
                 {
                     return Results.Unauthorized();
                 }
 
-                // Respuesta exitosa incluyendo el token generado y el nombre de usuario
-                var response = new LoginResponse { Token = token, Username = request.Username };
+                // Respuesta exitosa incluyendo el token generado, usuario y rol
                 return Results.Ok(response);
             })
             // Endpoint público sin autenticación requerida

@@ -1,4 +1,4 @@
-﻿using DTOs;
+using DTOs;
 using Data;
 using Entidades;
 using Microsoft.Extensions.Configuration;
@@ -21,7 +21,7 @@ namespace Application.Services
             _configuration = configuration;
         }
 
-        public async Task<string?> LoginAsync(LoginRequest loginRequest)
+        public async Task<LoginResponse?> LoginAsync(LoginRequest loginRequest)
         {
             // Validación de formato de credenciales
             if (string.IsNullOrEmpty(loginRequest.Username) || string.IsNullOrEmpty(loginRequest.Password))
@@ -39,7 +39,16 @@ namespace Application.Services
             }
 
             // Generación y firma del token JWT
-            return GenerateJwtToken(usuario);
+            var token = GenerateJwtToken(usuario);
+            var rol = usuario.Persona?.TipoPersona.ToString() ?? "Alumno";
+
+            return new LoginResponse
+            {
+                Token = token,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(60),
+                Username = usuario.NombreUsuario,
+                Role = rol
+            };
         }
 
         private string GenerateJwtToken(Usuario usuario)
@@ -53,11 +62,16 @@ namespace Application.Services
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+            // Obtención del rol a partir de la Persona asociada
+            var rol = usuario.Persona?.TipoPersona.ToString() ?? "Alumno";
+
             // Definición de reclamos (claims) integrados en el payload del JWT
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, usuario.ID.ToString()),
                 new Claim(ClaimTypes.Name, usuario.NombreUsuario),
+                new Claim(ClaimTypes.Role, rol),
+                new Claim("id_persona", usuario.IDPersona.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

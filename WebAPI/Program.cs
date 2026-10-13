@@ -31,8 +31,9 @@ builder.Services.AddScoped<IMateriaService, MateriaService>();
 builder.Services.AddScoped<IComisionRepository, ComisionRepository>();
 builder.Services.AddScoped<IComisionService, ComisionService>();
 
+builder.Services.AddScoped<IPersonaRepository, PersonaRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<Application.Services.AuthService>();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -141,7 +142,14 @@ app.MapEspecialidadEndpoints();
 app.MapMateriaEndpoints();
 app.MapComisionEndpoints();
 app.MapAuthEndpoints();
-// app.MapUsuarioEndpoints();
+app.MapUsuarioEndpoints();
+
+// Aseguramos que la base de datos y sus tablas estén creadas al iniciar
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<TPIContext>();
+    context.Database.EnsureCreated();
+}
 
 // Arrancamos el servidor
 app.Run();

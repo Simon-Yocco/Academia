@@ -1,114 +1,151 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DTOs;
 using Entidades;
 using Data;
 
 namespace Application.Services
 {
-    public class UsuarioService
+    public class UsuarioService : IUsuarioService
     {
-        private readonly IUsuarioRepository _repository;
+        private readonly IUsuarioRepository usuarioRepository;
+        private readonly IPersonaRepository personaRepository;
 
-        public UsuarioService(IUsuarioRepository repository)
+        public UsuarioService(IUsuarioRepository usuarioRepository, IPersonaRepository personaRepository)
         {
-            _repository = repository;
+            this.usuarioRepository = usuarioRepository;
+            this.personaRepository = personaRepository;
         }
+
         public async Task<IEnumerable<UsuarioDTO>> GetAllAsync()
         {
-            var usuarios = await _repository.GetAllAsync();
-
-            // Mapeo de Usuario (Entidad) a UsuarioCursoDTO
-            return usuarios.Select(u => new UsuarioDTO
-            {
-                ID = u.ID,
-                NombreUsuario = u.NombreUsuario,
-                Nombre = u.Nombre,
-                Apellido = u.Apellido,
-                Habilitado = u.Habilitado
-            }).ToList();
+            var usuarios = await usuarioRepository.GetAllAsync();
+            return usuarios.Select(MapearADTO).ToList();
         }
 
         public async Task<UsuarioDTO?> GetByIdAsync(int id)
         {
-            var usuario = await _repository.GetAsync(id);
+            var usuario = await usuarioRepository.GetAsync(id);
             if (usuario == null) return null;
 
-            return new UsuarioDTO
-            {
-                ID = usuario.ID,
-                NombreUsuario = usuario.NombreUsuario,
-                Nombre = usuario.Nombre,
-                Apellido = usuario.Apellido,
-                Habilitado = usuario.Habilitado
-            };
+            return MapearADTO(usuario);
         }
 
         public async Task<UsuarioDTO?> GetByUsernameAsync(string username)
         {
-            var usuario = await _repository.GetByUsernameAsync(username);
+            var usuario = await usuarioRepository.GetByUsernameAsync(username);
             if (usuario == null) return null;
 
-            return new UsuarioDTO
-            {
-                ID = usuario.ID,
-                NombreUsuario = usuario.NombreUsuario,
-                Nombre = usuario.Nombre,
-                Apellido = usuario.Apellido,
-                Habilitado = usuario.Habilitado
-            };
+            return MapearADTO(usuario);
         }
 
         public async Task<UsuarioDTO?> AddAsync(UsuarioDTO dto)
         {
-            // Mapeamos de DTO a Entidad.
-            var usuario = new Usuario(0, dto.Apellido, dto.Clave, dto.Habilitado, dto.Nombre, dto.NombreUsuario);
-            await _repository.AddAsync(usuario);
+            // Mapeamos y guardamos la Persona
+            var tipo = Enum.TryParse<Persona.TiposPersonas>(dto.Persona.TipoPersona, true, out var parsedTipo)
+                ? parsedTipo
+                : Persona.TiposPersonas.Alumno;
+
+            var persona = new Persona(
+                0,
+                dto.Persona.Nombre,
+                dto.Persona.Apellido,
+                dto.Persona.Direccion,
+                dto.Persona.Email,
+                dto.Persona.Telefono,
+                dto.Persona.FechaNacimiento,
+                dto.Persona.Legajo,
+                tipo,
+                dto.Persona.IDPlan
+            );
+            await personaRepository.AddAsync(persona);
+
+            // Mapeamos de DTO a Entidad Usuario
+            var usuario = new Usuario(0, dto.Clave, dto.Habilitado, dto.NombreUsuario, persona.ID);
+            await usuarioRepository.AddAsync(usuario);
 
             // Actualizamos el ID del DTO con el que se generó en la base de datos
             dto.ID = usuario.ID;
+            dto.IDPersona = persona.ID;
+            dto.Persona.ID = persona.ID;
 
             return dto;
         }
 
         public async Task<bool> UpdateAsync(UsuarioDTO dto)
         {
-            var existing = await _repository.GetAsync(dto.ID);
-
+            var existing = await usuarioRepository.GetAsync(dto.ID);
             if (existing == null)
                 return false;
 
-            // Aca le pasas dto.ID al principio
-            var usuario = new Usuario(dto.ID, dto.Apellido, dto.Clave, dto.Habilitado, dto.Nombre, dto.NombreUsuario);
+            // Actualizamos la entidad Usuario
+            existing.SetUsuario(dto.NombreUsuario);
+            existing.SetHabilitado(dto.Habilitado);
+            if (!string.IsNullOrWhiteSpace(dto.Clave))
+            {
+                existing.SetClave(dto.Clave);
+            }
 
-            return await _repository.UpdateAsync(usuario);
+            // Actualizamos la Persona asociada
+            if (existing.Persona != null && dto.Persona != null)
+            {
+                if (Enum.TryParse<Persona.TiposPersonas>(dto.Persona.TipoPersona, true, out var tipo))
+                {
+                    existing.Persona.SetTipoPersona(tipo);
+                }
+                existing.Persona.SetNombre(dto.Persona.Nombre);
+                existing.Persona.SetApellido(dto.Persona.Apellido);
+                existing.Persona.SetDireccion(dto.Persona.Direccion);
+                existing.Persona.SetEmail(dto.Persona.Email);
+                existing.Persona.SetTelefono(dto.Persona.Telefono);
+                existing.Persona.SetFechaNacimiento(dto.Persona.FechaNacimiento);
+                existing.Persona.SetLegajo(dto.Persona.Legajo);
+                existing.Persona.SetIDPlan(dto.Persona.IDPlan);
+
+                await personaRepository.UpdateAsync(existing.Persona);
+            }
+
+            return await usuarioRepository.UpdateAsync(existing);
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            return await _repository.DeleteAsync(id);
+            var usuario = await usuarioRepository.GetAsync(id);
+            if (usuario == null)
+                return false;
+
+            int idPersona = usuario.IDPersona;
+            var deleted = await usuarioRepository.DeleteAsync(id);
+            if (deleted && idPersona > 0)
+            {
+                await personaRepository.DeleteAsync(idPersona);
+            }
+
+            return deleted;
         }
 
-        public async Task<UsuarioDTO?> LoginAsync(string username, string password)
+        // Función para simplificar y reutilizar el mapeo de Entidad a DTO
+        private static UsuarioDTO MapearADTO(Usuario u)
         {
-            var user = await _repository.GetByUsernameAsync(username);
-            
-            // Validamos que exista y que la clave coincida
-            if (user != null && user.Clave == password)
+            return new UsuarioDTO
             {
-                return new UsuarioDTO
+                ID = u.ID,
+                NombreUsuario = u.NombreUsuario,
+                Habilitado = u.Habilitado,
+                IDPersona = u.IDPersona,
+                Persona = new PersonaDTO
                 {
-                    ID = user.ID,
-                    NombreUsuario = user.NombreUsuario,
-                    Nombre = user.Nombre,
-                    Apellido = user.Apellido,
-                    Habilitado = user.Habilitado,
-                };
-            }
-            return null;
+                    ID = u.Persona?.ID ?? 0,
+                    Nombre = u.Persona?.Nombre ?? string.Empty,
+                    Apellido = u.Persona?.Apellido ?? string.Empty,
+                    Direccion = u.Persona?.Direccion ?? string.Empty,
+                    Email = u.Persona?.Email ?? string.Empty,
+                    Telefono = u.Persona?.Telefono ?? string.Empty,
+                    FechaNacimiento = u.Persona?.FechaNacimiento ?? DateTime.Today,
+                    Legajo = u.Persona?.Legajo ?? 0,
+                    TipoPersona = u.Persona?.TipoPersona.ToString() ?? "Alumno",
+                    IDPlan = u.Persona?.IDPlan,
+                    PlanDescripcion = u.Persona?.Plan?.Descripcion
+                }
+            };
         }
     }
 }

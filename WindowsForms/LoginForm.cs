@@ -36,6 +36,8 @@ namespace WindowsForms
                     {
                         // Almacenamos el token JWT en el cliente base para las siguientes peticiones
                         BaseApiClient.Token = response.Token;
+                        BaseApiClient.Rol = response.Role;
+                        BaseApiClient.UsuarioActual = response.Username;
                         var usuarioLogueado = !string.IsNullOrWhiteSpace(response.Username) ? response.Username : usernameTextBox.Text.Trim();
                         MessageBox.Show($"¡Bienvenido {usuarioLogueado}!", "Éxito");
                         this.DialogResult = DialogResult.OK;

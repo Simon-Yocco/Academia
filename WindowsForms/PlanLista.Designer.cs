@@ -74,18 +74,19 @@
             agregarButton.UseVisualStyleBackColor = true;
             agregarButton.Click += agregarButton_Click;
             // 
-            // Form1
+            // PlanLista
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(854, 387);
+            ClientSize = new Size(854, 375);
             Controls.Add(agregarButton);
             Controls.Add(actualizaButton);
             Controls.Add(eliminarButton);
             Controls.Add(planDataGridView);
             FormBorderStyle = FormBorderStyle.FixedSingle;
-            Name = "Form1";
-            Text = "Form1";
+            Name = "PlanLista";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Planes";
             ((System.ComponentModel.ISupportInitialize)planDataGridView).EndInit();
             ResumeLayout(false);
         }

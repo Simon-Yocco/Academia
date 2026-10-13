@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +11,7 @@ namespace Entidades
         public int AnioEspecialidad { get; private set; }
         public string Descripcion { get; private set; } = string.Empty;
         public int IDPlan { get; private set; }
+        public Plan? Plan { get; private set; }
         public Comision() { }
         public Comision(int id, int anioEspecialidad, string descripcion, int idPlan)
         {

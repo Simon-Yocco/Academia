@@ -8,6 +8,7 @@ namespace Application.Services
     {
         Task<PlanDTO> AddAsync(PlanDTO dto);
         Task<IEnumerable<PlanDTO>> GetAllAsync();
+        Task<IEnumerable<PlanDTO>> GetByCriteriaAsync(string texto);
         Task<PlanDTO?> GetByIdAsync(int id);
         Task<bool> UpdateAsync(PlanDTO dto);
         Task<bool> DeleteAsync(int id);

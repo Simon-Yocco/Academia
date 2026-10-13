@@ -37,17 +37,23 @@ namespace Data
 
         public async Task<Usuario?> GetAsync(int id)
         {
-            return await _context.Usuarios.FindAsync(id);
+            return await _context.Usuarios
+                .Include(u => u.Persona)
+                .FirstOrDefaultAsync(u => u.ID == id);
         }
 
         public async Task<Usuario?> GetByUsernameAsync(string username)
         {
-            return await _context.Usuarios.FirstOrDefaultAsync(u => u.NombreUsuario == username && u.Habilitado);
+            return await _context.Usuarios
+                .Include(u => u.Persona)
+                .FirstOrDefaultAsync(u => u.NombreUsuario == username && u.Habilitado);
         }
 
         public async Task<IEnumerable<Usuario>> GetAllAsync()
         {
-            return await _context.Usuarios.ToListAsync();
+            return await _context.Usuarios
+                .Include(u => u.Persona)
+                .ToListAsync();
         }
 
         public async Task<bool> UpdateAsync(Usuario usuario)

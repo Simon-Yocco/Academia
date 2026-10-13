@@ -35,6 +35,16 @@ namespace WebAPI
             .WithOpenApi()
             .RequireAuthorization();
 
+            app.MapGet("/planes/buscar/{criteria}", async (string criteria, IPlanService planService) =>
+            {
+                var dtos = await planService.GetByCriteriaAsync(criteria);
+                return Results.Ok(dtos);
+            })
+            .WithName("GetPlanesByCriteria")
+            .Produces<List<PlanDTO>>(StatusCodes.Status200OK)
+            .WithOpenApi()
+            .RequireAuthorization();
+
             app.MapPost("/planes", async (PlanDTO dto, IPlanService planService) =>
             {
                 try

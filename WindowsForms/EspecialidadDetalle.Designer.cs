@@ -41,9 +41,9 @@
             idLabel.AutoSize = true;
             idLabel.Location = new Point(110, 76);
             idLabel.Name = "idLabel";
-            idLabel.Size = new Size(24, 15);
+            idLabel.Size = new Size(23, 15);
             idLabel.TabIndex = 0;
-            idLabel.Text = "ID: ";
+            idLabel.Text = "Id: ";
             // 
             // descripcionLabel
             // 
@@ -105,7 +105,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "EspecialidadDetalle";
             StartPosition = FormStartPosition.CenterParent;
-            Text = "Especialidad";
+            Text = "Especialidad - Detalle";
             ResumeLayout(false);
             PerformLayout();
         }

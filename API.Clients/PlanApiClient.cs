@@ -34,6 +34,19 @@ namespace API.Clients
             return null;
         }
 
+        public static async Task<IEnumerable<PlanDTO>> GetByCriteriaAsync(string criteria)
+        {
+            using var client = CreateHttpClient();
+            var response = await client.GetAsync($"planes/buscar/{System.Uri.EscapeDataString(criteria)}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<IEnumerable<PlanDTO>>()
+                       ?? new List<PlanDTO>();
+            }
+            throw new Exception("Error al obtener los planes filtrados");
+        }
+
         public static async Task<PlanDTO?> AddAsync(PlanDTO plan)
         {
             using var client = CreateHttpClient();

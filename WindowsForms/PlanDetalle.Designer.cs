@@ -172,7 +172,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "PlanDetalle";
             StartPosition = FormStartPosition.CenterParent;
-            Text = "Form1";
+            Text = "Plan - Detalle";
             ((System.ComponentModel.ISupportInitialize)materiaDataGridView).EndInit();
             ResumeLayout(false);
             PerformLayout();

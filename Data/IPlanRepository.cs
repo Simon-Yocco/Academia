@@ -8,6 +8,7 @@ namespace Data
     {
         Task AddAsync(Plan plan);
         Task<IEnumerable<Plan>> GetAllAsync();
+        Task<IEnumerable<Plan>> GetByCriteriaAsync(string texto);
         Task<Plan?> GetAsync(int id);
         Task<bool> UpdateAsync(Plan plan);
         Task<bool> DeleteAsync(int id);

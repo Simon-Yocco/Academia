@@ -30,6 +30,15 @@ namespace Data
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Plan>> GetByCriteriaAsync(string texto)
+        {
+            return await _context.Planes
+                .Include(p => p.Especialidad)
+                .Include(p => p.Materias)
+                .Where(p => p.Descripcion.Contains(texto) || (p.Especialidad != null && p.Especialidad.Descripcion.Contains(texto)))
+                .ToListAsync();
+        }
+
         public async Task<Plan?> GetAsync(int id)
         {
             return await _context.Planes

@@ -11,51 +11,50 @@ namespace Entidades
 {
     public class Usuario : BusinessEntity
     {
-        public string Apellido { get; private set; }
-        public string Clave { get; private set; }
+        public string Clave { get; private set; } = string.Empty;
         public bool Habilitado { get; private set; }
-        public string Nombre { get; private set; }
-        public string NombreUsuario { get; private set; }
+        public string NombreUsuario { get; private set; } = string.Empty;
+        public int IDPersona { get; private set; }
+        public Persona? Persona { get; set; }
+
+        public string Nombre => Persona?.Nombre ?? string.Empty;
+        public string Apellido => Persona?.Apellido ?? string.Empty;
 
         public Usuario() { }
 
-        public Usuario(int id, string apellido, string clave, bool habilitado, string nombre, string usuario)
+        public Usuario(int id, string clave, bool habilitado, string usuario, int idPersona)
         {
             SetId(id);
-            SetApellido(apellido);
             SetClave(clave);
             SetHabilitado(habilitado);
-            SetNombre(nombre);
             SetUsuario(usuario);
+            SetIDPersona(idPersona);
         }
 
-        public void SetApellido(string apellido)
-        {
-            if (string.IsNullOrWhiteSpace(apellido))
-                throw new ArgumentException("El apellido no puede estar vacío.");
-            Apellido = apellido;
-        }
         public void SetClave(string clave)
         {
             if (string.IsNullOrWhiteSpace(clave))
                 throw new ArgumentException("La clave no puede estar vacía.");
             Clave = clave;
         }
+
         public void SetHabilitado(bool habilitado)
         {
             Habilitado = habilitado;
         }
-        public void SetNombre(string nombre)
-        {
-            if (string.IsNullOrWhiteSpace(nombre))
-                throw new ArgumentException("El nombre no puede estar vacío.");
-            Nombre = nombre;
-        }
+
         public void SetUsuario(string usuario)
         {
             if (string.IsNullOrWhiteSpace(usuario))
                 throw new ArgumentException("El nombre de usuario no puede estar vacío.");
-            NombreUsuario = usuario;
+            NombreUsuario = usuario.Trim();
+        }
+
+        public void SetIDPersona(int idPersona)
+        {
+            if (idPersona <= 0)
+                throw new ArgumentException("El ID de la persona debe ser mayor a cero.");
+            IDPersona = idPersona;
         }
     }
 }

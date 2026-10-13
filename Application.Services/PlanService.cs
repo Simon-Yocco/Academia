@@ -52,6 +52,25 @@ namespace Application.Services
             }).ToList();
         }
 
+        public async Task<IEnumerable<PlanDTO>> GetByCriteriaAsync(string texto)
+        {
+            var planes = await _planRepository.GetByCriteriaAsync(texto);
+            return planes.Select(p => new PlanDTO
+            {
+                ID = p.ID,
+                Descripcion = p.Descripcion,
+                IDEspecialidad = p.IDEspecialidad,
+                Materias = p.Materias.Select(m => new MateriaDTO
+                {
+                    ID = m.ID,
+                    Descripcion = m.Descripcion,
+                    HSSemanales = m.HSSemanales,
+                    HSTotales = m.HSTotales,
+                    IDPlan = m.IDPlan
+                }).ToList()
+            }).ToList();
+        }
+
         public async Task<PlanDTO?> GetByIdAsync(int id)
         {
             var plan = await _planRepository.GetAsync(id);

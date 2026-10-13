@@ -1,4 +1,4 @@
-﻿@page "/especialidades"
+@page "/especialidades"
 @using DTOs
 @using API.Clients
 @using Blazor.WebAssembly.Components
@@ -15,8 +15,9 @@
                 <button class="btn btn-primary" @onclick="OpenAddModal">
                     Agregar
                 </button>
-                <div style="width: 300px;">
-                    <input type="text" class="form-control" placeholder="Buscar especialidad..." @bind="filtro" @bind:event="oninput" />
+                <div class="d-flex" style="width: 350px;">
+                    <input type="text" class="form-control me-2" placeholder="Buscar especialidad..." @bind="filtro" @bind:event="oninput" @onkeyup="HandleKeyUp" />
+                    <button class="btn btn-outline-primary" type="button" @onclick="Buscar">Buscar</button>
                 </div>
             </div>
 
@@ -40,9 +41,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (listaFiltrada != null && listaFiltrada.Any())
+                            @if (lista != null && lista.Any())
                             {
-                                @foreach (var item in listaFiltrada)
+                                @foreach (var item in lista)
                                 {
                                     <tr>
                                         <td>@item.ID</td>
@@ -58,6 +59,14 @@
                                     </tr>
                                 }
                             }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted py-3">
+                                        No se encontraron especialidades.
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -66,33 +75,46 @@
     </div>
 </div>
 
-<EspecialidadModal @ref="modal" OnChanged="LoadData" />
+<EspecialidadModal @ref="modal" OnChanged="Buscar" />
 
 @code {
     private List<EspecialidadDTO>? lista;
     private bool loading = true;
     private EspecialidadModal modal = null!;
-
     private string filtro = "";
-    private IEnumerable<EspecialidadDTO>? listaFiltrada => 
-        string.IsNullOrEmpty(filtro) ? lista : lista?.Where(c => c.Descripcion != null && c.Descripcion.Contains(filtro, StringComparison.OrdinalIgnoreCase));
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadData();
+        await Buscar();
     }
 
-    private async Task LoadData()
+    private async Task HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await Buscar();
+        }
+    }
+
+    private async Task Buscar()
     {
         try
         {
             loading = true;
-            var res = await EspecialidadApiClient.GetAllAsync();
-            lista = res?.ToList();
+            if (string.IsNullOrWhiteSpace(filtro))
+            {
+                var res = await EspecialidadApiClient.GetAllAsync();
+                lista = res?.ToList();
+            }
+            else
+            {
+                var res = await EspecialidadApiClient.GetByCriteriaAsync(filtro.Trim());
+                lista = res?.ToList();
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            Console.WriteLine($"Error al buscar especialidades: {ex.Message}");
         }
         finally
         {
@@ -118,7 +140,7 @@
         if (confirm)
         {
             await EspecialidadApiClient.DeleteAsync(item.ID);
-            await LoadData();
+            await Buscar();
         }
     }
 }

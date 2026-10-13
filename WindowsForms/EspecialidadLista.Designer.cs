@@ -39,7 +39,7 @@
             // 
             // buscarTextBox
             // 
-            buscarTextBox.Location = new Point(24, 24);
+            buscarTextBox.Location = new Point(24, 18);
             buscarTextBox.Name = "buscarTextBox";
             buscarTextBox.PlaceholderText = "Ingrese el nombre";
             buscarTextBox.Size = new Size(232, 23);
@@ -77,7 +77,7 @@
             // 
             // buscarButton
             // 
-            buscarButton.Location = new Point(262, 24);
+            buscarButton.Location = new Point(262, 18);
             buscarButton.Name = "buscarButton";
             buscarButton.Size = new Size(75, 23);
             buscarButton.TabIndex = 7;

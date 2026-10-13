@@ -1,24 +1,57 @@
-﻿using DTOs;
+using DTOs;
+using System.Collections.Generic;
 using System.Net.Http.Json;
+using System.Threading.Tasks;
 
 namespace API.Clients
 {
     public class UsuarioApiClient : BaseApiClient
     {
-        public static async Task<UsuarioDTO?> LoginAsync(string usuario, string clave)
+        public static async Task<IEnumerable<UsuarioDTO>> GetAllAsync()
         {
             using var client = CreateHttpClient();
+            var res = await client.GetAsync("usuarios");
+            if (res.IsSuccessStatusCode)
+            {
+                return await res.Content.ReadFromJsonAsync<IEnumerable<UsuarioDTO>>() ?? new List<UsuarioDTO>();
+            }
+            throw new System.Exception("Error al obtener los usuarios");
+        }
 
-            // Mandamos el usuario y clave en el body como un objeto anónimo
-            var loginData = new { Usuario = usuario, Clave = clave };
-            var response = await client.PostAsJsonAsync("usuarios/login", loginData);
+        public static async Task<UsuarioDTO?> GetByIdAsync(int id)
+        {
+            using var client = CreateHttpClient();
+            var response = await client.GetAsync($"usuarios/{id}");
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadFromJsonAsync<UsuarioDTO>();
             }
-
-            // Si devuelve 401 Unauthorized (o cualquier otro error), devolvemos null
             return null;
+        }
+
+        public static async Task<UsuarioDTO?> AddAsync(UsuarioDTO usuario)
+        {
+            using var client = CreateHttpClient();
+            var response = await client.PostAsJsonAsync("usuarios", usuario);
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<UsuarioDTO>();
+            }
+            throw new System.Exception("Error al crear el usuario");
+        }
+
+        public static async Task<bool> UpdateAsync(UsuarioDTO usuario)
+        {
+            using var client = CreateHttpClient();
+            var response = await client.PutAsJsonAsync("usuarios", usuario);
+            return response.IsSuccessStatusCode;
+        }
+
+        public static async Task<bool> DeleteAsync(int id)
+        {
+            using var client = CreateHttpClient();
+            var response = await client.DeleteAsync($"usuarios/{id}");
+            return response.IsSuccessStatusCode;
         }
     }
 }

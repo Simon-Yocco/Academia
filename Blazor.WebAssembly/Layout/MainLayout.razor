@@ -1,4 +1,4 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 @using API.Clients
 @inject NavigationManager Navigation
 
@@ -34,6 +34,8 @@
     private void Logout()
     {
         BaseApiClient.Token = "";
+        BaseApiClient.Rol = string.Empty;
+        BaseApiClient.UsuarioActual = string.Empty;
         Navigation.NavigateTo("/login");
     }
 }

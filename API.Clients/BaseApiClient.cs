@@ -16,6 +16,9 @@ namespace API.Clients
                 AuthenticationStateChanged?.Invoke(!string.IsNullOrEmpty(_token));
             }
         }
+        public static string Rol { get; set; } = string.Empty;
+        public static string UsuarioActual { get; set; } = string.Empty;
+        public static bool EsAdmin => Rol == "Administrador";
 
         public static event Action<bool>? AuthenticationStateChanged;
 

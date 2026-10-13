@@ -1,4 +1,4 @@
-﻿@page "/login"
+@page "/login"
 @using DTOs
 @using API.Clients
 @inject NavigationManager NavigationManager
@@ -67,6 +67,8 @@
 
             if (response != null && !string.IsNullOrEmpty(response.Token))
             {
+                BaseApiClient.Rol = response.Role;
+                BaseApiClient.UsuarioActual = response.Username;
                 BaseApiClient.Token = response.Token;
                 NavigationManager.NavigateTo("/");
             }

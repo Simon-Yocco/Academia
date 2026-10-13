@@ -15,8 +15,9 @@
                 <button class="btn btn-primary" @onclick="OpenAddModal">
                     + Nuevo Plan
                 </button>
-                <div style="width: 300px;">
-                    <input type="text" class="form-control" placeholder="Buscar plan..." @bind="filtro" @bind:event="oninput" />
+                <div class="d-flex" style="width: 350px;">
+                    <input type="text" class="form-control me-2" placeholder="Buscar plan..." @bind="filtro" @bind:event="oninput" @onkeyup="HandleKeyUp" />
+                    <button class="btn btn-outline-primary" type="button" @onclick="Buscar">Buscar</button>
                 </div>
             </div>
 
@@ -42,9 +43,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (listaFiltrada != null && listaFiltrada.Any())
+                            @if (lista != null && lista.Any())
                             {
-                                @foreach (var item in listaFiltrada)
+                                @foreach (var item in lista)
                                 {
                                     <tr>
                                         <td>@item.ID</td>
@@ -82,33 +83,46 @@
     </div>
 </div>
 
-<PlanModal @ref="modal" OnChanged="LoadData" />
+<PlanModal @ref="modal" OnChanged="Buscar" />
 
 @code {
     private List<PlanDTO>? lista;
     private bool loading = true;
     private PlanModal modal = null!;
-
     private string filtro = "";
-    private IEnumerable<PlanDTO>? listaFiltrada => 
-        string.IsNullOrEmpty(filtro) ? lista : lista?.Where(p => p.Descripcion != null && p.Descripcion.Contains(filtro, StringComparison.OrdinalIgnoreCase));
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadData();
+        await Buscar();
     }
 
-    private async Task LoadData()
+    private async Task HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await Buscar();
+        }
+    }
+
+    private async Task Buscar()
     {
         try
         {
             loading = true;
-            var res = await PlanApiClient.GetAllAsync();
-            lista = res?.ToList();
+            if (string.IsNullOrWhiteSpace(filtro))
+            {
+                var res = await PlanApiClient.GetAllAsync();
+                lista = res?.ToList();
+            }
+            else
+            {
+                var res = await PlanApiClient.GetByCriteriaAsync(filtro.Trim());
+                lista = res?.ToList();
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            Console.WriteLine($"Error al buscar planes: {ex.Message}");
         }
         finally
         {
@@ -134,7 +148,7 @@
         if (confirm)
         {
             await PlanApiClient.DeleteAsync(item.ID);
-            await LoadData();
+            await Buscar();
         }
     }
 }
