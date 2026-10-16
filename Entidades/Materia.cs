@@ -12,6 +12,7 @@ namespace Entidades
         public int HSSemanales { get; private set; }
         public int HSTotales { get; private set; }
         public int IDPlan { get; private set; }
+        public Plan? Plan { get; set; }
         public Materia() { }
         public Materia(int id, string descripcion, int hsSemanales, int hsTotales, int idPlan)
         {

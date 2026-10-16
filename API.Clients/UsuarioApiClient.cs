@@ -7,6 +7,17 @@ namespace API.Clients
 {
     public class UsuarioApiClient : BaseApiClient
     {
+        public static async Task<int> GetProximoLegajoAsync()
+        {
+            using var client = CreateHttpClient();
+            var response = await client.GetAsync("usuarios/proximo-legajo");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<int>();
+            }
+            return 1001;
+        }
+
         public static async Task<IEnumerable<UsuarioDTO>> GetAllAsync()
         {
             using var client = CreateHttpClient();

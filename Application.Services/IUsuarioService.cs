@@ -12,5 +12,6 @@ namespace Application.Services
         Task<UsuarioDTO?> AddAsync(UsuarioDTO dto);
         Task<bool> UpdateAsync(UsuarioDTO dto);
         Task<bool> DeleteAsync(int id);
+        Task<int> GetProximoLegajoAsync();
     }
 }

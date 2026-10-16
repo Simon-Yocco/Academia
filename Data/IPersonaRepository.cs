@@ -11,5 +11,6 @@ namespace Data
         Task<Persona?> GetAsync(int id);
         Task<IEnumerable<Persona>> GetAllAsync();
         Task<bool> UpdateAsync(Persona persona);
+        Task<int> GetProximoLegajoAsync();
     }
 }

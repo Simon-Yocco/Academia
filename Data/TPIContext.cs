@@ -104,7 +104,7 @@ namespace Data
                     .HasForeignKey(e => e.IDEspecialidad);
 
                 entity.HasMany(e => e.Materias)
-                    .WithOne()
+                    .WithOne(m => m.Plan)
                     .HasForeignKey(m => m.IDPlan);
             });
             modelBuilder.Entity<Persona>(entity =>

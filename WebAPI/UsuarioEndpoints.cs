@@ -19,6 +19,15 @@ namespace WebAPI
             .Produces<List<UsuarioDTO>>(StatusCodes.Status200OK)
             .WithOpenApi().RequireAuthorization();
 
+            app.MapGet("/usuarios/proximo-legajo", async (IUsuarioService usuarioService) =>
+            {
+                var proximoLegajo = await usuarioService.GetProximoLegajoAsync();
+                return Results.Ok(proximoLegajo);
+            })
+            .WithName("GetProximoLegajo")
+            .Produces<int>(StatusCodes.Status200OK)
+            .WithOpenApi().RequireAuthorization();
+
             app.MapGet("/usuarios/{id}", async (int id, IUsuarioService usuarioService) =>
             {
                 UsuarioDTO? dto = await usuarioService.GetByIdAsync(id);

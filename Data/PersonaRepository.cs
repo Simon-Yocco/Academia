@@ -52,5 +52,11 @@ namespace Data
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<int> GetProximoLegajoAsync()
+        {
+            var maxLegajo = await _context.Personas.MaxAsync(p => (int?)p.Legajo);
+            return (maxLegajo.HasValue && maxLegajo.Value >= 1000 ? maxLegajo.Value : 1000) + 1;
+        }
     }
 }

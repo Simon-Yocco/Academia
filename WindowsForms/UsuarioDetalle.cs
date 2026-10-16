@@ -34,7 +34,7 @@ namespace WindowsForms
 
             CargarTiposPersona();
             await CargarPlanes();
-            ConfigurarPantalla();
+            await ConfigurarPantallaAsync();
 
             aceptarButton.Enabled = true;
         }
@@ -64,14 +64,25 @@ namespace WindowsForms
             }
         }
 
-        private void ConfigurarPantalla()
+        private async Task ConfigurarPantallaAsync()
         {
+            legajoNumericUpDown.Enabled = false; // El legajo se asigna automáticamente de forma autoincremental
+
             if (_mode == FormMode.Add)
             {
                 this.Text = "Nuevo Usuario (Alumno / Profesor)";
-                legajoNumericUpDown.Value = 1000;
                 fechaNacimientoDateTimePicker.Value = DateTime.Today.AddYears(-20);
                 habilitadoCheckBox.Checked = true;
+
+                try
+                {
+                    var proximoLegajo = await UsuarioApiClient.GetProximoLegajoAsync();
+                    legajoNumericUpDown.Value = proximoLegajo;
+                }
+                catch
+                {
+                    legajoNumericUpDown.Value = 1001;
+                }
             }
             else if (_mode == FormMode.Update)
             {

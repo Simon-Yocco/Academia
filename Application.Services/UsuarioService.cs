@@ -37,12 +37,21 @@ namespace Application.Services
             return MapearADTO(usuario);
         }
 
+        public async Task<int> GetProximoLegajoAsync()
+        {
+            return await personaRepository.GetProximoLegajoAsync();
+        }
+
         public async Task<UsuarioDTO?> AddAsync(UsuarioDTO dto)
         {
             // Mapeamos y guardamos la Persona
             var tipo = Enum.TryParse<Persona.TiposPersonas>(dto.Persona.TipoPersona, true, out var parsedTipo)
                 ? parsedTipo
                 : Persona.TiposPersonas.Alumno;
+
+            // Asignación de legajo automática e incremental
+            int proximoLegajo = await personaRepository.GetProximoLegajoAsync();
+            dto.Persona.Legajo = proximoLegajo;
 
             var persona = new Persona(
                 0,
@@ -57,6 +66,19 @@ namespace Application.Services
                 dto.Persona.IDPlan
             );
             await personaRepository.AddAsync(persona);
+
+            // Nombre de usuario = nombre personal en minúsculas (evitando colisión si ya existe)
+            var baseUsername = dto.Persona.Nombre.Trim().ToLower();
+            var finalUsername = baseUsername;
+            int suffix = 1;
+            while (await usuarioRepository.GetByUsernameAsync(finalUsername) != null)
+            {
+                finalUsername = $"{baseUsername}{suffix++}";
+            }
+            dto.NombreUsuario = finalUsername;
+
+            // Contraseña = legajo asignado
+            dto.Clave = proximoLegajo.ToString();
 
             // Mapeamos de DTO a Entidad Usuario
             var usuario = new Usuario(0, dto.Clave, dto.Habilitado, dto.NombreUsuario, persona.ID);

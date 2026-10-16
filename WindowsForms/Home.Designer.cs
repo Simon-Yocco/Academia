@@ -1,4 +1,4 @@
-﻿namespace WindowsForms
+namespace WindowsForms
 {
     partial class Home
     {
@@ -31,6 +31,7 @@
             menuStrip1 = new MenuStrip();
             cursosToolStripMenuItem = new ToolStripMenuItem();
             especialidadesToolStripMenuItem = new ToolStripMenuItem();
+            materiasToolStripMenuItem = new ToolStripMenuItem();
             planesToolStripMenuItem = new ToolStripMenuItem();
             comisionesToolStripMenuItem = new ToolStripMenuItem();
             cerrarSesionToolStripMenuItem = new ToolStripMenuItem();
@@ -41,7 +42,7 @@
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(32, 32);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { cursosToolStripMenuItem, especialidadesToolStripMenuItem, planesToolStripMenuItem, comisionesToolStripMenuItem, cerrarSesionToolStripMenuItem, usuariosToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { cursosToolStripMenuItem, materiasToolStripMenuItem, especialidadesToolStripMenuItem, planesToolStripMenuItem, comisionesToolStripMenuItem, usuariosToolStripMenuItem, cerrarSesionToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(11, 4, 0, 4);
@@ -55,6 +56,13 @@
             cursosToolStripMenuItem.Size = new Size(105, 38);
             cursosToolStripMenuItem.Text = "Cursos";
             cursosToolStripMenuItem.Click += cursosToolStripMenuItem_Click;
+            // 
+            // materiasToolStripMenuItem
+            // 
+            materiasToolStripMenuItem.Name = "materiasToolStripMenuItem";
+            materiasToolStripMenuItem.Size = new Size(119, 38);
+            materiasToolStripMenuItem.Text = "Materias";
+            materiasToolStripMenuItem.Click += materiasToolStripMenuItem_Click;
             // 
             // especialidadesToolStripMenuItem
             // 
@@ -113,6 +121,7 @@
 
         private MenuStrip menuStrip1;
         private ToolStripMenuItem cursosToolStripMenuItem;
+        private ToolStripMenuItem materiasToolStripMenuItem;
         private ToolStripMenuItem especialidadesToolStripMenuItem;
         private ToolStripMenuItem cerrarSesionToolStripMenuItem;
         private ToolStripMenuItem planesToolStripMenuItem;

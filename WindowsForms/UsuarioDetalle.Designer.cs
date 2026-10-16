@@ -75,9 +75,9 @@ namespace WindowsForms
             legajoLabel.AutoSize = true;
             legajoLabel.Location = new Point(30, 60);
             legajoLabel.Name = "legajoLabel";
-            legajoLabel.Size = new Size(45, 15);
+            legajoLabel.Size = new Size(116, 15);
             legajoLabel.TabIndex = 2;
-            legajoLabel.Text = "Legajo:";
+            legajoLabel.Text = "Legajo (Automático):";
             // 
             // legajoNumericUpDown
             // 
