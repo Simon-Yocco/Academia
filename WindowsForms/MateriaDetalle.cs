@@ -71,15 +71,17 @@ namespace WindowsForms
                 idTextBox.Text = _materia.ID.ToString();
                 descripcionTextBox.Text = _materia.Descripcion;
 
-                if (_materia.HSSemanales >= hsSemanalesNumericUpDown.Minimum && _materia.HSSemanales <= hsSemanalesNumericUpDown.Maximum)
+                if (_materia.HSSemanales > hsSemanalesNumericUpDown.Maximum)
                 {
-                    hsSemanalesNumericUpDown.Value = _materia.HSSemanales;
+                    hsSemanalesNumericUpDown.Maximum = _materia.HSSemanales;
                 }
+                hsSemanalesNumericUpDown.Value = Math.Max(hsSemanalesNumericUpDown.Minimum, _materia.HSSemanales);
 
-                if (_materia.HSTotales >= hsTotalesNumericUpDown.Minimum && _materia.HSTotales <= hsTotalesNumericUpDown.Maximum)
+                if (_materia.HSTotales > hsTotalesNumericUpDown.Maximum)
                 {
-                    hsTotalesNumericUpDown.Value = _materia.HSTotales;
+                    hsTotalesNumericUpDown.Maximum = _materia.HSTotales;
                 }
+                hsTotalesNumericUpDown.Value = Math.Max(hsTotalesNumericUpDown.Minimum, _materia.HSTotales);
             }
 
             if (_materia.IDPlan > 0)

@@ -19,6 +19,7 @@ namespace WindowsForms
         private void ConfigurarColumnas()
         {
             comisionDataGridView.AutoGenerateColumns = false;
+            comisionDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             comisionDataGridView.Columns.Clear(); // Reiniciamos las columnas del DataGridView
 
             comisionDataGridView.Columns.Add(new DataGridViewTextBoxColumn

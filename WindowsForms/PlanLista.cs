@@ -23,34 +23,35 @@ namespace WindowsForms
         private void ConfigurarColumnas()
         {
             planDataGridView.AutoGenerateColumns = false;
+            planDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             planDataGridView.Columns.Clear();
             planDataGridView.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "ID",
                 HeaderText = "ID",
                 DataPropertyName = "ID",
-                Width = 60
+                FillWeight = 15
             });
             planDataGridView.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Descripcion",
                 HeaderText = "Plan",
                 DataPropertyName = "Descripcion",
-                Width = 250
+                FillWeight = 45
             });
             planDataGridView.Columns.Add(new DataGridViewTextBoxColumn
             {
-                Name = "IDEspecialidad",
-                HeaderText = "Cód. Especialidad",
-                DataPropertyName = "IDEspecialidad",
-                Width = 130
+                Name = "EspecialidadDescripcion",
+                HeaderText = "Especialidad",
+                DataPropertyName = "EspecialidadDescripcion",
+                FillWeight = 30
             });
             planDataGridView.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "CantidadMaterias",
                 HeaderText = "Materias",
                 DataPropertyName = "CantidadMaterias",
-                Width = 100
+                FillWeight = 15
             });
         }
 
@@ -59,12 +60,12 @@ namespace WindowsForms
             try
             {
                 var planes = await PlanApiClient.GetAllAsync();
-                // Proyectamos una columna extra para mostrar cuántas materias tiene cada plan
+                // Proyectamos una columna extra para mostrar la especialidad y cuántas materias tiene cada plan
                 var listaVisual = planes.Select(p => new
                 {
                     ID = p.ID,
                     Descripcion = p.Descripcion,
-                    IDEspecialidad = p.IDEspecialidad,
+                    EspecialidadDescripcion = !string.IsNullOrEmpty(p.EspecialidadDescripcion) ? p.EspecialidadDescripcion : p.IDEspecialidad.ToString(),
                     CantidadMaterias = p.Materias != null ? p.Materias.Count : 0,
                     PlanOriginal = p
                 }).ToList();

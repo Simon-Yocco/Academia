@@ -89,7 +89,7 @@ namespace WindowsForms
             // hsSemanalesNumericUpDown
             // 
             hsSemanalesNumericUpDown.Location = new Point(140, 88);
-            hsSemanalesNumericUpDown.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
+            hsSemanalesNumericUpDown.Maximum = new decimal(new int[] { 500, 0, 0, 0 });
             hsSemanalesNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             hsSemanalesNumericUpDown.Name = "hsSemanalesNumericUpDown";
             hsSemanalesNumericUpDown.Size = new Size(120, 23);
@@ -108,7 +108,7 @@ namespace WindowsForms
             // hsTotalesNumericUpDown
             // 
             hsTotalesNumericUpDown.Location = new Point(140, 123);
-            hsTotalesNumericUpDown.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            hsTotalesNumericUpDown.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
             hsTotalesNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             hsTotalesNumericUpDown.Name = "hsTotalesNumericUpDown";
             hsTotalesNumericUpDown.Size = new Size(120, 23);

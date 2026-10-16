@@ -14,6 +14,7 @@ namespace WindowsForms
         private void ConfigurarColumnas()
         {
             cursosDataGridView.AutoGenerateColumns = false;
+            cursosDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             cursosDataGridView.Columns.Clear(); // Reiniciamos las columnas del DataGridView
 
             cursosDataGridView.Columns.Add(new DataGridViewTextBoxColumn

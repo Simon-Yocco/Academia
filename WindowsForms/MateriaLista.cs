@@ -19,6 +19,7 @@ namespace WindowsForms
         private void ConfigurarColumnas()
         {
             materiaDataGridView.AutoGenerateColumns = false;
+            materiaDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             materiaDataGridView.Columns.Clear();
 
             materiaDataGridView.Columns.Add(new DataGridViewTextBoxColumn
@@ -34,7 +35,7 @@ namespace WindowsForms
                 Name = "Descripcion",
                 HeaderText = "Materia",
                 DataPropertyName = "Descripcion",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                FillWeight = 40
             });
 
             materiaDataGridView.Columns.Add(new DataGridViewTextBoxColumn
@@ -42,7 +43,7 @@ namespace WindowsForms
                 Name = "HSSemanales",
                 HeaderText = "Hs Semanales",
                 DataPropertyName = "HSSemanales",
-                Width = 110
+                FillWeight = 15
             });
 
             materiaDataGridView.Columns.Add(new DataGridViewTextBoxColumn
@@ -50,7 +51,7 @@ namespace WindowsForms
                 Name = "HSTotales",
                 HeaderText = "Hs Totales",
                 DataPropertyName = "HSTotales",
-                Width = 110
+                FillWeight = 15
             });
 
             materiaDataGridView.Columns.Add(new DataGridViewTextBoxColumn
@@ -58,7 +59,7 @@ namespace WindowsForms
                 Name = "PlanDescripcion",
                 HeaderText = "Plan",
                 DataPropertyName = "PlanDescripcion",
-                Width = 200
+                FillWeight = 30
             });
         }
 

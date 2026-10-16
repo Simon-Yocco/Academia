@@ -16,7 +16,38 @@ namespace WindowsForms
         public PlanDetalle()
         {
             InitializeComponent();
+            ConfigurarColumnasGrilla();
             _materias = new BindingList<MateriaDTO>();
+        }
+
+        private void ConfigurarColumnasGrilla()
+        {
+            materiaDataGridView.AutoGenerateColumns = false;
+            materiaDataGridView.AllowUserToAddRows = false;
+            materiaDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            materiaDataGridView.Columns.Clear();
+
+            materiaDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Descripcion",
+                HeaderText = "Materia",
+                DataPropertyName = "Descripcion",
+                FillWeight = 50
+            });
+            materiaDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "HSSemanales",
+                HeaderText = "Hs Semanales",
+                DataPropertyName = "HSSemanales",
+                FillWeight = 25
+            });
+            materiaDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "HSTotales",
+                HeaderText = "Hs Totales",
+                DataPropertyName = "HSTotales",
+                FillWeight = 25
+            });
         }
         public PlanDetalle(FormMode mode, PlanDTO plan) : this()
         {

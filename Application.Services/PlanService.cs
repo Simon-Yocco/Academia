@@ -10,14 +10,32 @@ namespace Application.Services
     public class PlanService : IPlanService
     {
         private readonly IPlanRepository _planRepository;
+        private readonly IEspecialidadRepository _especialidadRepository;
 
-        public PlanService(IPlanRepository planRepository)
+        public PlanService(IPlanRepository planRepository, IEspecialidadRepository especialidadRepository)
         {
             _planRepository = planRepository;
+            _especialidadRepository = especialidadRepository;
         }
 
         public async Task<PlanDTO> AddAsync(PlanDTO dto)
         {
+            if (string.IsNullOrWhiteSpace(dto.Descripcion))
+            {
+                throw new ArgumentException("La descripción del plan es requerida.");
+            }
+
+            if (dto.Materias == null || !dto.Materias.Any())
+            {
+                throw new ArgumentException("El plan debe contener al menos una materia.");
+            }
+
+            var especialidad = await _especialidadRepository.GetAsync(dto.IDEspecialidad);
+            if (especialidad == null)
+            {
+                throw new ArgumentException($"La especialidad con ID {dto.IDEspecialidad} no existe.");
+            }
+
             var plan = new Plan(0, dto.Descripcion, dto.IDEspecialidad);
 
             foreach (var materiaDto in dto.Materias)
@@ -29,6 +47,7 @@ namespace Application.Services
             await _planRepository.AddAsync(plan);
 
             dto.ID = plan.ID;
+            dto.EspecialidadDescripcion = especialidad.Descripcion;
             return dto;
         }
 
@@ -40,6 +59,7 @@ namespace Application.Services
                 ID = p.ID,
                 Descripcion = p.Descripcion,
                 IDEspecialidad = p.IDEspecialidad,
+                EspecialidadDescripcion = p.Especialidad?.Descripcion ?? string.Empty,
                 // Mapear también los detalles
                 Materias = p.Materias.Select(m => new MateriaDTO
                 {
@@ -60,6 +80,7 @@ namespace Application.Services
                 ID = p.ID,
                 Descripcion = p.Descripcion,
                 IDEspecialidad = p.IDEspecialidad,
+                EspecialidadDescripcion = p.Especialidad?.Descripcion ?? string.Empty,
                 Materias = p.Materias.Select(m => new MateriaDTO
                 {
                     ID = m.ID,
@@ -81,6 +102,7 @@ namespace Application.Services
                 ID = plan.ID,
                 Descripcion = plan.Descripcion,
                 IDEspecialidad = plan.IDEspecialidad,
+                EspecialidadDescripcion = plan.Especialidad?.Descripcion ?? string.Empty,
                 Materias = plan.Materias.Select(m => new MateriaDTO
                 {
                     ID = m.ID,
@@ -94,6 +116,22 @@ namespace Application.Services
 
         public async Task<bool> UpdateAsync(PlanDTO dto)
         {
+            if (string.IsNullOrWhiteSpace(dto.Descripcion))
+            {
+                throw new ArgumentException("La descripción del plan es requerida.");
+            }
+
+            if (dto.Materias == null || !dto.Materias.Any())
+            {
+                throw new ArgumentException("El plan debe contener al menos una materia.");
+            }
+
+            var especialidad = await _especialidadRepository.GetAsync(dto.IDEspecialidad);
+            if (especialidad == null)
+            {
+                throw new ArgumentException($"La especialidad con ID {dto.IDEspecialidad} no existe.");
+            }
+
             // Convertimos de DTO a Entidad para pasárselo al Repositorio
             var plan = new Plan(dto.ID, dto.Descripcion, dto.IDEspecialidad);
 

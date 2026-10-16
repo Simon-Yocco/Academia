@@ -22,6 +22,7 @@ namespace WindowsForms
         private void ConfigurarColumnas()
         {
             especialidadesDataGridView.AutoGenerateColumns = false;
+            especialidadesDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             especialidadesDataGridView.Columns.Clear();
 
             especialidadesDataGridView.Columns.Add(new DataGridViewTextBoxColumn
@@ -29,7 +30,6 @@ namespace WindowsForms
                 Name = "ID",
                 HeaderText = "ID",
                 DataPropertyName = "ID",
-                Width = 50,
                 Visible = false // Ocultamos la columna ID
             });
 
@@ -37,8 +37,7 @@ namespace WindowsForms
             {
                 Name = "Descripcion",
                 HeaderText = "Especialidad",
-                DataPropertyName = "Descripcion",
-                Width = 250
+                DataPropertyName = "Descripcion"
             });
         }
 

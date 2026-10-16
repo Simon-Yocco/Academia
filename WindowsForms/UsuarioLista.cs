@@ -19,6 +19,7 @@ namespace WindowsForms
         private void ConfigurarColumnas()
         {
             usuarioDataGridView.AutoGenerateColumns = false;
+            usuarioDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             usuarioDataGridView.Columns.Clear();
 
             usuarioDataGridView.Columns.Add(new DataGridViewTextBoxColumn
