@@ -20,7 +20,7 @@ namespace WindowsForms
     }
     public partial class EspecialidadDetalle : Form
     {
-        private EspecialidadDTO _especialidad;
+        private EspecialidadDTO _especialidad = new();
         private FormMode _mode;
 
         public EspecialidadDetalle(FormMode mode, EspecialidadDTO especialidad)

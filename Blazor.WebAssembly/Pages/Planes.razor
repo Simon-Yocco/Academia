@@ -37,7 +37,7 @@
                             <tr>
                                 <th style="width: 80px;">ID</th>
                                 <th>Plan</th>
-                                <th>Cód. Especialidad</th>
+                                <th>Especialidad</th>
                                 <th style="width: 150px;">Materias</th>
                                 <th style="width: 180px;">Acciones</th>
                             </tr>
@@ -50,7 +50,7 @@
                                     <tr>
                                         <td>@item.ID</td>
                                         <td><strong>@item.Descripcion</strong></td>
-                                        <td>@item.IDEspecialidad</td>
+                                        <td>@(!string.IsNullOrEmpty(item.EspecialidadDescripcion) ? item.EspecialidadDescripcion : item.IDEspecialidad.ToString())</td>
                                         <td>
                                             <span class="badge bg-info text-dark">
                                                 @(item.Materias != null ? item.Materias.Count : 0) materias

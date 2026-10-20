@@ -32,22 +32,22 @@ namespace WindowsForms
 
             usuarioDataGridView.Columns.Add(new DataGridViewTextBoxColumn
             {
-                Name = "LEGAJO",
-                HeaderText = "LEGAJO",
+                Name = "Legajo",
+                HeaderText = "Legajo",
                 DataPropertyName = "Legajo",
             });
 
             usuarioDataGridView.Columns.Add(new DataGridViewTextBoxColumn
             {
-                Name = "APELLIDO",
-                HeaderText = "APELLIDO",
+                Name = "Apellido",
+                HeaderText = "Apellido",
                 DataPropertyName = "Apellido",
             });
 
             usuarioDataGridView.Columns.Add(new DataGridViewTextBoxColumn
             {
-                Name = "NOMBRE",
-                HeaderText = "NOMBRE",
+                Name = "Nombre",
+                HeaderText = "Nombre",
                 DataPropertyName = "Nombre",
             });
 
@@ -89,6 +89,7 @@ namespace WindowsForms
         {
             try
             {
+                DeshabilitarControles();
                 var usuarios = await UsuarioApiClient.GetAllAsync();
                 // Filtro local por texto (busca por nombre, apellido, usuario, rol o legajo)
                 if (!string.IsNullOrWhiteSpace(buscarTextBox.Text))
@@ -108,6 +109,10 @@ namespace WindowsForms
             {
                 MessageBox.Show($"Error al cargar usuarios: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                HabilitarControles();
+            }
         }
 
         private async void buscarButton_Click(object sender, EventArgs e)
@@ -126,27 +131,43 @@ namespace WindowsForms
 
         private async void modificarButton_Click(object sender, EventArgs e)
         {
-            // Si no selecciona ningún usuario
             if (usuarioDataGridView.SelectedRows.Count == 0)
             {
                 MessageBox.Show("Por favor seleccioná un usuario de la lista.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            var fila = usuarioDataGridView.SelectedRows[0];
-            var usuarioSeleccionado = (UsuarioDTO)fila.DataBoundItem;
-
-            var form = new UsuarioDetalle(FormMode.Update, usuarioSeleccionado);
-            if (form.ShowDialog(this) == DialogResult.OK)
+            try
             {
-                await CargarGrilla();
+                DeshabilitarControles();
+                var fila = usuarioDataGridView.SelectedRows[0];
+                var usuarioSeleccionado = (UsuarioDTO)fila.DataBoundItem;
+
+                var usuarioCompleto = await UsuarioApiClient.GetByIdAsync(usuarioSeleccionado.ID);
+                if (usuarioCompleto == null)
+                {
+                    MessageBox.Show("No se pudo obtener el usuario seleccionado desde el servidor.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                var form = new UsuarioDetalle(FormMode.Update, usuarioCompleto);
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    await CargarGrilla();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar el usuario para edición: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HabilitarControles();
             }
         }
 
         private async void eliminarButton_Click(object sender, EventArgs e)
         {
-
-            // misma validacion para ver que este seleccionada una fila
             if (usuarioDataGridView.SelectedRows.Count == 0)
             {
                 MessageBox.Show("Por favor seleccioná un usuario de la lista.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -160,6 +181,7 @@ namespace WindowsForms
             {
                 try
                 {
+                    DeshabilitarControles();
                     var ok = await UsuarioApiClient.DeleteAsync(usuarioSeleccionado.ID);
                     if (ok)
                     {
@@ -174,7 +196,32 @@ namespace WindowsForms
                 {
                     MessageBox.Show($"Error al eliminar: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                finally
+                {
+                    HabilitarControles();
+                }
             }
+        }
+
+        private void DeshabilitarControles()
+        {
+            agregarButton.Enabled = false;
+            modificarButton.Enabled = false;
+            eliminarButton.Enabled = false;
+            buscarButton.Enabled = false;
+            buscarTextBox.Enabled = false;
+            usuarioDataGridView.Enabled = false;
+        }
+
+        private void HabilitarControles()
+        {
+            agregarButton.Enabled = true;
+            buscarButton.Enabled = true;
+            buscarTextBox.Enabled = true;
+            usuarioDataGridView.Enabled = true;
+            bool hasItems = usuarioDataGridView.Rows.Count > 0;
+            modificarButton.Enabled = hasItems;
+            eliminarButton.Enabled = hasItems;
         }
     }
 }

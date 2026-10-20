@@ -31,7 +31,6 @@ namespace WindowsForms
             tipoPersonaLabel = new Label();
             tipoPersonaComboBox = new ComboBox();
             legajoLabel = new Label();
-            legajoNumericUpDown = new NumericUpDown();
             nombreLabel = new Label();
             nombreTextBox = new TextBox();
             apellidoLabel = new Label();
@@ -49,15 +48,15 @@ namespace WindowsForms
             habilitadoCheckBox = new CheckBox();
             aceptarButton = new Button();
             cancelarButton = new Button();
-            ((System.ComponentModel.ISupportInitialize)legajoNumericUpDown).BeginInit();
+            legajoTextBox = new TextBox();
             SuspendLayout();
             // 
             // tipoPersonaLabel
             // 
             tipoPersonaLabel.AutoSize = true;
-            tipoPersonaLabel.Location = new Point(30, 25);
+            tipoPersonaLabel.Location = new Point(54, 71);
             tipoPersonaLabel.Name = "tipoPersonaLabel";
-            tipoPersonaLabel.Size = new Size(100, 15);
+            tipoPersonaLabel.Size = new Size(95, 15);
             tipoPersonaLabel.TabIndex = 0;
             tipoPersonaLabel.Text = "Tipo de Persona:";
             // 
@@ -65,7 +64,7 @@ namespace WindowsForms
             // 
             tipoPersonaComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             tipoPersonaComboBox.FormattingEnabled = true;
-            tipoPersonaComboBox.Location = new Point(170, 22);
+            tipoPersonaComboBox.Location = new Point(170, 63);
             tipoPersonaComboBox.Name = "tipoPersonaComboBox";
             tipoPersonaComboBox.Size = new Size(280, 23);
             tipoPersonaComboBox.TabIndex = 1;
@@ -73,26 +72,16 @@ namespace WindowsForms
             // legajoLabel
             // 
             legajoLabel.AutoSize = true;
-            legajoLabel.Location = new Point(30, 60);
+            legajoLabel.Location = new Point(30, 41);
             legajoLabel.Name = "legajoLabel";
-            legajoLabel.Size = new Size(116, 15);
+            legajoLabel.Size = new Size(119, 15);
             legajoLabel.TabIndex = 2;
             legajoLabel.Text = "Legajo (Automático):";
-            // 
-            // legajoNumericUpDown
-            // 
-            legajoNumericUpDown.Location = new Point(170, 57);
-            legajoNumericUpDown.Maximum = new decimal(new int[] { 9999999, 0, 0, 0 });
-            legajoNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            legajoNumericUpDown.Name = "legajoNumericUpDown";
-            legajoNumericUpDown.Size = new Size(280, 23);
-            legajoNumericUpDown.TabIndex = 3;
-            legajoNumericUpDown.Value = new decimal(new int[] { 1000, 0, 0, 0 });
             // 
             // nombreLabel
             // 
             nombreLabel.AutoSize = true;
-            nombreLabel.Location = new Point(30, 95);
+            nombreLabel.Location = new Point(95, 100);
             nombreLabel.Name = "nombreLabel";
             nombreLabel.Size = new Size(54, 15);
             nombreLabel.TabIndex = 4;
@@ -108,7 +97,7 @@ namespace WindowsForms
             // apellidoLabel
             // 
             apellidoLabel.AutoSize = true;
-            apellidoLabel.Location = new Point(30, 130);
+            apellidoLabel.Location = new Point(95, 135);
             apellidoLabel.Name = "apellidoLabel";
             apellidoLabel.Size = new Size(54, 15);
             apellidoLabel.TabIndex = 6;
@@ -124,7 +113,7 @@ namespace WindowsForms
             // emailLabel
             // 
             emailLabel.AutoSize = true;
-            emailLabel.Location = new Point(30, 165);
+            emailLabel.Location = new Point(110, 170);
             emailLabel.Name = "emailLabel";
             emailLabel.Size = new Size(39, 15);
             emailLabel.TabIndex = 8;
@@ -140,9 +129,9 @@ namespace WindowsForms
             // telefonoLabel
             // 
             telefonoLabel.AutoSize = true;
-            telefonoLabel.Location = new Point(30, 200);
+            telefonoLabel.Location = new Point(93, 205);
             telefonoLabel.Name = "telefonoLabel";
-            telefonoLabel.Size = new Size(55, 15);
+            telefonoLabel.Size = new Size(56, 15);
             telefonoLabel.TabIndex = 10;
             telefonoLabel.Text = "Teléfono:";
             // 
@@ -156,7 +145,7 @@ namespace WindowsForms
             // direccionLabel
             // 
             direccionLabel.AutoSize = true;
-            direccionLabel.Location = new Point(30, 235);
+            direccionLabel.Location = new Point(89, 240);
             direccionLabel.Name = "direccionLabel";
             direccionLabel.Size = new Size(60, 15);
             direccionLabel.TabIndex = 12;
@@ -172,7 +161,7 @@ namespace WindowsForms
             // fechaNacimientoLabel
             // 
             fechaNacimientoLabel.AutoSize = true;
-            fechaNacimientoLabel.Location = new Point(30, 270);
+            fechaNacimientoLabel.Location = new Point(43, 275);
             fechaNacimientoLabel.Name = "fechaNacimientoLabel";
             fechaNacimientoLabel.Size = new Size(106, 15);
             fechaNacimientoLabel.TabIndex = 14;
@@ -189,9 +178,9 @@ namespace WindowsForms
             // planLabel
             // 
             planLabel.AutoSize = true;
-            planLabel.Location = new Point(30, 305);
+            planLabel.Location = new Point(58, 310);
             planLabel.Name = "planLabel";
-            planLabel.Size = new Size(93, 15);
+            planLabel.Size = new Size(91, 15);
             planLabel.TabIndex = 16;
             planLabel.Text = "Plan de Estudio:";
             // 
@@ -211,16 +200,16 @@ namespace WindowsForms
             habilitadoCheckBox.CheckState = CheckState.Checked;
             habilitadoCheckBox.Location = new Point(170, 345);
             habilitadoCheckBox.Name = "habilitadoCheckBox";
-            habilitadoCheckBox.Size = new Size(80, 19);
+            habilitadoCheckBox.Size = new Size(81, 19);
             habilitadoCheckBox.TabIndex = 18;
             habilitadoCheckBox.Text = "Habilitado";
             habilitadoCheckBox.UseVisualStyleBackColor = true;
             // 
             // aceptarButton
             // 
-            aceptarButton.Location = new Point(230, 395);
+            aceptarButton.Location = new Point(280, 407);
             aceptarButton.Name = "aceptarButton";
-            aceptarButton.Size = new Size(105, 35);
+            aceptarButton.Size = new Size(75, 23);
             aceptarButton.TabIndex = 19;
             aceptarButton.Text = "Aceptar";
             aceptarButton.UseVisualStyleBackColor = true;
@@ -228,13 +217,21 @@ namespace WindowsForms
             // 
             // cancelarButton
             // 
-            cancelarButton.Location = new Point(345, 395);
+            cancelarButton.Location = new Point(375, 407);
             cancelarButton.Name = "cancelarButton";
-            cancelarButton.Size = new Size(105, 35);
+            cancelarButton.Size = new Size(75, 23);
             cancelarButton.TabIndex = 20;
             cancelarButton.Text = "Cancelar";
             cancelarButton.UseVisualStyleBackColor = true;
             cancelarButton.Click += cancelarButton_Click;
+            // 
+            // legajoTextBox
+            // 
+            legajoTextBox.Location = new Point(170, 33);
+            legajoTextBox.Name = "legajoTextBox";
+            legajoTextBox.ReadOnly = true;
+            legajoTextBox.Size = new Size(280, 23);
+            legajoTextBox.TabIndex = 21;
             // 
             // UsuarioDetalle
             // 
@@ -243,6 +240,7 @@ namespace WindowsForms
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = cancelarButton;
             ClientSize = new Size(494, 450);
+            Controls.Add(legajoTextBox);
             Controls.Add(cancelarButton);
             Controls.Add(aceptarButton);
             Controls.Add(habilitadoCheckBox);
@@ -260,7 +258,6 @@ namespace WindowsForms
             Controls.Add(apellidoLabel);
             Controls.Add(nombreTextBox);
             Controls.Add(nombreLabel);
-            Controls.Add(legajoNumericUpDown);
             Controls.Add(legajoLabel);
             Controls.Add(tipoPersonaComboBox);
             Controls.Add(tipoPersonaLabel);
@@ -269,7 +266,6 @@ namespace WindowsForms
             Name = "UsuarioDetalle";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Detalle de Usuario";
-            ((System.ComponentModel.ISupportInitialize)legajoNumericUpDown).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -279,7 +275,6 @@ namespace WindowsForms
         private Label tipoPersonaLabel;
         private ComboBox tipoPersonaComboBox;
         private Label legajoLabel;
-        private NumericUpDown legajoNumericUpDown;
         private Label nombreLabel;
         private TextBox nombreTextBox;
         private Label apellidoLabel;
@@ -297,5 +292,6 @@ namespace WindowsForms
         private CheckBox habilitadoCheckBox;
         private Button aceptarButton;
         private Button cancelarButton;
+        private TextBox legajoTextBox;
     }
 }

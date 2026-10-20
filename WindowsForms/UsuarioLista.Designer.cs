@@ -39,18 +39,20 @@ namespace WindowsForms
             // 
             // buscarTextBox
             // 
-            buscarTextBox.Location = new Point(44, 34);
+            buscarTextBox.Location = new Point(24, 16);
+            buscarTextBox.Margin = new Padding(2, 1, 2, 1);
             buscarTextBox.Name = "buscarTextBox";
-            buscarTextBox.Size = new Size(502, 39);
+            buscarTextBox.Size = new Size(272, 23);
             buscarTextBox.TabIndex = 0;
             // 
             // buscarButton
             // 
-            buscarButton.Location = new Point(572, 34);
+            buscarButton.Location = new Point(312, 16);
+            buscarButton.Margin = new Padding(2, 1, 2, 1);
             buscarButton.Name = "buscarButton";
-            buscarButton.Size = new Size(209, 39);
+            buscarButton.Size = new Size(81, 23);
             buscarButton.TabIndex = 1;
-            buscarButton.Text = "BUSCAR";
+            buscarButton.Text = "Buscar";
             buscarButton.UseVisualStyleBackColor = true;
             buscarButton.Click += buscarButton_Click;
             // 
@@ -58,56 +60,61 @@ namespace WindowsForms
             // 
             usuarioDataGridView.AllowUserToAddRows = false;
             usuarioDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            usuarioDataGridView.Location = new Point(45, 99);
+            usuarioDataGridView.Location = new Point(24, 46);
+            usuarioDataGridView.Margin = new Padding(2, 1, 2, 1);
             usuarioDataGridView.MultiSelect = false;
             usuarioDataGridView.Name = "usuarioDataGridView";
             usuarioDataGridView.ReadOnly = true;
             usuarioDataGridView.RowHeadersWidth = 82;
             usuarioDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            usuarioDataGridView.Size = new Size(1099, 469);
+            usuarioDataGridView.Size = new Size(592, 220);
             usuarioDataGridView.TabIndex = 2;
             // 
             // agregarButton
             // 
-            agregarButton.Location = new Point(45, 597);
+            agregarButton.Location = new Point(535, 279);
+            agregarButton.Margin = new Padding(2, 1, 2, 1);
             agregarButton.Name = "agregarButton";
-            agregarButton.Size = new Size(150, 46);
+            agregarButton.Size = new Size(81, 23);
             agregarButton.TabIndex = 3;
-            agregarButton.Text = "AGREGAR";
+            agregarButton.Text = "Agregar";
             agregarButton.UseVisualStyleBackColor = true;
             agregarButton.Click += agregarButton_Click;
             // 
             // modificarButton
             // 
-            modificarButton.Location = new Point(210, 597);
+            modificarButton.Location = new Point(450, 279);
+            modificarButton.Margin = new Padding(2, 1, 2, 1);
             modificarButton.Name = "modificarButton";
-            modificarButton.Size = new Size(150, 46);
+            modificarButton.Size = new Size(81, 22);
             modificarButton.TabIndex = 4;
-            modificarButton.Text = "MODIFICAR";
+            modificarButton.Text = "Modificar";
             modificarButton.UseVisualStyleBackColor = true;
             modificarButton.Click += modificarButton_Click;
             // 
             // eliminarButton
             // 
-            eliminarButton.Location = new Point(377, 597);
+            eliminarButton.Location = new Point(365, 279);
+            eliminarButton.Margin = new Padding(2, 1, 2, 1);
             eliminarButton.Name = "eliminarButton";
-            eliminarButton.Size = new Size(150, 46);
+            eliminarButton.Size = new Size(81, 23);
             eliminarButton.TabIndex = 5;
-            eliminarButton.Text = "ELIMINAR";
+            eliminarButton.Text = "Eliminar";
             eliminarButton.UseVisualStyleBackColor = true;
             eliminarButton.Click += eliminarButton_Click;
             // 
             // UsuarioLista
             // 
-            AutoScaleDimensions = new SizeF(13F, 32F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1190, 663);
+            ClientSize = new Size(641, 311);
             Controls.Add(eliminarButton);
             Controls.Add(modificarButton);
             Controls.Add(agregarButton);
             Controls.Add(usuarioDataGridView);
             Controls.Add(buscarButton);
             Controls.Add(buscarTextBox);
+            Margin = new Padding(2, 1, 2, 1);
             Name = "UsuarioLista";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Gestión de Usuarios (Alumnos y Profesores)";

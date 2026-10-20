@@ -10,7 +10,7 @@ namespace WindowsForms
 {
     public partial class UsuarioDetalle : Form
     {
-        private UsuarioDTO _usuario;
+        private UsuarioDTO _usuario = new UsuarioDTO();
         private FormMode _mode;
 
         public UsuarioDTO Usuario => _usuario;
@@ -27,16 +27,24 @@ namespace WindowsForms
 
         private async void Init(FormMode mode, UsuarioDTO usuario)
         {
-            _mode = mode;
-            _usuario = usuario ?? new UsuarioDTO();
+            try
+            {
+                DeshabilitarControles();
+                _mode = mode;
+                _usuario = usuario ?? new UsuarioDTO();
 
-            aceptarButton.Enabled = false;
-
-            CargarTiposPersona();
-            await CargarPlanes();
-            await ConfigurarPantallaAsync();
-
-            aceptarButton.Enabled = true;
+                CargarTiposPersona();
+                await CargarPlanes();
+                ConfigurarPantalla();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar datos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HabilitarControles();
+            }
         }
 
         private void CargarTiposPersona()
@@ -64,34 +72,27 @@ namespace WindowsForms
             }
         }
 
-        private async Task ConfigurarPantallaAsync()
+        private void ConfigurarPantalla()
         {
-            legajoNumericUpDown.Enabled = false; // El legajo se asigna automáticamente de forma autoincremental
-
             if (_mode == FormMode.Add)
             {
                 this.Text = "Nuevo Usuario (Alumno / Profesor)";
+                legajoLabel.Visible = false;
+                legajoTextBox.Visible = false;
                 fechaNacimientoDateTimePicker.Value = DateTime.Today.AddYears(-20);
                 habilitadoCheckBox.Checked = true;
-
-                try
-                {
-                    var proximoLegajo = await UsuarioApiClient.GetProximoLegajoAsync();
-                    legajoNumericUpDown.Value = proximoLegajo;
-                }
-                catch
-                {
-                    legajoNumericUpDown.Value = 1001;
-                }
             }
             else if (_mode == FormMode.Update)
             {
                 this.Text = "Modificar Usuario";
+                legajoLabel.Visible = true;
+                legajoTextBox.Visible = true;
+                legajoTextBox.ReadOnly = true;
+                legajoTextBox.Text = _usuario.Persona.Legajo.ToString();
 
                 // Datos de la Persona
                 nombreTextBox.Text = _usuario.Persona.Nombre;
                 apellidoTextBox.Text = _usuario.Persona.Apellido;
-                legajoNumericUpDown.Value = _usuario.Persona.Legajo > 0 ? _usuario.Persona.Legajo : 1;
                 emailTextBox.Text = _usuario.Persona.Email;
                 telefonoTextBox.Text = _usuario.Persona.Telefono;
                 direccionTextBox.Text = _usuario.Persona.Direccion;
@@ -158,7 +159,6 @@ namespace WindowsForms
             // 1. Asignar datos personales a PersonaDTO
             _usuario.Persona.Nombre = nombreTextBox.Text.Trim();
             _usuario.Persona.Apellido = apellidoTextBox.Text.Trim();
-            _usuario.Persona.Legajo = (int)legajoNumericUpDown.Value;
             _usuario.Persona.Email = email;
             _usuario.Persona.Telefono = telefonoTextBox.Text.Trim();
             _usuario.Persona.Direccion = direccionTextBox.Text.Trim();
@@ -177,22 +177,16 @@ namespace WindowsForms
             // 2. Asignación automática de Usuario y Contraseña
             if (_mode == FormMode.Add)
             {
-                // Usuario = nombre en minúsculas
                 _usuario.NombreUsuario = nombreTextBox.Text.Trim().ToLower();
-                // Contraseña = su número de legajo
-                _usuario.Clave = legajoNumericUpDown.Value.ToString();
+                _usuario.Clave = string.Empty; // El backend le asigna el legajo como clave inicial
             }
             else if (_mode == FormMode.Update)
             {
-                // En modificación, si no tenía usuario o clave, los aseguramos
                 if (string.IsNullOrWhiteSpace(_usuario.NombreUsuario))
                 {
                     _usuario.NombreUsuario = nombreTextBox.Text.Trim().ToLower();
                 }
-                if (string.IsNullOrWhiteSpace(_usuario.Clave))
-                {
-                    _usuario.Clave = legajoNumericUpDown.Value.ToString();
-                }
+                _usuario.Clave = string.Empty; // Se envía vacía para conservar la contraseña existente
             }
 
             _usuario.Habilitado = habilitadoCheckBox.Checked;
@@ -200,7 +194,7 @@ namespace WindowsForms
             // 3. Persistir a través de la API
             try
             {
-                aceptarButton.Enabled = false;
+                DeshabilitarControles();
 
                 if (_mode == FormMode.Add)
                 {
@@ -213,17 +207,52 @@ namespace WindowsForms
                 }
 
                 this.DialogResult = DialogResult.OK;
+                this.Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al guardar el usuario: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                aceptarButton.Enabled = true;
+            }
+            finally
+            {
+                HabilitarControles();
             }
         }
 
         private void cancelarButton_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+
+        private void DeshabilitarControles()
+        {
+            aceptarButton.Enabled = false;
+            cancelarButton.Enabled = false;
+            tipoPersonaComboBox.Enabled = false;
+            nombreTextBox.Enabled = false;
+            apellidoTextBox.Enabled = false;
+            emailTextBox.Enabled = false;
+            telefonoTextBox.Enabled = false;
+            direccionTextBox.Enabled = false;
+            fechaNacimientoDateTimePicker.Enabled = false;
+            planComboBox.Enabled = false;
+            habilitadoCheckBox.Enabled = false;
+        }
+
+        private void HabilitarControles()
+        {
+            aceptarButton.Enabled = true;
+            cancelarButton.Enabled = true;
+            tipoPersonaComboBox.Enabled = true;
+            nombreTextBox.Enabled = true;
+            apellidoTextBox.Enabled = true;
+            emailTextBox.Enabled = true;
+            telefonoTextBox.Enabled = true;
+            direccionTextBox.Enabled = true;
+            fechaNacimientoDateTimePicker.Enabled = true;
+            planComboBox.Enabled = true;
+            habilitadoCheckBox.Enabled = true;
         }
     }
 }

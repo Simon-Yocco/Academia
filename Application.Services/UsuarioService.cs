@@ -37,11 +37,6 @@ namespace Application.Services
             return MapearADTO(usuario);
         }
 
-        public async Task<int> GetProximoLegajoAsync()
-        {
-            return await personaRepository.GetProximoLegajoAsync();
-        }
-
         public async Task<UsuarioDTO?> AddAsync(UsuarioDTO dto)
         {
             // Mapeamos y guardamos la Persona

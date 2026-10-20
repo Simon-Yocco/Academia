@@ -9,7 +9,7 @@ namespace WindowsForms
 {
     public partial class CursoDetalle : Form
     {
-        private CursoDTO _curso;
+        private CursoDTO _curso = new();
         private FormMode _mode;
 
         public CursoDetalle(FormMode mode, CursoDTO curso) : this()

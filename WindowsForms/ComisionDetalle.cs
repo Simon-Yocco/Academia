@@ -9,7 +9,7 @@ namespace WindowsForms
 {
     public partial class ComisionDetalle : Form
     {
-        private ComisionDTO _comision;
+        private ComisionDTO _comision = new();
         private FormMode _mode;
 
         public ComisionDetalle(FormMode mode, ComisionDTO comision) : this()

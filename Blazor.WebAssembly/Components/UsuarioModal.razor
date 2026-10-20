@@ -15,7 +15,7 @@
                         <DataAnnotationsValidator />
 
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="@(mode == FormMode.Update ? "col-md-6" : "col-md-12") mb-3">
                                 <label class="form-label">Tipo de Persona / Rol *</label>
                                 <select class="form-select" @bind="current.Persona.TipoPersona">
                                     <option value="Alumno">Alumno</option>
@@ -23,10 +23,13 @@
                                     <option value="Administrador">Administrador</option>
                                 </select>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Legajo (Automático)</label>
-                                <input type="text" class="form-control" value="@(mode == FormMode.Add ? $"{proximoLegajo} (Asignado automáticamente)" : current.Persona.Legajo.ToString())" readonly disabled />
-                            </div>
+                            @if (mode == FormMode.Update)
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Legajo</label>
+                                    <input type="text" class="form-control" value="@current.Persona.Legajo" readonly disabled />
+                                </div>
+                            }
                         </div>
 
                         <div class="row">
@@ -145,7 +148,6 @@
     private bool showModal = false;
     private FormMode mode = FormMode.Add;
     private UsuarioDTO current = new UsuarioDTO();
-    private int proximoLegajo = 1001;
     private int selectedPlanId = 0;
     private bool saving = false;
     private string errorMessage = string.Empty;
@@ -169,15 +171,6 @@
         };
         selectedPlanId = 0;
 
-        try
-        {
-            proximoLegajo = await UsuarioApiClient.GetProximoLegajoAsync();
-        }
-        catch
-        {
-            proximoLegajo = 1001;
-        }
-
         await LoadPlanes();
         ClearValidationErrors();
         showModal = true;
@@ -191,7 +184,7 @@
         {
             ID = item.ID,
             NombreUsuario = item.NombreUsuario,
-            Clave = item.Clave,
+            Clave = string.Empty,
             Habilitado = item.Habilitado,
             IDPersona = item.IDPersona,
             Persona = new PersonaDTO
@@ -202,7 +195,7 @@
                 Direccion = item.Persona?.Direccion ?? string.Empty,
                 Email = item.Persona?.Email ?? string.Empty,
                 Telefono = item.Persona?.Telefono ?? string.Empty,
-                FechaNacimiento = item.Persona?.FechaNacimiento != default ? item.Persona.FechaNacimiento : DateTime.Today.AddYears(-20),
+                FechaNacimiento = item.Persona != null && item.Persona.FechaNacimiento != default ? item.Persona.FechaNacimiento : DateTime.Today.AddYears(-20),
                 Legajo = item.Persona?.Legajo ?? 0,
                 TipoPersona = item.Persona?.TipoPersona ?? "Alumno",
                 IDPlan = item.Persona?.IDPlan,
@@ -243,14 +236,14 @@
 
             if (mode == FormMode.Add)
             {
-                current.Persona.Legajo = proximoLegajo;
                 current.NombreUsuario = current.Persona.Nombre.Trim().ToLower();
-                current.Clave = proximoLegajo.ToString();
+                current.Clave = string.Empty; // El backend calcula el legajo y lo asigna como clave inicial
 
                 await UsuarioApiClient.AddAsync(current);
             }
             else
             {
+                current.Clave = string.Empty; // Se envía vacía para conservar la contraseña existente
                 var ok = await UsuarioApiClient.UpdateAsync(current);
                 if (!ok)
                 {
