@@ -47,7 +47,8 @@ namespace Application.Services
                 Token = token,
                 ExpiresAt = DateTime.UtcNow.AddMinutes(60),
                 Username = usuario.NombreUsuario,
-                Role = rol
+                Role = rol,
+                IDPersona = usuario.IDPersona
             };
         }
 
@@ -89,4 +90,3 @@ namespace Application.Services
         }
     }
 }
-

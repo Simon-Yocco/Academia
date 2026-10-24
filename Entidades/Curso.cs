@@ -9,12 +9,16 @@ namespace Entidades
         public string Descripcion { get; private set; } = string.Empty;
         public int IDcomision { get; private set; }
         public int IDmateria { get; private set; }
+
+        public int IDdocente { get; private set; }
         public Materia? Materia { get; private set; }
         public Comision? Comision { get; private set; }
 
+        public Persona? Docente { get; private set; }
+
         public Curso() { }
 
-        public Curso(int id, int anioCalendario, int cupo, string descripcion, int idComision, int idMateria)
+        public Curso(int id, int anioCalendario, int cupo, string descripcion, int idComision, int idMateria , int idDocente)
         {
             SetId(id);
             SetAnioCalendario(anioCalendario);
@@ -22,6 +26,7 @@ namespace Entidades
             SetDescripcion(descripcion);
             SetIDcomision(idComision);
             SetIDmateria(idMateria);
+            SetIDdocente(idDocente);
         }
 
         public void SetAnioCalendario(int anio)
@@ -66,6 +71,18 @@ namespace Entidades
             ArgumentNullException.ThrowIfNull(comision);
             Comision = comision;
             IDcomision = comision.ID;
+        }
+        public void SetIDdocente(int idDocente)
+        {
+            if (idDocente <= 0)
+                throw new ArgumentException("El ID del docente debe ser válido.");
+            IDdocente = idDocente;
+        }
+        public void SetDocente(Persona docente)
+        {
+            ArgumentNullException.ThrowIfNull(docente);
+            Docente = docente;
+            IDdocente = docente.ID;
         }
     }
 }

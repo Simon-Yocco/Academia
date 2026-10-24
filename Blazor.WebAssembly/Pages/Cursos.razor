@@ -40,6 +40,8 @@
                                 <th>Cupo</th>
                                 <th>Descripción</th>
                                 <th>Materia</th>
+                                <th>Comisión</th>
+                                <th>Docente</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -54,6 +56,8 @@
                                         <td>@item.Cupo</td>
                                         <td>@item.Descripcion</td>
                                         <td>@item.MateriaDescripcion</td>
+                                        <td>@item.ComisionDescripcion</td>
+                                        <td>@item.DocenteNombreCompleto</td>
                                         <td>
                                             <button class="btn btn-sm btn-outline-primary me-1" @onclick="() => OpenEditModal(item)">
                                                 Editar
@@ -68,7 +72,7 @@
                             else
                             {
                                 <tr>
-                                    <td colspan="6" class="text-center text-muted py-3">
+                                    <td colspan="8" class="text-center text-muted py-3">
                                         No se encontraron cursos.
                                     </td>
                                 </tr>

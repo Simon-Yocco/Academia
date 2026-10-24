@@ -1,4 +1,4 @@
-using API.Clients;
+﻿using API.Clients;
 using DTOs;
 using System;
 using System.Linq;
@@ -50,6 +50,22 @@ namespace WindowsForms
                 comisionComboBox.DisplayMember = "Descripcion";
                 comisionComboBox.ValueMember = "ID";
                 comisionComboBox.SelectedIndex = -1; // Por defecto vacío
+
+                var usuarios = await UsuarioApiClient.GetAllAsync();
+                var docentes = usuarios
+                    .Where(u => u.Rol == "Docente" || u.Persona?.TipoPersona == "Docente")
+                    .Select(u => new 
+                    { 
+                        ID = u.IDPersona, 
+                        NombreCompleto = $"{u.Apellido}, {u.Nombre}" 
+                    })
+                    .OrderBy(d => d.NombreCompleto)
+                    .ToList();
+
+                docenteComboBox.DataSource = docentes;
+                docenteComboBox.DisplayMember = "NombreCompleto";
+                docenteComboBox.ValueMember = "ID";
+                docenteComboBox.SelectedIndex = -1;
             }
             catch (Exception ex)
             {
@@ -71,11 +87,12 @@ namespace WindowsForms
                 anioCalendarioTextBox.Text = _curso.AnioCalendario.ToString();
                 cupoTextBox.Text = _curso.Cupo.ToString();
                 descripcionTextBox.Text = _curso.Descripcion;
-                
+
             }
 
             if (_curso.IDmateria > 0) materiaComboBox.SelectedValue = _curso.IDmateria;
             if (_curso.IDcomision > 0) comisionComboBox.SelectedValue = _curso.IDcomision;
+            if (_curso.IDDocente > 0) docenteComboBox.SelectedValue = _curso.IDDocente;
         }
 
         private async void aceptarButton_Click(object sender, EventArgs e)
@@ -102,12 +119,18 @@ namespace WindowsForms
                 MessageBox.Show("El cupo debe ser un número entero mayor a 0.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
+            if (materiaComboBox.SelectedValue == null || comisionComboBox.SelectedValue == null || docenteComboBox.SelectedValue == null)
+            {
+                MessageBox.Show("Debe seleccionar Materia, Comisión y Docente.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            
             _curso.AnioCalendario = anio;
             _curso.Cupo = cupo;
             _curso.Descripcion = descripcionTextBox.Text.Trim();
             _curso.IDmateria = (int)materiaComboBox.SelectedValue;
             _curso.IDcomision = (int)comisionComboBox.SelectedValue;
+            _curso.IDDocente = (int)docenteComboBox.SelectedValue;
 
             try
             {

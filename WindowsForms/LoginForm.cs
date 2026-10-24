@@ -38,6 +38,8 @@ namespace WindowsForms
                         BaseApiClient.Token = response.Token;
                         BaseApiClient.Rol = response.Role;
                         BaseApiClient.UsuarioActual = response.Username;
+                        BaseApiClient.IDPersonaActual = response.IDPersona;
+
                         var usuarioLogueado = !string.IsNullOrWhiteSpace(response.Username) ? response.Username : usernameTextBox.Text.Trim();
                         MessageBox.Show($"¡Bienvenido {usuarioLogueado}!", "Éxito");
                         this.DialogResult = DialogResult.OK;
@@ -82,5 +84,3 @@ namespace WindowsForms
         }
     }
 }
-
-

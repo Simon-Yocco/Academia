@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Headers;
+using System.Net.Http.Headers;
 using System.Text.Json;
 
 namespace API.Clients
@@ -18,7 +18,11 @@ namespace API.Clients
         }
         public static string Rol { get; set; } = string.Empty;
         public static string UsuarioActual { get; set; } = string.Empty;
+        public static int IDPersonaActual { get; set; }
+
         public static bool EsAdmin => Rol == "Administrador";
+        public static bool EsDocente => Rol == "Docente";
+        public static bool EsAlumno => Rol == "Alumno";
 
         public static event Action<bool>? AuthenticationStateChanged;
 

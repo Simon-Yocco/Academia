@@ -69,6 +69,11 @@ namespace WindowsForms
         {
             AbrirFormulario<UsuarioLista>();
         }
+
+        private void inscripcionesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<InscripcionLista>();
+        }
     }
 }
 

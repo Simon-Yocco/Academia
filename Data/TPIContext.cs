@@ -13,6 +13,7 @@ namespace Data
         public DbSet<Materia> Materias { get; set; }
         public DbSet<Comision> Comisiones { get; set; }
         public DbSet<Plan> Planes { get; set; }
+        public DbSet<AlumnoInscripcion> AlumnosInscripciones { get; set; }
 
         public TPIContext(DbContextOptions<TPIContext> options) : base(options)
         {
@@ -65,6 +66,11 @@ namespace Data
                     .WithMany()
                     .HasForeignKey(c => c.IDmateria)
                     .IsRequired(false);
+
+                entity.HasOne(c => c.Docente)
+                    .WithMany()
+                    .HasForeignKey(c => c.IDdocente)
+                    .IsRequired();
 
                 entity.HasOne(c => c.Comision)
                     .WithMany()
@@ -251,6 +257,26 @@ namespace Data
                 entity.HasOne(c => c.Plan)
                     .WithMany()
                     .HasForeignKey(c => c.IDPlan);
+            });
+
+            modelBuilder.Entity<AlumnoInscripcion>(entity =>
+            {
+                entity.HasKey(e => e.ID);
+                entity.Property(e => e.ID).ValueGeneratedOnAdd();
+                entity.Property(e => e.Condicion).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.Nota).IsRequired(false);
+                entity.Property(e => e.IDAlumno).IsRequired();
+                entity.Property(e => e.IDCurso).IsRequired();
+
+                entity.HasOne(e => e.Alumno)
+                    .WithMany()
+                    .HasForeignKey(e => e.IDAlumno)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.Curso)
+                    .WithMany()
+                    .HasForeignKey(e => e.IDCurso)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
         }

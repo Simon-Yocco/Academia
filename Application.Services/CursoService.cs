@@ -10,7 +10,7 @@ namespace Application.Services
 
         public CursoService(ICursoRepository cursoRepository)
         {
-            this.cursoRepository= cursoRepository;
+            this.cursoRepository = cursoRepository;
         }
 
         public async Task<IEnumerable<CursoDTO>> GetAllAsync()
@@ -25,8 +25,12 @@ namespace Application.Services
                 Descripcion = c.Descripcion,
                 IDcomision = c.IDcomision,
                 IDmateria = c.IDmateria,
+                IDDocente = c.IDdocente,
                 MateriaDescripcion = c.Materia?.Descripcion ?? "Sin Materia",
-                ComisionDescripcion = c.Comision?.Descripcion ?? "Sin Comisión"
+                ComisionDescripcion = c.Comision?.Descripcion ?? "Sin Comisión",
+                DocenteNombreCompleto = c.Docente != null 
+                    ? $"{c.Docente.Apellido}, {c.Docente.Nombre}" 
+                    : "Sin Asignar"
             }).ToList();
         }
 
@@ -42,14 +46,20 @@ namespace Application.Services
                 Cupo = curso.Cupo,
                 Descripcion = curso.Descripcion,
                 IDcomision = curso.IDcomision,
-                IDmateria = curso.IDmateria
+                IDmateria = curso.IDmateria,
+                IDDocente = curso.IDdocente,
+                MateriaDescripcion = curso.Materia?.Descripcion ?? "Sin Materia",
+                ComisionDescripcion = curso.Comision?.Descripcion ?? "Sin Comisión",
+                DocenteNombreCompleto = curso.Docente != null 
+                    ? $"{curso.Docente.Apellido}, {curso.Docente.Nombre}" 
+                    : "Sin Asignar"
             };
         }
 
         public async Task<CursoDTO?> AddAsync(CursoDTO dto)
         {
             // Mapeamos de DTO a Entidad.
-            var curso = new Curso(0, dto.AnioCalendario, dto.Cupo, dto.Descripcion, dto.IDcomision, dto.IDmateria);
+            var curso = new Curso(0, dto.AnioCalendario, dto.Cupo, dto.Descripcion, dto.IDcomision, dto.IDmateria, dto.IDDocente);
             await cursoRepository.AddAsync(curso);
             
             // Actualizamos el ID del DTO con el que se generó en la base de datos
@@ -65,7 +75,7 @@ namespace Application.Services
             if (existing == null)
                 return false;
 
-            var curso = new Curso(dto.ID, dto.AnioCalendario, dto.Cupo, dto.Descripcion, dto.IDcomision, dto.IDmateria);
+            var curso = new Curso(dto.ID, dto.AnioCalendario, dto.Cupo, dto.Descripcion, dto.IDcomision, dto.IDmateria, dto.IDDocente);
             return await cursoRepository.UpdateAsync(curso);
         }
 
@@ -73,25 +83,11 @@ namespace Application.Services
         {
             return await cursoRepository.DeleteAsync(id);
         }
+
         public async Task<IEnumerable<CursoDTO>> GetByCriteriaAsync(string criteria)
         {
-            // Llamar al repositorio
             var cursos = await cursoRepository.GetByCriteriaAsync(criteria);
 
-            // Mapear Domain Model a DTO
-            return cursos.Select(c => new CursoDTO
-            {
-                ID = c.ID,
-                AnioCalendario = c.AnioCalendario,
-                Cupo = c.Cupo,
-                Descripcion = c.Descripcion,
-                IDcomision = c.IDcomision,
-                IDmateria = c.IDmateria
-            });
-        }
-        public async Task<IEnumerable<CursoDTO>> GetByCriteria(string texto)
-        {
-            var cursos = await cursoRepository.GetByCriteriaAsync(texto);
             return cursos.Select(c => new CursoDTO
             {
                 ID = c.ID,
@@ -100,9 +96,18 @@ namespace Application.Services
                 Descripcion = c.Descripcion,
                 IDcomision = c.IDcomision,
                 IDmateria = c.IDmateria,
+                IDDocente = c.IDdocente,
                 MateriaDescripcion = c.Materia?.Descripcion ?? "Sin Materia",
-                ComisionDescripcion = c.Comision?.Descripcion ?? "Sin Comisión"
+                ComisionDescripcion = c.Comision?.Descripcion ?? "Sin Comisión",
+                DocenteNombreCompleto = c.Docente != null 
+                    ? $"{c.Docente.Apellido}, {c.Docente.Nombre}" 
+                    : "Sin Asignar"
             }).ToList();
+        }
+
+        public async Task<IEnumerable<CursoDTO>> GetByCriteria(string texto)
+        {
+            return await GetByCriteriaAsync(texto);
         }
     }
 }

@@ -1,4 +1,4 @@
-using API.Clients;
+﻿using API.Clients;
 using DTOs;
 
 namespace WindowsForms
@@ -58,6 +58,13 @@ namespace WindowsForms
                 Name = "Cupo",
                 HeaderText = "Cupo",
                 DataPropertyName = "Cupo",
+            });
+
+            cursosDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "DocenteNombreCompleto",
+                HeaderText = "Docente",
+                DataPropertyName = "DocenteNombreCompleto",
             });
         }
 

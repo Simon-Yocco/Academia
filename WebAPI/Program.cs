@@ -34,6 +34,8 @@ builder.Services.AddScoped<IComisionService, ComisionService>();
 builder.Services.AddScoped<IPersonaRepository, PersonaRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IAlumnoInscripcionRepository, AlumnoInscripcionRepository>();
+builder.Services.AddScoped<IAlumnoInscripcionService, AlumnoInscripcionService>();
 builder.Services.AddScoped<Application.Services.AuthService>();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -143,6 +145,7 @@ app.MapMateriaEndpoints();
 app.MapComisionEndpoints();
 app.MapAuthEndpoints();
 app.MapUsuarioEndpoints();
+app.MapInscripcionEndpoints();
 
 // Aseguramos que la base de datos y sus tablas estén creadas al iniciar
 using (var scope = app.Services.CreateScope())

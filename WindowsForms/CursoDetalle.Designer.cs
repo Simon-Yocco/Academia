@@ -42,6 +42,8 @@
             comisionLabel = new Label();
             materiaComboBox = new ComboBox();
             comisionComboBox = new ComboBox();
+            docenteLabel = new Label();
+            docenteComboBox = new ComboBox();
             SuspendLayout();
             // 
             // cancelarButton
@@ -66,7 +68,7 @@
             // 
             // descripcionTextBox
             // 
-            descripcionTextBox.Location = new Point(163, 217);
+            descripcionTextBox.Location = new Point(163, 247);
             descripcionTextBox.Name = "descripcionTextBox";
             descripcionTextBox.Size = new Size(305, 23);
             descripcionTextBox.TabIndex = 9;
@@ -82,7 +84,7 @@
             // descripcionLabel
             // 
             descripcionLabel.AutoSize = true;
-            descripcionLabel.Location = new Point(85, 225);
+            descripcionLabel.Location = new Point(85, 255);
             descripcionLabel.Name = "descripcionLabel";
             descripcionLabel.Size = new Size(72, 15);
             descripcionLabel.TabIndex = 7;
@@ -116,7 +118,7 @@
             // cupoLabel
             // 
             cupoLabel.AutoSize = true;
-            cupoLabel.Location = new Point(115, 189);
+            cupoLabel.Location = new Point(115, 219);
             cupoLabel.Name = "cupoLabel";
             cupoLabel.Size = new Size(42, 15);
             cupoLabel.TabIndex = 14;
@@ -124,7 +126,7 @@
             // 
             // cupoTextBox
             // 
-            cupoTextBox.Location = new Point(163, 181);
+            cupoTextBox.Location = new Point(163, 211);
             cupoTextBox.Name = "cupoTextBox";
             cupoTextBox.Size = new Size(100, 23);
             cupoTextBox.TabIndex = 15;
@@ -141,7 +143,7 @@
             // comisionLabel
             // 
             comisionLabel.AutoSize = true;
-            comisionLabel.Location = new Point(96, 151);
+            comisionLabel.Location = new Point(96, 185);
             comisionLabel.Name = "comisionLabel";
             comisionLabel.Size = new Size(61, 15);
             comisionLabel.TabIndex = 17;
@@ -160,10 +162,28 @@
             // 
             comisionComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             comisionComboBox.FormattingEnabled = true;
-            comisionComboBox.Location = new Point(163, 143);
+            comisionComboBox.Location = new Point(163, 177);
             comisionComboBox.Name = "comisionComboBox";
             comisionComboBox.Size = new Size(100, 23);
             comisionComboBox.TabIndex = 19;
+            // 
+            // docenteLabel
+            // 
+            docenteLabel.AutoSize = true;
+            docenteLabel.Location = new Point(103, 148);
+            docenteLabel.Name = "docenteLabel";
+            docenteLabel.Size = new Size(54, 15);
+            docenteLabel.TabIndex = 20;
+            docenteLabel.Text = "Docente:";
+            // 
+            // docenteComboBox
+            // 
+            docenteComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            docenteComboBox.FormattingEnabled = true;
+            docenteComboBox.Location = new Point(163, 140);
+            docenteComboBox.Name = "docenteComboBox";
+            docenteComboBox.Size = new Size(309, 23);
+            docenteComboBox.TabIndex = 21;
             // 
             // CursoDetalle
             // 
@@ -172,6 +192,8 @@
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = cancelarButton;
             ClientSize = new Size(553, 347);
+            Controls.Add(docenteComboBox);
+            Controls.Add(docenteLabel);
             Controls.Add(comisionComboBox);
             Controls.Add(materiaComboBox);
             Controls.Add(comisionLabel);
@@ -210,5 +232,7 @@
         private Label comisionLabel;
         private ComboBox materiaComboBox;
         private ComboBox comisionComboBox;
+        private Label docenteLabel;
+        private ComboBox docenteComboBox;
     }
 }

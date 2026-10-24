@@ -69,6 +69,7 @@
             {
                 BaseApiClient.Rol = response.Role;
                 BaseApiClient.UsuarioActual = response.Username;
+                BaseApiClient.IDPersonaActual = response.IDPersona;
                 BaseApiClient.Token = response.Token;
                 NavigationManager.NavigateTo("/");
             }

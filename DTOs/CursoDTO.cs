@@ -8,7 +8,9 @@ namespace DTOs
         public string Descripcion { get; set; } = string.Empty;
         public int IDcomision { get; set; }
         public int IDmateria { get; set; }
+        public int IDDocente { get; set; }
         public string MateriaDescripcion { get; set; } = string.Empty;
         public string ComisionDescripcion { get; set; } = string.Empty;
+        public string DocenteNombreCompleto { get; set; } = string.Empty;
     }
 }
