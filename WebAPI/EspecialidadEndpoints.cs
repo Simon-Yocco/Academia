@@ -14,7 +14,7 @@ namespace WebAPI
             })
             .WithName("GetAllEspecialidades") // Le asigna un nombre Ãºnico interno a este endpoint
             .Produces<List<EspecialidadDTO>>(StatusCodes.Status200OK) // Codigo para Swagger
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
 
             app.MapGet("/especialidades/{id}", async (int id, IEspecialidadService especialidadService) =>
             {
@@ -28,7 +28,7 @@ namespace WebAPI
             .WithName("GetEspecialidad")
             .Produces<EspecialidadDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
 
             app.MapGet("/especialidades/buscar/{criteria}", async (string criteria, IEspecialidadService especialidadService) =>
             {
@@ -37,7 +37,7 @@ namespace WebAPI
             })
             .WithName("GetEspecialidadByCriteria")
             .Produces<List<EspecialidadDTO>>(StatusCodes.Status200OK)
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
 
             app.MapPost("/especialidades", async (EspecialidadDTO dto, IEspecialidadService especialidadService) =>
             {
@@ -58,7 +58,7 @@ namespace WebAPI
             .WithName("AddEspecialidad")
             .Produces<EspecialidadDTO>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
 
             app.MapPut("/especialidades", async (EspecialidadDTO dto, IEspecialidadService especialidadService) =>
             {
@@ -86,7 +86,7 @@ namespace WebAPI
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
 
             app.MapDelete("/especialidades/{id}", async (int id, IEspecialidadService especialidadService) =>
             {
@@ -113,7 +113,7 @@ namespace WebAPI
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
         }
     }
 }

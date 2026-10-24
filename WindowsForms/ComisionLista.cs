@@ -90,7 +90,11 @@ namespace WindowsForms
 
             if (respuesta == DialogResult.Yes)
             {
-                await ComisionApiClient.DeleteAsync(comisionSeleccionada.ID);
+                var ok = await ComisionApiClient.DeleteAsync(comisionSeleccionada.ID);
+                if (!ok)
+                {
+                    MessageBox.Show("No se pudo eliminar la comisión (puede tener cursos asociados).", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 await CargarGrilla();
             }
         }
@@ -126,4 +130,3 @@ namespace WindowsForms
         }
     }
 }
-

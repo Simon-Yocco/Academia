@@ -11,6 +11,14 @@
         <div class="col-12">
             <h3 class="mt-3">Cursos</h3>
 
+            @if (!BaseApiClient.EsAdmin)
+            {
+                <div class="alert alert-warning mt-3">
+                    Solo los administradores pueden gestionar cursos.
+                </div>
+            }
+            else
+            {
             <div class="mb-3 mt-3 d-flex justify-content-between">
                 <button class="btn btn-primary" @onclick="OpenAddModal">
                     + Nuevo Curso
@@ -81,6 +89,7 @@
                     </table>
                 </div>
             }
+            }
         </div>
     </div>
 </div>
@@ -95,6 +104,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (!BaseApiClient.EsAdmin) return;
         await Buscar();
     }
 
@@ -150,7 +160,11 @@
         
         if (confirm)
         {
-            await CursoApiClient.DeleteAsync(item.ID);
+            var ok = await CursoApiClient.DeleteAsync(item.ID);
+            if (!ok)
+            {
+                await JSRuntime.InvokeVoidAsync("alert", "No se pudo eliminar el curso (puede tener inscripciones asociadas).");
+            }
             await Buscar();
         }
     }

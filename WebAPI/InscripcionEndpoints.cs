@@ -19,7 +19,7 @@ namespace WebAPI
             .WithName("GetAllInscripciones")
             .Produces<List<AlumnoInscripcionDTO>>(StatusCodes.Status200OK)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("InscripcionesLeer");
 
             app.MapGet("/inscripciones/{id:int}", async (int id, IAlumnoInscripcionService service) =>
             {
@@ -30,7 +30,7 @@ namespace WebAPI
             .Produces<AlumnoInscripcionDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("InscripcionesLeer");
 
             app.MapGet("/inscripciones/curso/{idCurso:int}", async (int idCurso, IAlumnoInscripcionService service) =>
             {
@@ -40,7 +40,7 @@ namespace WebAPI
             .WithName("GetInscripcionesByCurso")
             .Produces<List<AlumnoInscripcionDTO>>(StatusCodes.Status200OK)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("InscripcionesLeer");
 
             app.MapGet("/inscripciones/alumno/{idAlumno:int}", async (int idAlumno, IAlumnoInscripcionService service) =>
             {
@@ -50,7 +50,7 @@ namespace WebAPI
             .WithName("GetInscripcionesByAlumno")
             .Produces<List<AlumnoInscripcionDTO>>(StatusCodes.Status200OK)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("InscripcionesLeer");
 
             app.MapGet("/inscripciones/buscar/{criteria}", async (string criteria, IAlumnoInscripcionService service) =>
             {
@@ -60,7 +60,7 @@ namespace WebAPI
             .WithName("GetInscripcionesByCriteria")
             .Produces<List<AlumnoInscripcionDTO>>(StatusCodes.Status200OK)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("InscripcionesLeer");
 
             app.MapPost("/inscripciones", async (AlumnoInscripcionDTO dto, IAlumnoInscripcionService service) =>
             {
@@ -86,7 +86,7 @@ namespace WebAPI
             .Produces<AlumnoInscripcionDTO>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("InscripcionesAgregar");
 
             app.MapPut("/inscripciones", async (AlumnoInscripcionDTO dto, IAlumnoInscripcionService service) =>
             {
@@ -114,7 +114,7 @@ namespace WebAPI
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("InscripcionesActualizar");
 
             app.MapDelete("/inscripciones/{id:int}", async (int id, IAlumnoInscripcionService service) =>
             {
@@ -132,7 +132,7 @@ namespace WebAPI
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("InscripcionesEliminar");
         }
     }
 }

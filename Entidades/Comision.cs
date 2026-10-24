@@ -22,7 +22,7 @@ namespace Entidades
         }
         public void SetAnioEspecialidad(int anio)
         {
-            if (anio < 2000) throw new ArgumentException("El año de especialidad no es válido.");
+            if (anio < 1 || anio > 10) throw new ArgumentException("El año de especialidad debe estar entre 1 y 10.");
             AnioEspecialidad = anio;
         }
         public void SetDescripcion(string descripcion)

@@ -18,7 +18,7 @@ namespace WebAPI
             .WithName("GetAllPlanes")
             .Produces<List<PlanDTO>>(StatusCodes.Status200OK)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("Admin");
 
             app.MapGet("/planes/{id}", async (int id, IPlanService planService) =>
             {
@@ -33,7 +33,7 @@ namespace WebAPI
             .Produces<PlanDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("Admin");
 
             app.MapGet("/planes/buscar/{criteria}", async (string criteria, IPlanService planService) =>
             {
@@ -43,7 +43,7 @@ namespace WebAPI
             .WithName("GetPlanesByCriteria")
             .Produces<List<PlanDTO>>(StatusCodes.Status200OK)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("Admin");
 
             app.MapPost("/planes", async (PlanDTO dto, IPlanService planService) =>
             {
@@ -65,7 +65,7 @@ namespace WebAPI
             .Produces<PlanDTO>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("Admin");
 
             app.MapPut("/planes", async (PlanDTO dto, IPlanService planService) =>
             {
@@ -92,7 +92,7 @@ namespace WebAPI
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("Admin");
 
             app.MapDelete("/planes/{id}", async (int id, IPlanService planService) =>
             {
@@ -119,7 +119,7 @@ namespace WebAPI
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("Admin");
         }
     }
 }

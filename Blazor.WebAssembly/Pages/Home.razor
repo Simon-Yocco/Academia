@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @using API.Clients
 @inject NavigationManager NavigationManager
 
@@ -9,9 +9,13 @@
         {
             NavigationManager.NavigateTo("/login");
         }
-        else
+        else if (BaseApiClient.EsAdmin)
         {
             NavigationManager.NavigateTo("/cursos");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/inscripciones");
         }
     }
 }

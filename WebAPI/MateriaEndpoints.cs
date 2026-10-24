@@ -17,7 +17,7 @@ namespace WebAPI
             })
             .WithName("GetAllMaterias")
             .Produces<List<MateriaDTO>>(StatusCodes.Status200OK)
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
         }
     }
 }

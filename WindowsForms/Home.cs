@@ -13,6 +13,7 @@ namespace WindowsForms
         {
             if (!BaseApiClient.EsAdmin)
             {
+                cursosToolStripMenuItem.Visible = false;
                 planesToolStripMenuItem.Visible = false;
                 especialidadesToolStripMenuItem.Visible = false;
                 comisionesToolStripMenuItem.Visible = false;
@@ -52,6 +53,7 @@ namespace WindowsForms
             BaseApiClient.Token = string.Empty;
             BaseApiClient.Rol = string.Empty;
             BaseApiClient.UsuarioActual = string.Empty;
+            BaseApiClient.IDPersonaActual = 0;
             Application.Restart();
         }
 
@@ -76,4 +78,3 @@ namespace WindowsForms
         }
     }
 }
-

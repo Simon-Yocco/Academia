@@ -46,7 +46,7 @@ namespace Data
         {
             return await _context.Usuarios
                 .Include(u => u.Persona)
-                .FirstOrDefaultAsync(u => u.NombreUsuario == username && u.Habilitado);
+                .FirstOrDefaultAsync(u => u.NombreUsuario == username);
         }
 
         public async Task<IEnumerable<Usuario>> GetAllAsync()

@@ -60,7 +60,11 @@ namespace WindowsForms
 
             if (respuesta == DialogResult.Yes)
             {
-                await EspecialidadApiClient.DeleteAsync(especialidadSeleccionada.ID);
+                var ok = await EspecialidadApiClient.DeleteAsync(especialidadSeleccionada.ID);
+                if (!ok)
+                {
+                    MessageBox.Show("No se pudo eliminar la especialidad (puede tener planes asociados).", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 await CargarGrilla();
             }
         }

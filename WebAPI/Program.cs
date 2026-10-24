@@ -110,7 +110,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 // Habilitamos el motor de permisos (para decidir quién entra a dónde)
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    // Permiso exclusivo para Administradores (ABM de Especialidades, Planes, Comisiones, Materias, Usuarios y Cursos)
+    options.AddPolicy("Admin", policy => policy.RequireRole("Administrador"));
+
+    // Cursos: Lectura permitida a todos los roles autenticados (necesario para inscribirse o filtrar cursos en Inscripciones)
+    options.AddPolicy("CursosLeer", policy => policy.RequireRole("Administrador", "Docente", "Alumno"));
+
+    // Inscripciones: Permisos según el rol
+    options.AddPolicy("InscripcionesLeer", policy => policy.RequireRole("Administrador", "Docente", "Alumno"));
+    options.AddPolicy("InscripcionesAgregar", policy => policy.RequireRole("Administrador", "Alumno"));
+    options.AddPolicy("InscripcionesActualizar", policy => policy.RequireRole("Administrador", "Docente"));
+    options.AddPolicy("InscripcionesEliminar", policy => policy.RequireRole("Administrador"));
+});
 
 
 // =========================================================================
@@ -147,14 +160,5 @@ app.MapAuthEndpoints();
 app.MapUsuarioEndpoints();
 app.MapInscripcionEndpoints();
 
-// Aseguramos que la base de datos y sus tablas estén creadas al iniciar
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<TPIContext>();
-    context.Database.EnsureCreated();
-}
-
 // Arrancamos el servidor
 app.Run();
-
-

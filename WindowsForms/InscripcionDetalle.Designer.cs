@@ -39,8 +39,7 @@
             alumnoComboBox = new ComboBox();
             cursoComboBox = new ComboBox();
             condicionComboBox = new ComboBox();
-            notaNumericUpDown = new NumericUpDown();
-            ((System.ComponentModel.ISupportInitialize)notaNumericUpDown).BeginInit();
+            notaTextBox = new TextBox();
             SuspendLayout();
             // 
             // idLabel
@@ -143,15 +142,12 @@
             condicionComboBox.Size = new Size(148, 23);
             condicionComboBox.TabIndex = 10;
             // 
-            // notaNumericUpDown
+            // notaTextBox
             // 
-            notaNumericUpDown.Location = new Point(164, 208);
-            notaNumericUpDown.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
-            notaNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            notaNumericUpDown.Name = "notaNumericUpDown";
-            notaNumericUpDown.Size = new Size(120, 23);
-            notaNumericUpDown.TabIndex = 11;
-            notaNumericUpDown.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            notaTextBox.Location = new Point(163, 208);
+            notaTextBox.Name = "notaTextBox";
+            notaTextBox.Size = new Size(100, 23);
+            notaTextBox.TabIndex = 12;
             // 
             // InscripcionDetalle
             // 
@@ -160,7 +156,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = cancelarButton;
             ClientSize = new Size(536, 355);
-            Controls.Add(notaNumericUpDown);
+            Controls.Add(notaTextBox);
             Controls.Add(condicionComboBox);
             Controls.Add(cursoComboBox);
             Controls.Add(alumnoComboBox);
@@ -175,7 +171,6 @@
             Name = "InscripcionDetalle";
             Text = "Inscripcion - Detalle";
             Load += InscripcionDetalle_Load;
-            ((System.ComponentModel.ISupportInitialize)notaNumericUpDown).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -193,6 +188,6 @@
         private ComboBox alumnoComboBox;
         private ComboBox cursoComboBox;
         private ComboBox condicionComboBox;
-        private NumericUpDown notaNumericUpDown;
+        private TextBox notaTextBox;
     }
 }

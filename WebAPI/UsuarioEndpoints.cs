@@ -17,7 +17,7 @@ namespace WebAPI
             })
             .WithName("GetAllUsuarios")
             .Produces<List<UsuarioDTO>>(StatusCodes.Status200OK)
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
 
             app.MapGet("/usuarios/{id}", async (int id, IUsuarioService usuarioService) =>
             {
@@ -31,7 +31,7 @@ namespace WebAPI
             .WithName("GetUsuario")
             .Produces<UsuarioDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
 
             app.MapPost("/usuarios", async (UsuarioDTO dto, IUsuarioService usuarioService) =>
             {
@@ -52,7 +52,7 @@ namespace WebAPI
             .WithName("AddUsuario")
             .Produces<UsuarioDTO>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
 
             app.MapPut("/usuarios", async (UsuarioDTO dto, IUsuarioService usuarioService) =>
             {
@@ -78,7 +78,7 @@ namespace WebAPI
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
 
             app.MapDelete("/usuarios/{id}", async (int id, IUsuarioService usuarioService) =>
             {
@@ -104,7 +104,7 @@ namespace WebAPI
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
         }
     }
 }

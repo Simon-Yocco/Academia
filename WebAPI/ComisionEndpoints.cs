@@ -17,7 +17,7 @@ namespace WebAPI
             })
             .WithName("GetAllComisiones")
             .Produces<List<ComisionDTO>>(StatusCodes.Status200OK)
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
 
             app.MapGet("/comisiones/{id}", async (int id, IComisionService comisionService) =>
             {
@@ -31,7 +31,7 @@ namespace WebAPI
             .WithName("GetComision")
             .Produces<ComisionDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
 
             app.MapGet("/comisiones/buscar/{criteria}", async (string criteria, IComisionService comisionService) =>
             {
@@ -40,7 +40,7 @@ namespace WebAPI
             })
             .WithName("GetComisionesByCriteria")
             .Produces<List<ComisionDTO>>(StatusCodes.Status200OK)
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
 
             app.MapPost("/comisiones", async (ComisionDTO dto, IComisionService comisionService) =>
             {
@@ -61,7 +61,7 @@ namespace WebAPI
             .WithName("AddComision")
             .Produces<ComisionDTO>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
 
             app.MapPut("/comisiones", async (ComisionDTO dto, IComisionService comisionService) =>
             {
@@ -87,7 +87,7 @@ namespace WebAPI
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
 
             app.MapDelete("/comisiones/{id}", async (int id, IComisionService comisionService) =>
             {
@@ -113,7 +113,7 @@ namespace WebAPI
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi().RequireAuthorization();
+            .WithOpenApi().RequireAuthorization("Admin");
         }
     }
 }

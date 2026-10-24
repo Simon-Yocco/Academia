@@ -11,6 +11,14 @@
         <div class="col-12">
             <h3 class="mt-3">Comisiones</h3>
 
+            @if (!BaseApiClient.EsAdmin)
+            {
+                <div class="alert alert-warning mt-3">
+                    Solo los administradores pueden gestionar comisiones.
+                </div>
+            }
+            else
+            {
             <div class="mb-3 mt-3 d-flex justify-content-between">
                 <button class="btn btn-primary" @onclick="OpenAddModal">
                     + Nueva Comisión
@@ -75,6 +83,7 @@
                     </table>
                 </div>
             }
+            }
         </div>
     </div>
 </div>
@@ -89,6 +98,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (!BaseApiClient.EsAdmin) return;
         await Buscar();
     }
 

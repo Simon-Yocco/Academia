@@ -49,13 +49,13 @@ namespace Entidades
 
         public void SetIDcomision(int idComision)
         {
-            if (idComision < 0) throw new ArgumentException("El ID de la comisión debe ser válido.");
+            if (idComision <= 0) throw new ArgumentException("El ID de la comisión debe ser válido.");
             IDcomision = idComision;
         }
 
         public void SetIDmateria(int idMateria)
         {
-            if (idMateria < 0) throw new ArgumentException("El ID de la materia debe ser válido.");
+            if (idMateria <= 0) throw new ArgumentException("El ID de la materia debe ser válido.");
             IDmateria = idMateria;
         }
 

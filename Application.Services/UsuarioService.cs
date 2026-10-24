@@ -129,14 +129,7 @@ namespace Application.Services
             if (usuario == null)
                 return false;
 
-            int idPersona = usuario.IDPersona;
-            var deleted = await usuarioRepository.DeleteAsync(id);
-            if (deleted && idPersona > 0)
-            {
-                await personaRepository.DeleteAsync(idPersona);
-            }
-
-            return deleted;
+            return await personaRepository.DeleteAsync(usuario.IDPersona);
         }
 
         // Función para simplificar y reutilizar el mapeo de Entidad a DTO

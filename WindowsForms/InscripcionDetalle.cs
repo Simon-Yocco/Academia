@@ -43,22 +43,25 @@ namespace WindowsForms
         {
             try
             {
-                // 1. Cargar alumnos
-                var usuarios = await UsuarioApiClient.GetAllAsync();
-                var alumnos = usuarios
-                    .Where(u => u.Rol == "Alumno" || u.Persona?.TipoPersona == "Alumno")
-                    .Select(u => new
-                    {
-                        ID = u.IDPersona,
-                        Descripcion = $"{u.Apellido}, {u.Nombre} (Legajo: {u.Legajo})"
-                    })
-                    .OrderBy(a => a.Descripcion)
-                    .ToList();
+                // 1. Cargar alumnos (solo si es Admin)
+                if (BaseApiClient.EsAdmin)
+                {
+                    var usuarios = await UsuarioApiClient.GetAllAsync();
+                    var alumnos = usuarios
+                        .Where(u => u.Rol == "Alumno" || u.Persona?.TipoPersona == "Alumno")
+                        .Select(u => new
+                        {
+                            ID = u.IDPersona,
+                            Descripcion = $"{u.Apellido}, {u.Nombre} (Legajo: {u.Legajo})"
+                        })
+                        .OrderBy(a => a.Descripcion)
+                        .ToList();
 
-                alumnoComboBox.DataSource = alumnos;
-                alumnoComboBox.DisplayMember = "Descripcion";
-                alumnoComboBox.ValueMember = "ID";
-                alumnoComboBox.SelectedIndex = -1;
+                    alumnoComboBox.DataSource = alumnos;
+                    alumnoComboBox.DisplayMember = "Descripcion";
+                    alumnoComboBox.ValueMember = "ID";
+                    alumnoComboBox.SelectedIndex = -1;
+                }
 
                 // 2. Cargar cursos
                 var cursos = await CursoApiClient.GetAllAsync();
@@ -97,10 +100,22 @@ namespace WindowsForms
                 // Ocultar Condicion y Nota al dar de alta
                 condicionComboBox.Visible = false;
                 condicionLabel.Visible = false;
-                notaNumericUpDown.Visible = false;
+                notaTextBox.Visible = false;
                 notaLabel.Visible = false;
 
-                alumnoComboBox.Enabled = true;
+                if (BaseApiClient.EsAlumno)
+                {
+                    alumnoComboBox.Visible = false;
+                    alumnoLabel.Visible = false;
+                    this.Text = "Inscribirme a Curso";
+                    aceptarButton.Text = "Inscribirme";
+                }
+                else
+                {
+                    alumnoComboBox.Visible = true;
+                    alumnoLabel.Visible = true;
+                    alumnoComboBox.Enabled = true;
+                }
             }
             else if (_mode == FormMode.Update)
             {
@@ -111,12 +126,20 @@ namespace WindowsForms
                 // Mostrar Condicion y Nota para poder calificar o actualizar estado
                 condicionComboBox.Visible = true;
                 condicionLabel.Visible = true;
-                notaNumericUpDown.Visible = true;
+                notaTextBox.Visible = true;
                 notaLabel.Visible = true;
 
                 // En modificacion no se cambia el alumno
-                alumnoComboBox.SelectedValue = _inscripcion.IDAlumno;
-                alumnoComboBox.Enabled = false;
+                if (BaseApiClient.EsAdmin)
+                {
+                    alumnoComboBox.SelectedValue = _inscripcion.IDAlumno;
+                    alumnoComboBox.Enabled = false;
+                }
+                else
+                {
+                    alumnoComboBox.Visible = false;
+                    alumnoLabel.Visible = false;
+                }
 
                 cursoComboBox.SelectedValue = _inscripcion.IDCurso;
 
@@ -131,25 +154,24 @@ namespace WindowsForms
                     ? "Inscripto"
                     : _inscripcion.Condicion;
 
-                if (_inscripcion.Nota.HasValue &&
-                    _inscripcion.Nota.Value >= notaNumericUpDown.Minimum &&
-                    _inscripcion.Nota.Value <= notaNumericUpDown.Maximum)
-                {
-                    notaNumericUpDown.Value = _inscripcion.Nota.Value;
-                }
-                else
-                {
-                    notaNumericUpDown.Value = notaNumericUpDown.Minimum;
-                }
+                notaTextBox.Text = _inscripcion.Nota.HasValue ? _inscripcion.Nota.Value.ToString() : string.Empty;
             }
         }
 
         private async void aceptarButton_Click(object? sender, EventArgs e)
         {
-            if (alumnoComboBox.SelectedValue == null)
+            if (BaseApiClient.EsAlumno && _mode == FormMode.Add)
             {
-                MessageBox.Show("Debe seleccionar un alumno.", "Atencion", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                _inscripcion.IDAlumno = BaseApiClient.IDPersonaActual;
+            }
+            else if (_mode == FormMode.Add || BaseApiClient.EsAdmin)
+            {
+                if (alumnoComboBox.SelectedValue == null)
+                {
+                    MessageBox.Show("Debe seleccionar un alumno.", "Atencion", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                _inscripcion.IDAlumno = (int)alumnoComboBox.SelectedValue;
             }
 
             if (cursoComboBox.SelectedValue == null)
@@ -158,7 +180,6 @@ namespace WindowsForms
                 return;
             }
 
-            _inscripcion.IDAlumno = (int)alumnoComboBox.SelectedValue;
             _inscripcion.IDCurso = (int)cursoComboBox.SelectedValue;
 
             if (_mode == FormMode.Add)
@@ -169,7 +190,19 @@ namespace WindowsForms
             else
             {
                 _inscripcion.Condicion = condicionComboBox.SelectedItem?.ToString() ?? "Inscripto";
-                _inscripcion.Nota = (int)notaNumericUpDown.Value;
+                if (string.IsNullOrWhiteSpace(notaTextBox.Text))
+                {
+                    _inscripcion.Nota = null;
+                }
+                else if (int.TryParse(notaTextBox.Text.Trim(), out int nota) && nota >= 1 && nota <= 10)
+                {
+                    _inscripcion.Nota = nota;
+                }
+                else
+                {
+                    MessageBox.Show("La nota debe ser un número entero entre 1 y 10 (o dejarse vacía).", "Atencion", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
             }
 
             try

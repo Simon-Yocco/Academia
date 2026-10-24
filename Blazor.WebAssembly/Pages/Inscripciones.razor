@@ -9,13 +9,13 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <h3 class="mt-3">@(BaseApiClient.EsDocente ? "Alumnos de mis Cursos - Calificaciones" : "Inscripciones a Cursado")</h3>
+            <h3 class="mt-3">@(BaseApiClient.EsDocente ? "Alumnos de mis Cursos - Calificaciones" : (BaseApiClient.EsAlumno ? "Mis Inscripciones a Cursado" : "Inscripciones a Cursado"))</h3>
 
             <div class="mb-3 mt-3 d-flex justify-content-between">
                 @if (canAdd)
                 {
                     <button class="btn btn-primary" @onclick="OpenAddModal">
-                        + Nueva Inscripción
+                        @(BaseApiClient.EsAlumno ? "+ Inscribirme a Curso" : "+ Nueva Inscripción")
                     </button>
                 }
                 else
@@ -117,7 +117,7 @@
     protected override async Task OnInitializedAsync()
     {
         // Configuración de permisos igual al patrón de la cátedra
-        canAdd = BaseApiClient.EsAdmin;
+        canAdd = BaseApiClient.EsAdmin || BaseApiClient.EsAlumno;
         canUpdate = BaseApiClient.EsAdmin || BaseApiClient.EsDocente;
         canDelete = BaseApiClient.EsAdmin;
 
@@ -150,6 +150,18 @@
                 }
 
                 lista = misAlumnos.ToList();
+            }
+            else if (BaseApiClient.EsAlumno)
+            {
+                var misInscripciones = await InscripcionApiClient.GetByAlumnoAsync(BaseApiClient.IDPersonaActual);
+                if (!string.IsNullOrWhiteSpace(filtro))
+                {
+                    misInscripciones = misInscripciones.Where(i =>
+                        i.MateriaDescripcion.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
+                        i.ComisionDescripcion.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
+                        i.Condicion.Contains(filtro, StringComparison.OrdinalIgnoreCase));
+                }
+                lista = misInscripciones.ToList();
             }
             else
             {
@@ -185,7 +197,7 @@
 
     private async Task OpenAddModal()
     {
-        await modal.ShowAddModal();
+        await modal.ShowAddModal(BaseApiClient.EsAlumno ? BaseApiClient.IDPersonaActual : 0);
     }
 
     private async Task OpenEditModal(AlumnoInscripcionDTO item)

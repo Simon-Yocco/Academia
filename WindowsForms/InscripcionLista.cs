@@ -19,8 +19,8 @@ namespace WindowsForms
 
         private void ConfigureButtonPermissions()
         {
-            // El admin puede agregar y eliminar; el docente solo calificar/actualizar
-            bool canAdd = BaseApiClient.EsAdmin;
+            // El admin y el alumno pueden inscribir; el docente y admin pueden calificar/actualizar; solo el admin elimina
+            bool canAdd = BaseApiClient.EsAdmin || BaseApiClient.EsAlumno;
             bool canUpdate = BaseApiClient.EsAdmin || BaseApiClient.EsDocente;
             bool canDelete = BaseApiClient.EsAdmin;
 
@@ -28,11 +28,16 @@ namespace WindowsForms
             actualizarButton.Visible = canUpdate;
             eliminarButton.Visible = canDelete;
 
-            // Si es docente, personalizamos el texto del botón y el título
+            // Si es docente o alumno, personalizamos el texto del botón y el título
             if (BaseApiClient.EsDocente)
             {
                 actualizarButton.Text = "Cargar Nota";
                 this.Text = "Alumnos de mis Cursos - Calificaciones";
+            }
+            else if (BaseApiClient.EsAlumno)
+            {
+                agregarButton.Text = "Inscribirme";
+                this.Text = "Mis Inscripciones a Cursado";
             }
         }
 
@@ -147,6 +152,19 @@ namespace WindowsForms
                     }
 
                     inscripciones = misAlumnos;
+                }
+                else if (BaseApiClient.EsAlumno)
+                {
+                    var misInscripciones = await InscripcionApiClient.GetByAlumnoAsync(BaseApiClient.IDPersonaActual);
+                    if (!string.IsNullOrWhiteSpace(buscarTextBox.Text))
+                    {
+                        var filtro = buscarTextBox.Text.Trim();
+                        misInscripciones = misInscripciones.Where(i =>
+                            i.MateriaDescripcion.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
+                            i.ComisionDescripcion.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
+                            i.Condicion.Contains(filtro, StringComparison.OrdinalIgnoreCase));
+                    }
+                    inscripciones = misInscripciones;
                 }
                 else
                 {

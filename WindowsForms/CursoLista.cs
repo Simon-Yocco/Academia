@@ -1,4 +1,4 @@
-﻿using API.Clients;
+using API.Clients;
 using DTOs;
 
 namespace WindowsForms
@@ -106,7 +106,11 @@ namespace WindowsForms
 
             if (respuesta == DialogResult.Yes)
             {
-                await CursoApiClient.DeleteAsync(cursoSeleccionado.ID);
+                var ok = await CursoApiClient.DeleteAsync(cursoSeleccionado.ID);
+                if (!ok)
+                {
+                    MessageBox.Show("No se pudo eliminar el curso (puede tener inscripciones asociadas).", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 await CargarGrilla();
             }
         }

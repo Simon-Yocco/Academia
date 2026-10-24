@@ -16,7 +16,7 @@ namespace WebAPI
             .WithName("GetAllCursos") // Le asigna un nombre único interno a este endpoint
             .Produces<List<CursoDTO>>(StatusCodes.Status200OK) // Codigo para Swagger
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("CursosLeer");
 
             app.MapGet("/cursos/{id:int}", async (int id, ICursoService cursoService) =>
             {
@@ -31,7 +31,7 @@ namespace WebAPI
             .Produces<CursoDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("CursosLeer");
 
             app.MapGet("/cursos/buscar/{criteria}", async (string criteria, ICursoService cursoService) =>
             {
@@ -41,7 +41,7 @@ namespace WebAPI
             .WithName("GetByCriteria") // Le asigna un nombre único interno a este endpoint
             .Produces<List<CursoDTO>>(StatusCodes.Status200OK) // Codigo para Swagger
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("CursosLeer");
 
             app.MapPost("/cursos", async (CursoDTO dto, ICursoService cursoService) =>
             {
@@ -63,7 +63,7 @@ namespace WebAPI
             .Produces<CursoDTO>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("Admin");
 
             app.MapPut("/cursos", async (CursoDTO dto, ICursoService cursoService) =>
             {
@@ -92,7 +92,7 @@ namespace WebAPI
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("Admin");
 
             app.MapDelete("/cursos/{id}", async (int id, ICursoService cursoService) =>
             {
@@ -120,8 +120,7 @@ namespace WebAPI
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
-            .RequireAuthorization();
+            .RequireAuthorization("Admin");
         }
     }
 }
-

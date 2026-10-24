@@ -27,7 +27,7 @@ La API debe estar en ejecución antes de utilizar cualquiera de las aplicaciones
 ```bash
 dotnet run --project WebAPI
 ```
-* Swagger UI estará disponible en: `https://localhost:7196/swagger` (o el puerto configurado en `launchSettings.json`).
+* Swagger UI estará disponible en: `https://localhost:7001/swagger` (o el puerto configurado en `launchSettings.json`).
 * La base de datos `AcademiaTPI` se creará automáticamente en `(localdb)\MSSQLLocalDB` con el usuario administrador inicial.
 
 ---

@@ -135,7 +135,11 @@ namespace WindowsForms
                 try
                 {
                     DeshabilitarControles();
-                    await PlanApiClient.DeleteAsync(planSeleccionado.ID);
+                    var ok = await PlanApiClient.DeleteAsync(planSeleccionado.ID);
+                    if (!ok)
+                    {
+                        MessageBox.Show("No se pudo eliminar el plan (puede tener comisiones, cursos o personas asociadas).", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                     await CargarGrilla();
                 }
                 catch (Exception ex)
