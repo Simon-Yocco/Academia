@@ -18,6 +18,12 @@ namespace WindowsForms
                 especialidadesToolStripMenuItem.Visible = false;
                 comisionesToolStripMenuItem.Visible = false;
                 usuariosToolStripMenuItem.Visible = false;
+
+                // El reporte de ocupación es visible para Administradores y Docentes, pero no para Alumnos
+                if (BaseApiClient.EsAlumno)
+                {
+                    reporteCursosToolStripMenuItem.Visible = false;
+                }
             }
         }
 
@@ -75,6 +81,11 @@ namespace WindowsForms
         private void inscripcionesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AbrirFormulario<InscripcionLista>();
+        }
+
+        private void reporteCursosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<ReporteCursosForm>();
         }
     }
 }

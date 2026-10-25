@@ -131,6 +131,13 @@ builder.Services.AddAuthorization(options =>
 // =========================================================================
 var app = builder.Build();
 
+// Asegurar que la base de datos y sus tablas estén creadas al iniciar
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<TPIContext>();
+    context.Database.EnsureCreated();
+}
+
 // Solo en modo desarrollo mostramos Swagger
 if (app.Environment.IsDevelopment())
 {
@@ -158,7 +165,8 @@ app.MapMateriaEndpoints();
 app.MapComisionEndpoints();
 app.MapAuthEndpoints();
 app.MapUsuarioEndpoints();
-app.MapInscripcionEndpoints();
+app.MapInscripcionEndpoints(); 
+app.MapReporteEndpoints();
 
 // Arrancamos el servidor
 app.Run();
