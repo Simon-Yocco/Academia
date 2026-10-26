@@ -164,7 +164,7 @@
             if (BaseApiClient.EsAdmin)
             {
                 var usuarios = await UsuarioApiClient.GetAllAsync();
-                alumnos = usuarios?.Where(u => u.Rol == "Alumno" || u.Persona?.TipoPersona == "Alumno").ToList();
+                alumnos = usuarios?.Where(u => (u.Habilitado || u.IDPersona == current.IDAlumno) && (u.Rol == "Alumno" || u.Persona?.TipoPersona == "Alumno")).ToList();
             }
         }
         catch (Exception ex)

@@ -169,7 +169,7 @@
             materias = (await MateriaApiClient.GetAllAsync())?.ToList();
             comisiones = (await ComisionApiClient.GetAllAsync())?.ToList();
             var usuarios = await UsuarioApiClient.GetAllAsync();
-            docentes = usuarios?.Where(u => u.Rol == "Docente" || u.Persona?.TipoPersona == "Docente").ToList();
+            docentes = usuarios?.Where(u => (u.Habilitado || u.IDPersona == current.IDDocente) && (u.Rol == "Docente" || u.Persona?.TipoPersona == "Docente")).ToList();
         }
         catch (Exception ex)
         {

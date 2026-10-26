@@ -1,4 +1,4 @@
-﻿using API.Clients;
+using API.Clients;
 using DTOs;
 using System;
 using System.Linq;
@@ -53,7 +53,7 @@ namespace WindowsForms
 
                 var usuarios = await UsuarioApiClient.GetAllAsync();
                 var docentes = usuarios
-                    .Where(u => u.Rol == "Docente" || u.Persona?.TipoPersona == "Docente")
+                    .Where(u => (u.Habilitado || u.IDPersona == _curso.IDDocente) && (u.Rol == "Docente" || u.Persona?.TipoPersona == "Docente"))
                     .Select(u => new 
                     { 
                         ID = u.IDPersona, 
@@ -87,7 +87,6 @@ namespace WindowsForms
                 anioCalendarioTextBox.Text = _curso.AnioCalendario.ToString();
                 cupoTextBox.Text = _curso.Cupo.ToString();
                 descripcionTextBox.Text = _curso.Descripcion;
-
             }
 
             if (_curso.IDmateria > 0) materiaComboBox.SelectedValue = _curso.IDmateria;
@@ -102,11 +101,6 @@ namespace WindowsForms
                 MessageBox.Show("La descripción es requerida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if (materiaComboBox.SelectedValue == null || comisionComboBox.SelectedValue == null)
-            {
-                MessageBox.Show("Debe seleccionar una Materia y una Comisión.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
 
             if (!int.TryParse(anioCalendarioTextBox.Text, out int anio) || anio < 2000)
             {
@@ -119,6 +113,7 @@ namespace WindowsForms
                 MessageBox.Show("El cupo debe ser un número entero mayor a 0.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
             if (materiaComboBox.SelectedValue == null || comisionComboBox.SelectedValue == null || docenteComboBox.SelectedValue == null)
             {
                 MessageBox.Show("Debe seleccionar Materia, Comisión y Docente.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);

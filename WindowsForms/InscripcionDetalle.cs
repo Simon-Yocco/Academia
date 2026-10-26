@@ -48,7 +48,7 @@ namespace WindowsForms
                 {
                     var usuarios = await UsuarioApiClient.GetAllAsync();
                     var alumnos = usuarios
-                        .Where(u => u.Rol == "Alumno" || u.Persona?.TipoPersona == "Alumno")
+                        .Where(u => (u.Habilitado || u.IDPersona == _inscripcion.IDAlumno) && (u.Rol == "Alumno" || u.Persona?.TipoPersona == "Alumno"))
                         .Select(u => new
                         {
                             ID = u.IDPersona,

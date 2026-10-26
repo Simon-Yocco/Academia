@@ -129,7 +129,9 @@ namespace Application.Services
             if (usuario == null)
                 return false;
 
-            return await personaRepository.DeleteAsync(usuario.IDPersona);
+            // Borrado lógico: se deshabilita la cuenta preservando las notas y cursos históricos
+            usuario.SetHabilitado(false);
+            return await usuarioRepository.UpdateAsync(usuario);
         }
 
         // Función para simplificar y reutilizar el mapeo de Entidad a DTO
