@@ -45,7 +45,7 @@ namespace WebAPI
             .WithName("GetReporteCursosOcupacion")
             .Produces<List<CursoOcupacionDTO>>(StatusCodes.Status200OK)
             .WithOpenApi()
-            .RequireAuthorization("CursosLeer");
+            .RequireAuthorization("Admin");
 
             // Reporte 2: Rendimiento Académico por Curso (% Aprobados, Regulares, Libres)
             app.MapGet("/reportes/cursos-rendimiento", async (TPIContext context) =>
@@ -103,7 +103,7 @@ namespace WebAPI
             .WithName("GetReporteCursosRendimiento")
             .Produces<List<CursoRendimientoDTO>>(StatusCodes.Status200OK)
             .WithOpenApi()
-            .RequireAuthorization("CursosLeer");
+            .RequireAuthorization("Admin");
         }
     }
 }

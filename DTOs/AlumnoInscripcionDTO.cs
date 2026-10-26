@@ -14,6 +14,7 @@ namespace DTOs
         public string CursoDescripcion { get; set; } = string.Empty;
         public string MateriaDescripcion { get; set; } = string.Empty;
         public string ComisionDescripcion { get; set; } = string.Empty;
+        public string DocenteNombreCompleto { get; set; } = string.Empty;
         public int AnioCalendario { get; set; }
         public int Cupo { get; set; }
     }

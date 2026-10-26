@@ -159,6 +159,12 @@
             return;
         }
 
+        if (!BaseApiClient.EsAdmin)
+        {
+            Navigation.NavigateTo("");
+            return;
+        }
+
         await CargarReporte();
     }
 

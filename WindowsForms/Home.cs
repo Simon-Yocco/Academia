@@ -24,12 +24,9 @@ namespace WindowsForms
                 comisionesToolStripMenuItem.Visible = false;
                 usuariosToolStripMenuItem.Visible = false;
 
-                // Los reportes son visibles para Administradores y Docentes, pero no para Alumnos
-                if (BaseApiClient.EsAlumno)
-                {
-                    reporteCursosToolStripMenuItem.Visible = false;
-                    reporteRendimientoToolStripMenuItem.Visible = false;
-                }
+                // Solo los administradores pueden ver los reportes
+                reporteCursosToolStripMenuItem.Visible = false;
+                reporteRendimientoToolStripMenuItem.Visible = false;
             }
         }
 

@@ -23,7 +23,7 @@
                 </NavLink>
             </div>
 
-            @if (BaseApiClient.EsAdmin || BaseApiClient.EsDocente)
+            @if (BaseApiClient.EsAdmin)
             {
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="reporte-cursos">
@@ -35,10 +35,6 @@
                         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Reporte Rendimiento
                     </NavLink>
                 </div>
-            }
-
-            @if (BaseApiClient.EsAdmin)
-            {
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="cursos">
                         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Cursos

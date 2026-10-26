@@ -41,6 +41,8 @@ namespace Data
                     .ThenInclude(c => c!.Materia)
                 .Include(i => i.Curso)
                     .ThenInclude(c => c!.Comision)
+                .Include(i => i.Curso)
+                    .ThenInclude(c => c!.Docente)
                 .FirstOrDefaultAsync(i => i.ID == id);
         }
 
@@ -52,6 +54,8 @@ namespace Data
                     .ThenInclude(c => c!.Materia)
                 .Include(i => i.Curso)
                     .ThenInclude(c => c!.Comision)
+                .Include(i => i.Curso)
+                    .ThenInclude(c => c!.Docente)
                 .ToListAsync();
         }
 
@@ -63,6 +67,8 @@ namespace Data
                     .ThenInclude(c => c!.Materia)
                 .Include(i => i.Curso)
                     .ThenInclude(c => c!.Comision)
+                .Include(i => i.Curso)
+                    .ThenInclude(c => c!.Docente)
                 .Where(i => i.IDCurso == idCurso)
                 .OrderBy(i => i.Alumno!.Apellido)
                 .ThenBy(i => i.Alumno!.Nombre)
@@ -77,6 +83,8 @@ namespace Data
                     .ThenInclude(c => c!.Materia)
                 .Include(i => i.Curso)
                     .ThenInclude(c => c!.Comision)
+                .Include(i => i.Curso)
+                    .ThenInclude(c => c!.Docente)
                 .Where(i => i.IDAlumno == idAlumno)
                 .ToListAsync();
         }
@@ -117,10 +125,13 @@ namespace Data
                     .ThenInclude(c => c!.Materia)
                 .Include(i => i.Curso)
                     .ThenInclude(c => c!.Comision)
+                .Include(i => i.Curso)
+                    .ThenInclude(c => c!.Docente)
                 .Where(i => (i.Alumno != null && (i.Alumno.Nombre.Contains(texto) || i.Alumno.Apellido.Contains(texto) || i.Alumno.Legajo.ToString().Contains(texto)))
                          || (i.Curso != null && i.Curso.Descripcion.Contains(texto))
                          || (i.Curso != null && i.Curso.Materia != null && i.Curso.Materia.Descripcion.Contains(texto))
                          || (i.Curso != null && i.Curso.Comision != null && i.Curso.Comision.Descripcion.Contains(texto))
+                         || (i.Curso != null && i.Curso.Docente != null && (i.Curso.Docente.Nombre.Contains(texto) || i.Curso.Docente.Apellido.Contains(texto)))
                          || i.Condicion.Contains(texto))
                 .ToListAsync();
         }

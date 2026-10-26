@@ -67,9 +67,9 @@
             // 
             // actualizarButton
             // 
-            actualizarButton.Location = new Point(639, 407);
+            actualizarButton.Location = new Point(614, 407);
             actualizarButton.Name = "actualizarButton";
-            actualizarButton.Size = new Size(75, 23);
+            actualizarButton.Size = new Size(100, 23);
             actualizarButton.TabIndex = 3;
             actualizarButton.Text = "Actualizar";
             actualizarButton.UseVisualStyleBackColor = true;

@@ -41,6 +41,7 @@ namespace WindowsForms
             if (BaseApiClient.EsDocente)
             {
                 actualizarButton.Text = "Cargar Nota";
+                actualizarButton.Size = new Size(100, 23);
                 this.Text = "Alumnos de mis Cursos - Calificaciones";
             }
             else if (BaseApiClient.EsAlumno)
@@ -99,6 +100,14 @@ namespace WindowsForms
                 HeaderText = "Comisión",
                 DataPropertyName = "ComisionDescripcion",
                 FillWeight = 45
+            });
+
+            inscripcionDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "DocenteNombreCompleto",
+                HeaderText = "Profesor",
+                DataPropertyName = "DocenteNombreCompleto",
+                FillWeight = 65
             });
 
             inscripcionDataGridView.Columns.Add(new DataGridViewTextBoxColumn

@@ -129,6 +129,7 @@ namespace Application.Services
                 CursoDescripcion = i.Curso?.Descripcion ?? "Sin Curso",
                 MateriaDescripcion = i.Curso?.Materia?.Descripcion ?? "Sin Materia",
                 ComisionDescripcion = i.Curso?.Comision?.Descripcion ?? "Sin Comisión",
+                DocenteNombreCompleto = i.Curso?.Docente != null ? $"{i.Curso.Docente.Apellido}, {i.Curso.Docente.Nombre}" : "Sin Asignar",
                 AnioCalendario = i.Curso?.AnioCalendario ?? 0,
                 Cupo = i.Curso?.Cupo ?? 0
             };

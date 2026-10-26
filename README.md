@@ -25,7 +25,7 @@ El sistema utiliza la convención definida en la lógica de negocio (`UsuarioSer
 ---
 
 ### 👨‍🏫 Profesores (Docentes)
-*Acceso a calificaciones de sus cursos y a los Reportes.*
+*Acceso a carga de notas y calificaciones de los alumnos de sus cursos.*
 
 | Profesor | Usuario (Nombre) | Contraseña (Legajo) | Email | Cursos asignados |
 | :--- | :--- | :--- | :--- | :--- |

@@ -46,6 +46,7 @@
                                 <th>Alumno</th>
                                 <th>Materia</th>
                                 <th>Comisión</th>
+                                <th>Profesor</th>
                                 <th>Año</th>
                                 <th>Condición</th>
                                 <th>Nota</th>
@@ -65,6 +66,7 @@
                                         <td>@item.AlumnoNombreCompleto</td>
                                         <td>@item.MateriaDescripcion</td>
                                         <td>@item.ComisionDescripcion</td>
+                                        <td><strong>@item.DocenteNombreCompleto</strong></td>
                                         <td>@item.AnioCalendario</td>
                                         <td>
                                             <span class="badge @GetBadgeClass(item.Condicion)">
@@ -95,7 +97,7 @@
                             else
                             {
                                 <tr>
-                                    <td colspan="@((canUpdate || canDelete) ? 8 : 7)" class="text-center text-muted py-3">
+                                    <td colspan="@((canUpdate || canDelete) ? 9 : 8)" class="text-center text-muted py-3">
                                         No se encontraron inscripciones.
                                     </td>
                                 </tr>
@@ -165,6 +167,7 @@
                     misInscripciones = misInscripciones.Where(i =>
                         i.MateriaDescripcion.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
                         i.ComisionDescripcion.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
+                        i.DocenteNombreCompleto.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
                         i.Condicion.Contains(filtro, StringComparison.OrdinalIgnoreCase));
                 }
                 lista = misInscripciones.ToList();
