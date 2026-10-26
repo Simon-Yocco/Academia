@@ -62,7 +62,7 @@ namespace WindowsForms
             {
                 var planes = await PlanApiClient.GetAllAsync();
                 planComboBox.DataSource = planes.ToList();
-                planComboBox.DisplayMember = "Descripcion";
+                planComboBox.DisplayMember = "DescripcionCompleta";
                 planComboBox.ValueMember = "ID";
                 planComboBox.SelectedIndex = -1;
             }

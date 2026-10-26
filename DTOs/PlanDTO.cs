@@ -11,5 +11,9 @@ namespace DTOs
         public string EspecialidadDescripcion { get; set; } = string.Empty;
         public List<MateriaDTO> Materias { get; set; } = new List<MateriaDTO>();
         public int CantidadMaterias => Materias?.Count ?? 0;
+
+        public string DescripcionCompleta => string.IsNullOrWhiteSpace(EspecialidadDescripcion)
+            ? Descripcion
+            : $"{Descripcion} ({EspecialidadDescripcion})";
     }
 }

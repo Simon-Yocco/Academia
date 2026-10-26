@@ -119,7 +119,7 @@ namespace WindowsForms
             planComboBox.FormattingEnabled = true;
             planComboBox.Location = new Point(169, 159);
             planComboBox.Name = "planComboBox";
-            planComboBox.Size = new Size(121, 23);
+            planComboBox.Size = new Size(280, 23);
             planComboBox.TabIndex = 12;
             // 
             // planLabel
