@@ -43,7 +43,9 @@ namespace Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // =========================================================================
             // 1. ESPECIALIDADES
+            // =========================================================================
             modelBuilder.Entity<Especialidad>(entity =>
             {
                 entity.HasKey(e => e.ID);
@@ -52,11 +54,14 @@ namespace Data
 
                 entity.HasData(
                     new { ID = 1, Descripcion = "Ingeniería en Sistemas de Información", State = "Activo" },
-                    new { ID = 2, Descripcion = "Ingeniería Química", State = "Activo" }
+                    new { ID = 2, Descripcion = "Ingeniería Química", State = "Activo" },
+                    new { ID = 3, Descripcion = "Ingeniería Mecánica", State = "Activo" }
                 );
             });
 
+            // =========================================================================
             // 2. PLANES
+            // =========================================================================
             modelBuilder.Entity<Plan>(entity =>
             {
                 entity.HasKey(e => e.ID);
@@ -74,11 +79,14 @@ namespace Data
 
                 entity.HasData(
                     new { ID = 1, Descripcion = "Plan 2023", IDEspecialidad = 1, State = "Activo" },
-                    new { ID = 2, Descripcion = "Plan 2008", IDEspecialidad = 1, State = "Activo" }
+                    new { ID = 2, Descripcion = "Plan 2008", IDEspecialidad = 1, State = "Activo" },
+                    new { ID = 3, Descripcion = "Plan 2023", IDEspecialidad = 2, State = "Activo" }
                 );
             });
 
+            // =========================================================================
             // 3. MATERIAS
+            // =========================================================================
             modelBuilder.Entity<Materia>(entity =>
             {
                 entity.HasKey(e => e.ID);
@@ -91,11 +99,16 @@ namespace Data
                 entity.HasData(
                     new { ID = 1, Descripcion = "Sistemas Operativos", HSSemanales = 6, HSTotales = 192, IDPlan = 1, State = "Activo" },
                     new { ID = 2, Descripcion = "Desarrollo de Software .NET", HSSemanales = 4, HSTotales = 128, IDPlan = 1, State = "Activo" },
-                    new { ID = 3, Descripcion = "Bases de Datos", HSSemanales = 4, HSTotales = 128, IDPlan = 1, State = "Activo" }
+                    new { ID = 3, Descripcion = "Bases de Datos", HSSemanales = 4, HSTotales = 128, IDPlan = 1, State = "Activo" },
+                    new { ID = 4, Descripcion = "Ingeniería de Software", HSSemanales = 6, HSTotales = 192, IDPlan = 1, State = "Activo" },
+                    new { ID = 5, Descripcion = "Algoritmos y Estructuras de Datos", HSSemanales = 6, HSTotales = 192, IDPlan = 1, State = "Activo" },
+                    new { ID = 6, Descripcion = "Química General", HSSemanales = 5, HSTotales = 160, IDPlan = 3, State = "Activo" }
                 );
             });
 
+            // =========================================================================
             // 4. COMISIONES
+            // =========================================================================
             modelBuilder.Entity<Comision>(entity =>
             {
                 entity.HasKey(e => e.ID);
@@ -109,12 +122,16 @@ namespace Data
                     .HasForeignKey(c => c.IDPlan);
 
                 entity.HasData(
-                    new { ID = 1, Descripcion = "Comisión 3K1", AnioEspecialidad = 3, IDPlan = 1, State = "Activo" },
-                    new { ID = 2, Descripcion = "Comisión 3K2", AnioEspecialidad = 3, IDPlan = 1, State = "Activo" }
+                    new { ID = 1, Descripcion = "Comisión 1K1", AnioEspecialidad = 1, IDPlan = 1, State = "Activo" },
+                    new { ID = 2, Descripcion = "Comisión 2K1", AnioEspecialidad = 2, IDPlan = 1, State = "Activo" },
+                    new { ID = 3, Descripcion = "Comisión 3K1", AnioEspecialidad = 3, IDPlan = 1, State = "Activo" },
+                    new { ID = 4, Descripcion = "Comisión 3K2", AnioEspecialidad = 3, IDPlan = 1, State = "Activo" }
                 );
             });
 
+            // =========================================================================
             // 5. PERSONAS
+            // =========================================================================
             modelBuilder.Entity<Persona>(entity =>
             {
                 entity.HasKey(e => e.ID);
@@ -135,29 +152,31 @@ namespace Data
                     .IsRequired(false);
 
                 entity.HasData(
+                    // Administrador
                     new
                     {
                         ID = 1,
                         Nombre = "Administrador",
                         Apellido = "General",
-                        Direccion = "Sistemas 123",
+                        Direccion = "Zeballos 1320",
                         Email = "admin@academia.utn.edu.ar",
                         Telefono = "3411234567",
-                        FechaNacimiento = new DateTime(1990, 1, 1),
+                        FechaNacimiento = new DateTime(1985, 1, 1),
                         Legajo = 1000,
                         TipoPersona = Persona.TiposPersonas.Administrador,
                         IDPlan = (int?)null,
                         State = "Activo"
                     },
+                    // Docentes (Profesores)
                     new
                     {
                         ID = 2,
                         Nombre = "Carlos",
                         Apellido = "Gómez",
-                        Direccion = "Pellegrini 1234",
+                        Direccion = "Pellegrini 1540",
                         Email = "profesor@academia.utn.edu.ar",
                         Telefono = "3415551122",
-                        FechaNacimiento = new DateTime(1980, 5, 15),
+                        FechaNacimiento = new DateTime(1978, 5, 15),
                         Legajo = 2001,
                         TipoPersona = Persona.TiposPersonas.Docente,
                         IDPlan = (int?)null,
@@ -166,11 +185,40 @@ namespace Data
                     new
                     {
                         ID = 3,
+                        Nombre = "Laura",
+                        Apellido = "Martínez",
+                        Direccion = "Oroño 820",
+                        Email = "laura@academia.utn.edu.ar",
+                        Telefono = "3415552233",
+                        FechaNacimiento = new DateTime(1982, 9, 23),
+                        Legajo = 2002,
+                        TipoPersona = Persona.TiposPersonas.Docente,
+                        IDPlan = (int?)null,
+                        State = "Activo"
+                    },
+                    new
+                    {
+                        ID = 4,
+                        Nombre = "Roberto",
+                        Apellido = "Sánchez",
+                        Direccion = "Santa Fe 2100",
+                        Email = "roberto@academia.utn.edu.ar",
+                        Telefono = "3415553344",
+                        FechaNacimiento = new DateTime(1975, 12, 10),
+                        Legajo = 2003,
+                        TipoPersona = Persona.TiposPersonas.Docente,
+                        IDPlan = (int?)null,
+                        State = "Activo"
+                    },
+                    // Alumnos
+                    new
+                    {
+                        ID = 5,
                         Nombre = "Juan",
                         Apellido = "Pérez",
                         Direccion = "Mitre 450",
                         Email = "alumno@academia.utn.edu.ar",
-                        Telefono = "3415553344",
+                        Telefono = "3415554455",
                         FechaNacimiento = new DateTime(2001, 8, 20),
                         Legajo = 5001,
                         TipoPersona = Persona.TiposPersonas.Alumno,
@@ -179,7 +227,7 @@ namespace Data
                     },
                     new
                     {
-                        ID = 4,
+                        ID = 6,
                         Nombre = "María",
                         Apellido = "López",
                         Direccion = "Corrientes 890",
@@ -193,14 +241,84 @@ namespace Data
                     },
                     new
                     {
-                        ID = 5,
+                        ID = 7,
                         Nombre = "Lucas",
                         Apellido = "Fernández",
                         Direccion = "San Juan 1100",
                         Email = "lucas@academia.utn.edu.ar",
-                        Telefono = "3415557788",
+                        Telefono = "3415556677",
                         FechaNacimiento = new DateTime(2000, 11, 5),
                         Legajo = 5003,
+                        TipoPersona = Persona.TiposPersonas.Alumno,
+                        IDPlan = (int?)1,
+                        State = "Activo"
+                    },
+                    new
+                    {
+                        ID = 8,
+                        Nombre = "Sofía",
+                        Apellido = "Rossi",
+                        Direccion = "Alvear 630",
+                        Email = "sofia@academia.utn.edu.ar",
+                        Telefono = "3415557788",
+                        FechaNacimiento = new DateTime(2002, 7, 14),
+                        Legajo = 5004,
+                        TipoPersona = Persona.TiposPersonas.Alumno,
+                        IDPlan = (int?)1,
+                        State = "Activo"
+                    },
+                    new
+                    {
+                        ID = 9,
+                        Nombre = "Mateo",
+                        Apellido = "Benítez",
+                        Direccion = "Córdoba 1820",
+                        Email = "mateo@academia.utn.edu.ar",
+                        Telefono = "3415558899",
+                        FechaNacimiento = new DateTime(2001, 4, 30),
+                        Legajo = 5005,
+                        TipoPersona = Persona.TiposPersonas.Alumno,
+                        IDPlan = (int?)1,
+                        State = "Activo"
+                    },
+                    new
+                    {
+                        ID = 10,
+                        Nombre = "Camila",
+                        Apellido = "Rodríguez",
+                        Direccion = "Mendoza 3200",
+                        Email = "camila@academia.utn.edu.ar",
+                        Telefono = "3415559900",
+                        FechaNacimiento = new DateTime(2003, 1, 19),
+                        Legajo = 5006,
+                        TipoPersona = Persona.TiposPersonas.Alumno,
+                        IDPlan = (int?)1,
+                        State = "Activo"
+                    },
+                    new
+                    {
+                        ID = 11,
+                        Nombre = "Tomás",
+                        Apellido = "Díaz",
+                        Direccion = "España 1420",
+                        Email = "tomas@academia.utn.edu.ar",
+                        Telefono = "3415550011",
+                        FechaNacimiento = new DateTime(2001, 10, 8),
+                        Legajo = 5007,
+                        TipoPersona = Persona.TiposPersonas.Alumno,
+                        IDPlan = (int?)1,
+                        State = "Activo"
+                    },
+                    new
+                    {
+                        ID = 12,
+                        Nombre = "Valentina",
+                        Apellido = "Romero",
+                        Direccion = "Urquiza 950",
+                        Email = "valentina@academia.utn.edu.ar",
+                        Telefono = "3415551133",
+                        FechaNacimiento = new DateTime(2002, 6, 25),
+                        Legajo = 5008,
                         TipoPersona = Persona.TiposPersonas.Alumno,
                         IDPlan = (int?)1,
                         State = "Activo"
@@ -208,7 +326,9 @@ namespace Data
                 );
             });
 
+            // =========================================================================
             // 6. USUARIOS
+            // =========================================================================
             modelBuilder.Entity<Usuario>(entity =>
             {
                 entity.HasKey(e => e.ID);
@@ -226,15 +346,27 @@ namespace Data
                     .IsRequired();
 
                 entity.HasData(
+                    // Administrador
                     new { ID = 1, NombreUsuario = "admin", Clave = "admin123", Habilitado = true, IDPersona = 1, State = "Activo" },
+                    // Docentes
                     new { ID = 2, NombreUsuario = "profesor", Clave = "profe123", Habilitado = true, IDPersona = 2, State = "Activo" },
-                    new { ID = 3, NombreUsuario = "alumno", Clave = "alumno123", Habilitado = true, IDPersona = 3, State = "Activo" },
-                    new { ID = 4, NombreUsuario = "maria", Clave = "maria123", Habilitado = true, IDPersona = 4, State = "Activo" },
-                    new { ID = 5, NombreUsuario = "lucas", Clave = "lucas123", Habilitado = true, IDPersona = 5, State = "Activo" }
+                    new { ID = 3, NombreUsuario = "laura", Clave = "laura123", Habilitado = true, IDPersona = 3, State = "Activo" },
+                    new { ID = 4, NombreUsuario = "roberto", Clave = "roberto123", Habilitado = true, IDPersona = 4, State = "Activo" },
+                    // Alumnos
+                    new { ID = 5, NombreUsuario = "alumno", Clave = "alumno123", Habilitado = true, IDPersona = 5, State = "Activo" },
+                    new { ID = 6, NombreUsuario = "maria", Clave = "maria123", Habilitado = true, IDPersona = 6, State = "Activo" },
+                    new { ID = 7, NombreUsuario = "lucas", Clave = "lucas123", Habilitado = true, IDPersona = 7, State = "Activo" },
+                    new { ID = 8, NombreUsuario = "sofia", Clave = "sofia123", Habilitado = true, IDPersona = 8, State = "Activo" },
+                    new { ID = 9, NombreUsuario = "mateo", Clave = "mateo123", Habilitado = true, IDPersona = 9, State = "Activo" },
+                    new { ID = 10, NombreUsuario = "camila", Clave = "camila123", Habilitado = true, IDPersona = 10, State = "Activo" },
+                    new { ID = 11, NombreUsuario = "tomas", Clave = "tomas123", Habilitado = true, IDPersona = 11, State = "Activo" },
+                    new { ID = 12, NombreUsuario = "valentina", Clave = "valentina123", Habilitado = true, IDPersona = 12, State = "Activo" }
                 );
             });
 
+            // =========================================================================
             // 7. CURSOS
+            // =========================================================================
             modelBuilder.Entity<Curso>(entity =>
             {
                 entity.HasKey(e => e.ID);
@@ -262,29 +394,75 @@ namespace Data
                     new
                     {
                         ID = 1,
-                        Descripcion = "Curso .NET - Turno Noche",
+                        Descripcion = "Desarrollo .NET - Turno Tarde",
                         AnioCalendario = 2026,
                         Cupo = 30,
                         IDmateria = 2,
-                        IDcomision = 1,
+                        IDcomision = 3,
                         IDdocente = 2,
                         State = "Activo"
                     },
                     new
                     {
                         ID = 2,
-                        Descripcion = "Curso Bases de Datos - Turno Mañana",
+                        Descripcion = "Desarrollo .NET - Turno Noche",
                         AnioCalendario = 2026,
                         Cupo = 25,
-                        IDmateria = 3,
-                        IDcomision = 1,
+                        IDmateria = 2,
+                        IDcomision = 4,
                         IDdocente = 2,
+                        State = "Activo"
+                    },
+                    new
+                    {
+                        ID = 3,
+                        Descripcion = "Bases de Datos - Turno Mañana",
+                        AnioCalendario = 2026,
+                        Cupo = 35,
+                        IDmateria = 3,
+                        IDcomision = 3,
+                        IDdocente = 3,
+                        State = "Activo"
+                    },
+                    new
+                    {
+                        ID = 4,
+                        Descripcion = "Sistemas Operativos - Turno Noche",
+                        AnioCalendario = 2026,
+                        Cupo = 30,
+                        IDmateria = 1,
+                        IDcomision = 3,
+                        IDdocente = 2,
+                        State = "Activo"
+                    },
+                    new
+                    {
+                        ID = 5,
+                        Descripcion = "Algoritmos y Estructuras - Turno Mañana",
+                        AnioCalendario = 2026,
+                        Cupo = 40,
+                        IDmateria = 5,
+                        IDcomision = 1,
+                        IDdocente = 4,
+                        State = "Activo"
+                    },
+                    new
+                    {
+                        ID = 6,
+                        Descripcion = "Ingeniería de Software - Turno Tarde",
+                        AnioCalendario = 2026,
+                        Cupo = 25,
+                        IDmateria = 4,
+                        IDcomision = 4,
+                        IDdocente = 3,
                         State = "Activo"
                     }
                 );
             });
 
+            // =========================================================================
             // 8. ALUMNOS INSCRIPCIONES
+            // =========================================================================
             modelBuilder.Entity<AlumnoInscripcion>(entity =>
             {
                 entity.HasKey(e => e.ID);
@@ -305,11 +483,45 @@ namespace Data
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasData(
-                    new { ID = 1, IDAlumno = 3, IDCurso = 1, Condicion = "Aprobado", Nota = (int?)8, State = "Activo" },
-                    new { ID = 2, IDAlumno = 4, IDCurso = 1, Condicion = "Regular", Nota = (int?)6, State = "Activo" },
-                    new { ID = 3, IDAlumno = 5, IDCurso = 1, Condicion = "Libre", Nota = (int?)2, State = "Activo" },
-                    new { ID = 4, IDAlumno = 3, IDCurso = 2, Condicion = "Aprobado", Nota = (int?)9, State = "Activo" },
-                    new { ID = 5, IDAlumno = 4, IDCurso = 2, Condicion = "Inscripto", Nota = (int?)null, State = "Activo" }
+                    // Curso 1: Desarrollo .NET - Turno Tarde
+                    new { ID = 1, IDAlumno = 5, IDCurso = 1, Condicion = "Aprobado", Nota = (int?)8, State = "Activo" },
+                    new { ID = 2, IDAlumno = 6, IDCurso = 1, Condicion = "Regular", Nota = (int?)6, State = "Activo" },
+                    new { ID = 3, IDAlumno = 7, IDCurso = 1, Condicion = "Libre", Nota = (int?)2, State = "Activo" },
+                    new { ID = 4, IDAlumno = 8, IDCurso = 1, Condicion = "Aprobado", Nota = (int?)9, State = "Activo" },
+                    new { ID = 5, IDAlumno = 9, IDCurso = 1, Condicion = "Aprobado", Nota = (int?)7, State = "Activo" },
+                    new { ID = 6, IDAlumno = 10, IDCurso = 1, Condicion = "Regular", Nota = (int?)5, State = "Activo" },
+                    new { ID = 7, IDAlumno = 11, IDCurso = 1, Condicion = "Inscripto", Nota = (int?)null, State = "Activo" },
+
+                    // Curso 2: Desarrollo .NET - Turno Noche
+                    new { ID = 8, IDAlumno = 12, IDCurso = 2, Condicion = "Aprobado", Nota = (int?)10, State = "Activo" },
+                    new { ID = 9, IDAlumno = 7, IDCurso = 2, Condicion = "Regular", Nota = (int?)6, State = "Activo" },
+                    new { ID = 10, IDAlumno = 9, IDCurso = 2, Condicion = "Inscripto", Nota = (int?)null, State = "Activo" },
+
+                    // Curso 3: Bases de Datos - Turno Mañana
+                    new { ID = 11, IDAlumno = 5, IDCurso = 3, Condicion = "Aprobado", Nota = (int?)9, State = "Activo" },
+                    new { ID = 12, IDAlumno = 6, IDCurso = 3, Condicion = "Aprobado", Nota = (int?)8, State = "Activo" },
+                    new { ID = 13, IDAlumno = 7, IDCurso = 3, Condicion = "Regular", Nota = (int?)7, State = "Activo" },
+                    new { ID = 14, IDAlumno = 10, IDCurso = 3, Condicion = "Aprobado", Nota = (int?)10, State = "Activo" },
+                    new { ID = 15, IDAlumno = 11, IDCurso = 3, Condicion = "Libre", Nota = (int?)3, State = "Activo" },
+                    new { ID = 16, IDAlumno = 12, IDCurso = 3, Condicion = "Regular", Nota = (int?)6, State = "Activo" },
+
+                    // Curso 4: Sistemas Operativos - Turno Noche
+                    new { ID = 17, IDAlumno = 5, IDCurso = 4, Condicion = "Regular", Nota = (int?)6, State = "Activo" },
+                    new { ID = 18, IDAlumno = 6, IDCurso = 4, Condicion = "Inscripto", Nota = (int?)null, State = "Activo" },
+                    new { ID = 19, IDAlumno = 7, IDCurso = 4, Condicion = "Libre", Nota = (int?)2, State = "Activo" },
+                    new { ID = 20, IDAlumno = 8, IDCurso = 4, Condicion = "Aprobado", Nota = (int?)8, State = "Activo" },
+                    new { ID = 21, IDAlumno = 11, IDCurso = 4, Condicion = "Inscripto", Nota = (int?)null, State = "Activo" },
+
+                    // Curso 5: Algoritmos y Estructuras - Turno Mañana
+                    new { ID = 22, IDAlumno = 9, IDCurso = 5, Condicion = "Aprobado", Nota = (int?)7, State = "Activo" },
+                    new { ID = 23, IDAlumno = 10, IDCurso = 5, Condicion = "Aprobado", Nota = (int?)9, State = "Activo" },
+                    new { ID = 24, IDAlumno = 12, IDCurso = 5, Condicion = "Regular", Nota = (int?)6, State = "Activo" },
+                    new { ID = 25, IDAlumno = 7, IDCurso = 5, Condicion = "Aprobado", Nota = (int?)8, State = "Activo" },
+
+                    // Curso 6: Ingeniería de Software - Turno Tarde
+                    new { ID = 26, IDAlumno = 5, IDCurso = 6, Condicion = "Inscripto", Nota = (int?)null, State = "Activo" },
+                    new { ID = 27, IDAlumno = 8, IDCurso = 6, Condicion = "Aprobado", Nota = (int?)9, State = "Activo" },
+                    new { ID = 28, IDAlumno = 10, IDCurso = 6, Condicion = "Regular", Nota = (int?)6, State = "Activo" }
                 );
             });
         }

@@ -13,15 +13,22 @@
 ---
 
 ## Credenciales de Acceso para Pruebas (Roles)
-El sistema incluye datos de prueba precargados representativos para evaluar todos los roles y permisos:
+El sistema incluye datos de prueba precargados representativos en `TPIContext.cs` para evaluar el sistema en funcionamiento real:
 
-| Rol | Usuario | Contraseña | Descripción / Alcance |
-| :--- | :--- | :--- | :--- |
-| **Administrador** | `admin` | `admin123` | Acceso total a todos los ABMs y a ambos Reportes |
-| **Docente** | `profesor` | `profe123` | Carga de calificaciones de sus cursos y acceso a ambos Reportes |
-| **Alumno** | `alumno` | `alumno123` | Inscripción a cursos y consulta de sus estados académicos |
-
-*(Otros alumnos de prueba precargados: `maria` / `maria123`, `lucas` / `lucas123`)*
+| Rol | Usuario | Contraseña | Persona Asociada | Alcance |
+| :--- | :--- | :--- | :--- | :--- |
+| **Administrador** | `admin` | `admin123` | Administrador General | Acceso total a los 7 ABMs y a ambos Reportes |
+| **Docente** | `profesor` | `profe123` | Ing. Carlos Gómez | Cursos de .NET y Sistemas Operativos, carga notas y ve Reportes |
+| **Docente** | `laura` | `laura123` | Dra. Laura Martínez | Cursos de Bases de Datos e Ing. de Software, carga notas y ve Reportes |
+| **Docente** | `roberto` | `roberto123` | Lic. Roberto Sánchez | Cursos de Algoritmos, carga notas y ve Reportes |
+| **Alumno** | `alumno` | `alumno123` | Juan Pérez | Inscripción a cursados y visualización de sus materias y notas |
+| **Alumno** | `maria` | `maria123` | María López | Inscripción a cursados y visualización de sus materias y notas |
+| **Alumno** | `lucas` | `lucas123` | Lucas Fernández | Inscripción a cursados y visualización de sus materias y notas |
+| **Alumno** | `sofia` | `sofia123` | Sofía Rossi | Inscripción a cursados y visualización de sus materias y notas |
+| **Alumno** | `mateo` | `mateo123` | Mateo Benítez | Inscripción a cursados y visualización de sus materias y notas |
+| **Alumno** | `camila` | `camila123` | Camila Rodríguez | Inscripción a cursados y visualización de sus materias y notas |
+| **Alumno** | `tomas` | `tomas123` | Tomás Díaz | Inscripción a cursados y visualización de sus materias y notas |
+| **Alumno** | `valentina` | `valentina123` | Valentina Romero | Inscripción a cursados y visualización de sus materias y notas |
 
 ---
 
@@ -34,8 +41,8 @@ La API debe estar en ejecución antes de utilizar cualquiera de las aplicaciones
 ```bash
 dotnet run --project WebAPI
 ```
-* Swagger UI estará disponible en: `https://localhost:7001/swagger` (o el puerto configurado en `launchSettings.json`).
-* La base de datos `AcademiaTPI` se creará automáticamente en `(localdb)\MSSQLLocalDB` con todos los datos de prueba y roles representativos.
+* Swagger UI estará disponible en: `https://localhost:7001/swagger`.
+* La base de datos `AcademiaTPI` se creará automáticamente en `(localdb)\MSSQLLocalDB` con todos los datos precargados listos.
 
 ---
 
@@ -45,12 +52,10 @@ dotnet run --project WebAPI
 ```bash
 dotnet run --project WindowsForms
 ```
-* Se abrirá la ventana de inicio de sesión centrada en pantalla.
-* Ingresar con cualquiera de las credenciales indicadas arriba.
-* En el menú principal se adaptarán las opciones según el rol del usuario logueado.
-* Dispone de los 7 ABMs y de los **2 Reportes Gráficos**:
+* Se abrirá la ventana de login. Al ingresar con cualquier usuario (Docente, Alumno o Administrador), la interfaz se adaptará según su rol y mostrará su nombre en la barra de título.
+* Cuenta con los 7 ABMs y los **2 Reportes**:
   1. **Reporte Cursos y Ocupación** (Gráfico comparativo de Cupo vs. Inscriptos con GDI+).
-  2. **Reporte de Rendimiento Académico** (Gráfico de Torta / Pie Chart con % de Aprobados, Regulares y Libres).
+  2. **Reporte de Rendimiento Académico** (Tabular, porcentaje de Aprobados, Regulares y Libres por Materia).
 
 ---
 
@@ -61,10 +66,10 @@ dotnet run --project WindowsForms
 dotnet run --project Blazor.WebAssembly
 ```
 * Acceder desde el navegador a la URL que indique la consola (habitualmente `http://localhost:5194`).
-* Menú de navegación dinámico por rol con gestión de Cursos, Especialidades, Comisiones, Usuarios, Inscripciones y **Planes de Estudio (Maestro/Detalle)**.
-* Los **2 Reportes Interactivos** con gráficos SVG y barras acumuladas:
+* Menú de navegación dinámico por rol y visualización del usuario conectado en el header superior.
+* Los **2 Reportes**:
   1. `/reporte-cursos`: Gráfico comparativo interactivo SVG de Cupo vs Inscriptos.
-  2. `/reporte-rendimiento`: Gráfico porcentual de Aprobados, Regulares y Libres por curso.
+  2. `/reporte-rendimiento`: Tabla comparativa con buscador rápido y totales generales.
 
 ---
 
