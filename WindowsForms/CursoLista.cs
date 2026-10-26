@@ -9,8 +9,17 @@ namespace WindowsForms
         {
             InitializeComponent();
             ConfigurarColumnas();
+            ConfigurarAnchors();
         }
 
+
+        private void ConfigurarAnchors()
+        {
+            cursosDataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            eliminarButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            actualizarButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            agregarButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        }
         private void ConfigurarColumnas()
         {
             cursosDataGridView.AutoGenerateColumns = false;

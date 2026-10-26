@@ -13,12 +13,21 @@ namespace WindowsForms
         {
             InitializeComponent();
             ConfigurarColumnas();
+            ConfigurarAnchors();
             Init();
         }
 
         private async void Init()
         {
             await CargarGrilla();
+        }
+
+        private void ConfigurarAnchors()
+        {
+            planDataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            eliminarButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            actualizaButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            agregarButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
         }
         private void ConfigurarColumnas()
         {

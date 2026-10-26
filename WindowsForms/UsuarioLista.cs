@@ -14,8 +14,17 @@ namespace WindowsForms
         {
             InitializeComponent();
             ConfigurarColumnas();
+            ConfigurarAnchors();
         }
 
+
+        private void ConfigurarAnchors()
+        {
+            usuarioDataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            eliminarButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            modificarButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            agregarButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        }
         private void ConfigurarColumnas()
         {
             usuarioDataGridView.AutoGenerateColumns = false;

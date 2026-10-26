@@ -46,6 +46,7 @@ namespace WindowsForms
             {
                 formulario = new T();
                 formulario.MdiParent = this;
+                formulario.WindowState = FormWindowState.Maximized;
                 formulario.Show();
             }
         }

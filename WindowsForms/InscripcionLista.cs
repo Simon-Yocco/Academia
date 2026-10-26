@@ -14,9 +14,18 @@ namespace WindowsForms
         {
             InitializeComponent();
             ConfigurarColumnas();
+            ConfigurarAnchors();
             this.Load += InscripcionLista_Load;
         }
 
+
+        private void ConfigurarAnchors()
+        {
+            inscripcionDataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            eliminarButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            actualizarButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            agregarButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        }
         private void ConfigureButtonPermissions()
         {
             // El admin y el alumno pueden inscribir; el docente y admin pueden calificar/actualizar; solo el admin elimina
