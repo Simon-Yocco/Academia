@@ -169,4 +169,11 @@ app.MapInscripcionEndpoints();
 app.MapReporteEndpoints();
 
 // Arrancamos el servidor
+// Asegurar que la base de datos se cree e inicialice con los datos semilla
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<TPIContext>();
+    context.Database.EnsureCreated();
+}
+
 app.Run();
