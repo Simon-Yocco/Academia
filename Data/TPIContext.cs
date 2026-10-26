@@ -348,19 +348,19 @@ namespace Data
                 entity.HasData(
                     // Administrador
                     new { ID = 1, NombreUsuario = "admin", Clave = "admin123", Habilitado = true, IDPersona = 1, State = "Activo" },
-                    // Docentes (Profesores)
-                    new { ID = 2, NombreUsuario = "carlos.gomez", Clave = "123456", Habilitado = true, IDPersona = 2, State = "Activo" },
-                    new { ID = 3, NombreUsuario = "laura.martinez", Clave = "123456", Habilitado = true, IDPersona = 3, State = "Activo" },
-                    new { ID = 4, NombreUsuario = "roberto.sanchez", Clave = "123456", Habilitado = true, IDPersona = 4, State = "Activo" },
-                    // Alumnos
-                    new { ID = 5, NombreUsuario = "juan.perez", Clave = "123456", Habilitado = true, IDPersona = 5, State = "Activo" },
-                    new { ID = 6, NombreUsuario = "maria.lopez", Clave = "123456", Habilitado = true, IDPersona = 6, State = "Activo" },
-                    new { ID = 7, NombreUsuario = "lucas.fernandez", Clave = "123456", Habilitado = true, IDPersona = 7, State = "Activo" },
-                    new { ID = 8, NombreUsuario = "sofia.rossi", Clave = "123456", Habilitado = true, IDPersona = 8, State = "Activo" },
-                    new { ID = 9, NombreUsuario = "mateo.benitez", Clave = "123456", Habilitado = true, IDPersona = 9, State = "Activo" },
-                    new { ID = 10, NombreUsuario = "camila.rodriguez", Clave = "123456", Habilitado = true, IDPersona = 10, State = "Activo" },
-                    new { ID = 11, NombreUsuario = "tomas.diaz", Clave = "123456", Habilitado = true, IDPersona = 11, State = "Activo" },
-                    new { ID = 12, NombreUsuario = "valentina.romero", Clave = "123456", Habilitado = true, IDPersona = 12, State = "Activo" }
+                    // Docentes (Profesores): Usuario = Nombre en minúsculas, Clave = Legajo
+                    new { ID = 2, NombreUsuario = "carlos", Clave = "2001", Habilitado = true, IDPersona = 2, State = "Activo" },
+                    new { ID = 3, NombreUsuario = "laura", Clave = "2002", Habilitado = true, IDPersona = 3, State = "Activo" },
+                    new { ID = 4, NombreUsuario = "roberto", Clave = "2003", Habilitado = true, IDPersona = 4, State = "Activo" },
+                    // Alumnos: Usuario = Nombre en minúsculas, Clave = Legajo
+                    new { ID = 5, NombreUsuario = "juan", Clave = "5001", Habilitado = true, IDPersona = 5, State = "Activo" },
+                    new { ID = 6, NombreUsuario = "maria", Clave = "5002", Habilitado = true, IDPersona = 6, State = "Activo" },
+                    new { ID = 7, NombreUsuario = "lucas", Clave = "5003", Habilitado = true, IDPersona = 7, State = "Activo" },
+                    new { ID = 8, NombreUsuario = "sofia", Clave = "5004", Habilitado = true, IDPersona = 8, State = "Activo" },
+                    new { ID = 9, NombreUsuario = "mateo", Clave = "5005", Habilitado = true, IDPersona = 9, State = "Activo" },
+                    new { ID = 10, NombreUsuario = "camila", Clave = "5006", Habilitado = true, IDPersona = 10, State = "Activo" },
+                    new { ID = 11, NombreUsuario = "tomas", Clave = "5007", Habilitado = true, IDPersona = 11, State = "Activo" },
+                    new { ID = 12, NombreUsuario = "valentina", Clave = "5008", Habilitado = true, IDPersona = 12, State = "Activo" }
                 );
             });
 

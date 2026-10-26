@@ -13,41 +13,41 @@
 ---
 
 ## Credenciales de Acceso para Pruebas (Roles)
-El sistema permite iniciar sesión ingresando el **Nombre de Usuario**, el **Número de Legajo** o el **Email**:
+El sistema utiliza la convención definida en la lógica de negocio (`UsuarioService.AddAsync`):
+* **Nombre de Usuario:** Primer nombre en minúsculas.
+* **Contraseña:** El número de legajo asignado automáticamente.
 
 ### 👑 Administrador
-* **Usuario / Legajo:** `admin` (Legajo: `1000`)
+* **Usuario:** `admin`
 * **Contraseña:** `admin123`
 * **Alcance:** Acceso completo a los 7 ABMs y a ambos Reportes.
 
 ---
 
 ### 👨‍🏫 Profesores (Docentes)
-* **Contraseña común:** `123456`
-* **Alcance:** Gestión de calificaciones de sus cursos asignados y acceso a ambos Reportes.
+*Acceso a calificaciones de sus cursos y a los Reportes.*
 
-| Profesor | Usuario | Legajo | Email | Materias a cargo |
+| Profesor | Usuario (Nombre) | Contraseña (Legajo) | Email | Cursos asignados |
 | :--- | :--- | :--- | :--- | :--- |
-| **Ing. Carlos Gómez** | `carlos.gomez` | `2001` | `carlos.gomez@academia.utn.edu.ar` | Desarrollo .NET (Tarde/Noche), Sistemas Operativos |
-| **Dra. Laura Martínez** | `laura.martinez` | `2002` | `laura.martinez@academia.utn.edu.ar` | Bases de Datos, Ingeniería de Software |
-| **Lic. Roberto Sánchez** | `roberto.sanchez` | `2003` | `roberto.sanchez@academia.utn.edu.ar` | Algoritmos y Estructuras de Datos |
+| **Ing. Carlos Gómez** | `carlos` | **`2001`** | `carlos.gomez@academia.utn.edu.ar` | Desarrollo .NET (Tarde y Noche), Sistemas Operativos |
+| **Dra. Laura Martínez** | `laura` | **`2002`** | `laura.martinez@academia.utn.edu.ar` | Bases de Datos, Ingeniería de Software |
+| **Lic. Roberto Sánchez** | `roberto` | **`2003`** | `roberto.sanchez@academia.utn.edu.ar` | Algoritmos y Estructuras de Datos |
 
 ---
 
 ### 🎓 Alumnos
-* **Contraseña común:** `123456`
-* **Alcance:** Inscripción a cursos y consulta de notas/estados académicos.
+*Acceso a inscripción a cursados y visualización de sus notas y materias.*
 
-| Alumno | Usuario | Legajo | Email |
+| Alumno | Usuario (Nombre) | Contraseña (Legajo) | Email |
 | :--- | :--- | :--- | :--- |
-| **Juan Pérez** | `juan.perez` | `5001` | `juan.perez@academia.utn.edu.ar` |
-| **María López** | `maria.lopez` | `5002` | `maria.lopez@academia.utn.edu.ar` |
-| **Lucas Fernández** | `lucas.fernandez` | `5003` | `lucas.fernandez@academia.utn.edu.ar` |
-| **Sofía Rossi** | `sofia.rossi` | `5004` | `sofia.rossi@academia.utn.edu.ar` |
-| **Mateo Benítez** | `mateo.benitez` | `5005` | `mateo.benitez@academia.utn.edu.ar` |
-| **Camila Rodríguez** | `camila.rodriguez` | `5006` | `camila.rodriguez@academia.utn.edu.ar` |
-| **Tomás Díaz** | `tomas.diaz` | `5007` | `tomas.diaz@academia.utn.edu.ar` |
-| **Valentina Romero** | `valentina.romero` | `5008` | `valentina.romero@academia.utn.edu.ar` |
+| **Juan Pérez** | `juan` | **`5001`** | `juan.perez@academia.utn.edu.ar` |
+| **María López** | `maria` | **`5002`** | `maria.lopez@academia.utn.edu.ar` |
+| **Lucas Fernández** | `lucas` | **`5003`** | `lucas.fernandez@academia.utn.edu.ar` |
+| **Sofía Rossi** | `sofia` | **`5004`** | `sofia.rossi@academia.utn.edu.ar` |
+| **Mateo Benítez** | `mateo` | **`5005`** | `mateo.benitez@academia.utn.edu.ar` |
+| **Camila Rodríguez** | `camila` | **`5006`** | `camila.rodriguez@academia.utn.edu.ar` |
+| **Tomás Díaz** | `tomas` | **`5007`** | `tomas.diaz@academia.utn.edu.ar` |
+| **Valentina Romero** | `valentina` | **`5008`** | `valentina.romero@academia.utn.edu.ar` |
 
 ---
 
@@ -71,7 +71,8 @@ dotnet run --project WebAPI
 ```bash
 dotnet run --project WindowsForms
 ```
-* Se abrirá la ventana de login. Puedes ingresar con el **Usuario** (`carlos.gomez`), con el **Legajo** (`2001`) o con el **Email**.
+* Se abrirá la ventana de login.
+* Ingresar con el usuario (ej: `carlos` o `juan`) y su legajo como contraseña (ej: `2001` o `5001`).
 * La interfaz se adaptará según su rol y mostrará su nombre en la barra de título.
 * Cuenta con los 7 ABMs y los **2 Reportes**:
   1. **Reporte Cursos y Ocupación** (Gráfico comparativo de Cupo vs. Inscriptos con GDI+).
@@ -98,5 +99,4 @@ Desde el rol **Administrador**, ingresar al módulo **Usuarios**:
 1. Hacer clic en **Agregar** / **Nuevo Usuario**.
 2. Completar los datos de la Persona (Nombre, Apellido, Email, Dirección, Teléfono, Fecha de Nacimiento).
 3. Seleccionar el tipo de persona: **Docente** o **Alumno**.
-4. Establecer su **Nombre de Usuario** y **Contraseña**.
-5. Al guardar, el nuevo usuario podrá iniciar sesión inmediatamente en el sistema con sus permisos correspondientes.
+4. Al guardar, el sistema le asigna el próximo número de legajo automáticamente, su usuario será su nombre en minúsculas y su contraseña será su número de legajo.
