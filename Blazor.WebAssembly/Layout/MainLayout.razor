@@ -8,10 +8,11 @@
     </div>
 
     <main>
-        <div class="top-row px-4 d-flex justify-content-end">
+        <div class="top-row px-4 d-flex justify-content-end align-items-center gap-3">
             @if (!string.IsNullOrEmpty(BaseApiClient.Token))
             {
-                <button class="btn btn-primary btn-sm" @onclick="Logout">Cerrar Sesión</button>
+                <span class="text-secondary small">Conectado como: <strong>@BaseApiClient.UsuarioActual</strong> <span class="badge bg-secondary ms-1">@BaseApiClient.Rol</span></span>
+                <button class="btn btn-outline-danger btn-sm" @onclick="Logout">Cerrar Sesión</button>
             }
         </div>
 

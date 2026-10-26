@@ -1,4 +1,7 @@
 using API.Clients;
+using System;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace WindowsForms
 {
@@ -8,7 +11,9 @@ namespace WindowsForms
         {
             InitializeComponent();
             ConfigurarMenuSegunRol();
+            this.Text = $"Gestión Académica - Usuario: {BaseApiClient.UsuarioActual} ({BaseApiClient.Rol})";
         }
+
         private void ConfigurarMenuSegunRol()
         {
             if (!BaseApiClient.EsAdmin)
@@ -19,10 +24,11 @@ namespace WindowsForms
                 comisionesToolStripMenuItem.Visible = false;
                 usuariosToolStripMenuItem.Visible = false;
 
-                // El reporte de ocupación es visible para Administradores y Docentes, pero no para Alumnos
+                // Los reportes son visibles para Administradores y Docentes, pero no para Alumnos
                 if (BaseApiClient.EsAlumno)
                 {
                     reporteCursosToolStripMenuItem.Visible = false;
+                    reporteRendimientoToolStripMenuItem.Visible = false;
                 }
             }
         }
@@ -86,6 +92,11 @@ namespace WindowsForms
         private void reporteCursosToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AbrirFormulario<ReporteCursosForm>();
+        }
+
+        private void reporteRendimientoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<ReporteRendimientoForm>();
         }
     }
 }

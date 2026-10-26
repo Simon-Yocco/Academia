@@ -36,6 +36,7 @@ namespace WindowsForms
             usuariosToolStripMenuItem = new ToolStripMenuItem();
             inscripcionesToolStripMenuItem = new ToolStripMenuItem();
             reporteCursosToolStripMenuItem = new ToolStripMenuItem();
+            reporteRendimientoToolStripMenuItem = new ToolStripMenuItem();
             cerrarSesionToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -43,7 +44,7 @@ namespace WindowsForms
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(32, 32);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { cursosToolStripMenuItem, especialidadesToolStripMenuItem, planesToolStripMenuItem, comisionesToolStripMenuItem, usuariosToolStripMenuItem, inscripcionesToolStripMenuItem, reporteCursosToolStripMenuItem, cerrarSesionToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { cursosToolStripMenuItem, especialidadesToolStripMenuItem, planesToolStripMenuItem, comisionesToolStripMenuItem, usuariosToolStripMenuItem, inscripcionesToolStripMenuItem, reporteCursosToolStripMenuItem, reporteRendimientoToolStripMenuItem, cerrarSesionToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(11, 4, 0, 4);
@@ -100,6 +101,13 @@ namespace WindowsForms
             reporteCursosToolStripMenuItem.Text = "Reporte Cursos";
             reporteCursosToolStripMenuItem.Click += reporteCursosToolStripMenuItem_Click;
             // 
+            // reporteRendimientoToolStripMenuItem
+            // 
+            reporteRendimientoToolStripMenuItem.Name = "reporteRendimientoToolStripMenuItem";
+            reporteRendimientoToolStripMenuItem.Size = new Size(245, 36);
+            reporteRendimientoToolStripMenuItem.Text = "Reporte Rendimiento";
+            reporteRendimientoToolStripMenuItem.Click += reporteRendimientoToolStripMenuItem_Click;
+            // 
             // cerrarSesionToolStripMenuItem
             // 
             cerrarSesionToolStripMenuItem.Name = "cerrarSesionToolStripMenuItem";
@@ -136,5 +144,6 @@ namespace WindowsForms
         private ToolStripMenuItem usuariosToolStripMenuItem;
         private ToolStripMenuItem inscripcionesToolStripMenuItem;
         private ToolStripMenuItem reporteCursosToolStripMenuItem;
+        private ToolStripMenuItem reporteRendimientoToolStripMenuItem;
     }
 }

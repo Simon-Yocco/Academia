@@ -55,7 +55,7 @@ namespace Data
                 ORDER BY Descripcion";
 
             var especialidades = new List<Especialidad>();
-            string connectionString = _context.Database.GetConnectionString();
+            string connectionString = _context.Database.GetConnectionString() ?? throw new InvalidOperationException("Cadena de conexión no configurada.");
             
             string searchPattern = $"%{texto}%";
 

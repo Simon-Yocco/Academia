@@ -1,0 +1,182 @@
+@page "/reporte-rendimiento"
+@using DTOs
+@using API.Clients
+@inject NavigationManager Navigation
+
+<PageTitle>Reporte de Rendimiento Académico</PageTitle>
+
+<div class="container-fluid py-3">
+    <!-- CABECERA -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h3 class="mb-0">📋 Reporte de Rendimiento Académico por Curso</h3>
+            <small class="text-muted">Porcentaje de alumnos aprobados, regulares y libres por materia y comisión</small>
+        </div>
+        <button class="btn btn-outline-primary" @onclick="CargarReporte" disabled="@loading">
+            🔄 Recargar
+        </button>
+    </div>
+
+    @if (loading)
+    {
+        <div class="d-flex justify-content-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+        </div>
+    }
+    else if (!string.IsNullOrEmpty(errorMsg))
+    {
+        <div class="alert alert-danger shadow-sm">
+            @errorMsg
+        </div>
+    }
+    else if (datos == null || !datos.Any())
+    {
+        <div class="alert alert-info shadow-sm">
+            No hay cursos registrados para mostrar en el reporte.
+        </div>
+    }
+    else
+    {
+        <!-- BARRA DE BÚSQUEDA Y FILTRO -->
+        <div class="card mb-3 shadow-sm border-0 bg-light">
+            <div class="card-body py-2">
+                <div class="row align-items-center g-2">
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white">🔍</span>
+                            <input type="text" class="form-control" placeholder="Buscar por materia..."
+                                   @bind="filtroTexto" @bind:event="oninput" />
+                        </div>
+                    </div>
+                    <div class="col-md-7 text-md-end text-muted small">
+                        Mostrando <strong>@CursosFiltrados.Count</strong> de <strong>@datos.Count</strong> cursos
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLA TABULAR DETALLADA -->
+        <div class="card shadow-sm">
+            <div class="card-body p-0 table-responsive">
+                <table class="table table-hover table-striped align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Materia</th>
+                            <th>Comisión</th>
+                            <th class="text-center">Año</th>
+                            <th>Docente</th>
+                            <th class="text-center">Inscriptos</th>
+                            <th class="text-center">Aprobados</th>
+                            <th class="text-center text-success">% Aprobados</th>
+                            <th class="text-center">Regulares</th>
+                            <th class="text-center text-warning">% Regulares</th>
+                            <th class="text-center">Libres</th>
+                            <th class="text-center text-danger">% Libres</th>
+                            <th class="text-center text-secondary">% Cursando</th>
+                            <th class="text-center">Nota Prom.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!CursosFiltrados.Any())
+                        {
+                            <tr>
+                                <td colspan="13" class="text-center py-4 text-muted">
+                                    No se encontraron cursos que coincidan con la búsqueda.
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var c in CursosFiltrados)
+                            {
+                                <tr>
+                                    <td class="fw-bold text-primary">@c.Materia</td>
+                                    <td>@c.Comision</td>
+                                    <td class="text-center">@c.AnioCalendario</td>
+                                    <td>@c.Docente</td>
+                                    <td class="text-center">
+                                        <span class="badge bg-secondary">@c.TotalInscriptos</span>
+                                    </td>
+                                    <td class="text-center">@c.CantidadAprobados</td>
+                                    <td class="text-center fw-bold text-success">@c.PorcentajeAprobados%</td>
+                                    <td class="text-center">@c.CantidadRegulares</td>
+                                    <td class="text-center fw-bold text-warning-emphasis">@c.PorcentajeRegulares%</td>
+                                    <td class="text-center">@c.CantidadLibres</td>
+                                    <td class="text-center fw-bold text-danger">@c.PorcentajeLibres%</td>
+                                    <td class="text-center text-muted">@c.PorcentajeCursando%</td>
+                                    <td class="text-center">
+                                        @(c.NotaPromedio.HasValue ? c.NotaPromedio.Value.ToString("0.00") : "-")
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                    <tfoot class="table-light fw-bold">
+                        <tr>
+                            <td colspan="4" class="text-end">Totales Generales:</td>
+                            <td class="text-center">@CursosFiltrados.Sum(c => c.TotalInscriptos)</td>
+                            <td class="text-center">@CursosFiltrados.Sum(c => c.CantidadAprobados)</td>
+                            <td class="text-center text-success">-</td>
+                            <td class="text-center">@CursosFiltrados.Sum(c => c.CantidadRegulares)</td>
+                            <td class="text-center text-warning-emphasis">-</td>
+                            <td class="text-center">@CursosFiltrados.Sum(c => c.CantidadLibres)</td>
+                            <td class="text-center text-danger">-</td>
+                            <td class="text-center">-</td>
+                            <td class="text-center">-</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private List<CursoRendimientoDTO> datos = new();
+    private string filtroTexto = string.Empty;
+    private bool loading = true;
+    private string errorMsg = string.Empty;
+
+    private List<CursoRendimientoDTO> CursosFiltrados
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(filtroTexto))
+                return datos;
+
+            var t = filtroTexto.Trim().ToLowerInvariant();
+            return datos.Where(c => c.Materia.ToLowerInvariant().Contains(t)).ToList();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(BaseApiClient.Token))
+        {
+            Navigation.NavigateTo("login");
+            return;
+        }
+
+        await CargarReporte();
+    }
+
+    private async Task CargarReporte()
+    {
+        try
+        {
+            loading = true;
+            errorMsg = string.Empty;
+            datos = await ReporteApiClient.GetCursosRendimientoAsync();
+        }
+        catch (Exception ex)
+        {
+            errorMsg = $"Error al cargar reporte: {ex.Message}";
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+}
