@@ -135,7 +135,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<TPIContext>();
-    context.Database.EnsureCreated();
+    DbInitializer.Initialize(context);
 }
 
 // Solo en modo desarrollo mostramos Swagger
