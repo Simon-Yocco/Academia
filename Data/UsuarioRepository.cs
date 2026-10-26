@@ -44,9 +44,14 @@ namespace Data
 
         public async Task<Usuario?> GetByUsernameAsync(string username)
         {
+            string term = username.Trim();
+            bool isNumeric = int.TryParse(term, out int legajo);
+
             return await _context.Usuarios
                 .Include(u => u.Persona)
-                .FirstOrDefaultAsync(u => u.NombreUsuario == username);
+                .FirstOrDefaultAsync(u => 
+                    u.NombreUsuario == term ||
+                    (u.Persona != null && (u.Persona.Email == term || (isNumeric && u.Persona.Legajo == legajo))));
         }
 
         public async Task<IEnumerable<Usuario>> GetAllAsync()
