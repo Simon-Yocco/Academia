@@ -89,6 +89,22 @@ namespace Data
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<AlumnoInscripcion>> GetByDocenteAsync(int idDocente)
+        {
+            return await _context.AlumnosInscripciones
+                .Include(i => i.Alumno)
+                .Include(i => i.Curso)
+                    .ThenInclude(c => c!.Materia)
+                .Include(i => i.Curso)
+                    .ThenInclude(c => c!.Comision)
+                .Include(i => i.Curso)
+                    .ThenInclude(c => c!.Docente)
+                .Where(i => i.Curso != null && i.Curso.IDdocente == idDocente)
+                .OrderBy(i => i.Curso!.Materia!.Descripcion)
+                .ThenBy(i => i.Alumno!.Apellido)
+                .ToListAsync();
+        }
+
         public async Task<int> CountInscriptosByCursoAsync(int idCurso)
         {
             return await _context.AlumnosInscripciones

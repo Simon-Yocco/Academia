@@ -36,6 +36,7 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IAlumnoInscripcionRepository, AlumnoInscripcionRepository>();
 builder.Services.AddScoped<IAlumnoInscripcionService, AlumnoInscripcionService>();
+builder.Services.AddScoped<IReporteService, ReporteService>();
 builder.Services.AddScoped<Application.Services.AuthService>();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -167,13 +168,5 @@ app.MapAuthEndpoints();
 app.MapUsuarioEndpoints();
 app.MapInscripcionEndpoints(); 
 app.MapReporteEndpoints();
-
-// Arrancamos el servidor
-// Asegurar que la base de datos se cree e inicialice con los datos semilla
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<TPIContext>();
-    context.Database.EnsureCreated();
-}
 
 app.Run();

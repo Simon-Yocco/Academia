@@ -3,7 +3,10 @@ using Application.Services;
 using DTOs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 
 namespace WebAPI
 {
@@ -11,20 +14,50 @@ namespace WebAPI
     {
         public static void MapInscripcionEndpoints(this WebApplication app)
         {
-            app.MapGet("/inscripciones", async (IAlumnoInscripcionService service) =>
+            app.MapGet("/inscripciones", async (ClaimsPrincipal user, IAlumnoInscripcionService service) =>
             {
-                var dtos = await service.GetAllAsync();
-                return Results.Ok(dtos);
+                var rol = user.FindFirst(ClaimTypes.Role)?.Value;
+                var idPersonaStr = user.FindFirst("id_persona")?.Value;
+                int.TryParse(idPersonaStr, out int idPersona);
+
+                if (rol == "Administrador")
+                {
+                    var dtos = await service.GetAllAsync();
+                    return Results.Ok(dtos);
+                }
+                else if (rol == "Docente")
+                {
+                    var dtos = await service.GetByDocenteAsync(idPersona);
+                    return Results.Ok(dtos);
+                }
+                else if (rol == "Alumno")
+                {
+                    var dtos = await service.GetByAlumnoAsync(idPersona);
+                    return Results.Ok(dtos);
+                }
+
+                return Results.Forbid();
             })
             .WithName("GetAllInscripciones")
             .Produces<List<AlumnoInscripcionDTO>>(StatusCodes.Status200OK)
             .WithOpenApi()
             .RequireAuthorization("InscripcionesLeer");
 
-            app.MapGet("/inscripciones/{id:int}", async (int id, IAlumnoInscripcionService service) =>
+            app.MapGet("/inscripciones/{id:int}", async (int id, ClaimsPrincipal user, IAlumnoInscripcionService service) =>
             {
                 var dto = await service.GetByIdAsync(id);
-                return dto != null ? Results.Ok(dto) : Results.NotFound();
+                if (dto == null) return Results.NotFound();
+
+                var rol = user.FindFirst(ClaimTypes.Role)?.Value;
+                var idPersonaStr = user.FindFirst("id_persona")?.Value;
+                int.TryParse(idPersonaStr, out int idPersona);
+
+                if (rol == "Alumno" && dto.IDAlumno != idPersona)
+                {
+                    return Results.Forbid();
+                }
+
+                return Results.Ok(dto);
             })
             .WithName("GetInscripcion")
             .Produces<AlumnoInscripcionDTO>(StatusCodes.Status200OK)
@@ -42,8 +75,17 @@ namespace WebAPI
             .WithOpenApi()
             .RequireAuthorization("InscripcionesLeer");
 
-            app.MapGet("/inscripciones/alumno/{idAlumno:int}", async (int idAlumno, IAlumnoInscripcionService service) =>
+            app.MapGet("/inscripciones/alumno/{idAlumno:int}", async (int idAlumno, ClaimsPrincipal user, IAlumnoInscripcionService service) =>
             {
+                var rol = user.FindFirst(ClaimTypes.Role)?.Value;
+                var idPersonaStr = user.FindFirst("id_persona")?.Value;
+                int.TryParse(idPersonaStr, out int idPersona);
+
+                if (rol == "Alumno" && idPersona != idAlumno)
+                {
+                    return Results.Forbid();
+                }
+
                 var dtos = await service.GetByAlumnoAsync(idAlumno);
                 return Results.Ok(dtos);
             })
@@ -52,9 +94,38 @@ namespace WebAPI
             .WithOpenApi()
             .RequireAuthorization("InscripcionesLeer");
 
-            app.MapGet("/inscripciones/buscar/{criteria}", async (string criteria, IAlumnoInscripcionService service) =>
+            app.MapGet("/inscripciones/buscar/{criteria}", async (string criteria, ClaimsPrincipal user, IAlumnoInscripcionService service) =>
             {
-                var dtos = await service.GetByCriteriaAsync(criteria);
+                var rol = user.FindFirst(ClaimTypes.Role)?.Value;
+                var idPersonaStr = user.FindFirst("id_persona")?.Value;
+                int.TryParse(idPersonaStr, out int idPersona);
+
+                IEnumerable<AlumnoInscripcionDTO> dtos;
+                if (rol == "Administrador")
+                {
+                    dtos = await service.GetByCriteriaAsync(criteria);
+                }
+                else if (rol == "Docente")
+                {
+                    var docentesInscripciones = await service.GetByDocenteAsync(idPersona);
+                    dtos = docentesInscripciones.Where(i =>
+                        i.AlumnoNombreCompleto.Contains(criteria, StringComparison.OrdinalIgnoreCase) ||
+                        i.MateriaDescripcion.Contains(criteria, StringComparison.OrdinalIgnoreCase) ||
+                        i.AlumnoLegajo.ToString().Contains(criteria));
+                }
+                else if (rol == "Alumno")
+                {
+                    var alumnoInscripciones = await service.GetByAlumnoAsync(idPersona);
+                    dtos = alumnoInscripciones.Where(i =>
+                        i.MateriaDescripcion.Contains(criteria, StringComparison.OrdinalIgnoreCase) ||
+                        i.ComisionDescripcion.Contains(criteria, StringComparison.OrdinalIgnoreCase) ||
+                        i.Condicion.Contains(criteria, StringComparison.OrdinalIgnoreCase));
+                }
+                else
+                {
+                    return Results.Forbid();
+                }
+
                 return Results.Ok(dtos);
             })
             .WithName("GetInscripcionesByCriteria")

@@ -109,6 +109,12 @@ namespace Application.Services
             return items.Select(MapToDTO).ToList();
         }
 
+        public async Task<IEnumerable<AlumnoInscripcionDTO>> GetByDocenteAsync(int idDocente)
+        {
+            var items = await _inscripcionRepo.GetByDocenteAsync(idDocente);
+            return items.Select(MapToDTO).ToList();
+        }
+
         public async Task<IEnumerable<AlumnoInscripcionDTO>> GetByCriteriaAsync(string criteria)
         {
             var items = await _inscripcionRepo.GetByCriteriaAsync(criteria);

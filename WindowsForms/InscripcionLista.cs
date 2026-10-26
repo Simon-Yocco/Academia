@@ -147,54 +147,13 @@ namespace WindowsForms
             {
                 IEnumerable<AlumnoInscripcionDTO> inscripciones;
 
-                if (BaseApiClient.EsDocente)
+                if (string.IsNullOrWhiteSpace(buscarTextBox.Text))
                 {
-                    // 1. Obtener cursos donde dicta clases el docente logueado
-                    var todosLosCursos = await CursoApiClient.GetAllAsync();
-                    var misCursos = todosLosCursos
-                        .Where(c => c.IDDocente == BaseApiClient.IDPersonaActual)
-                        .Select(c => c.ID)
-                        .ToHashSet();
-
-                    // 2. Filtrar solo los alumnos inscriptos en esos cursos
-                    var todas = await InscripcionApiClient.GetAllAsync();
-                    var misAlumnos = todas.Where(i => misCursos.Contains(i.IDCurso));
-
-                    if (!string.IsNullOrWhiteSpace(buscarTextBox.Text))
-                    {
-                        var filtro = buscarTextBox.Text.Trim();
-                        misAlumnos = misAlumnos.Where(i =>
-                            i.AlumnoNombreCompleto.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
-                            i.MateriaDescripcion.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
-                            i.AlumnoLegajo.ToString().Contains(filtro));
-                    }
-
-                    inscripciones = misAlumnos;
-                }
-                else if (BaseApiClient.EsAlumno)
-                {
-                    var misInscripciones = await InscripcionApiClient.GetByAlumnoAsync(BaseApiClient.IDPersonaActual);
-                    if (!string.IsNullOrWhiteSpace(buscarTextBox.Text))
-                    {
-                        var filtro = buscarTextBox.Text.Trim();
-                        misInscripciones = misInscripciones.Where(i =>
-                            i.MateriaDescripcion.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
-                            i.ComisionDescripcion.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
-                            i.Condicion.Contains(filtro, StringComparison.OrdinalIgnoreCase));
-                    }
-                    inscripciones = misInscripciones;
+                    inscripciones = await InscripcionApiClient.GetAllAsync();
                 }
                 else
                 {
-                    // Administrador: búsqueda normal
-                    if (string.IsNullOrWhiteSpace(buscarTextBox.Text))
-                    {
-                        inscripciones = await InscripcionApiClient.GetAllAsync();
-                    }
-                    else
-                    {
-                        inscripciones = await InscripcionApiClient.GetByCriteriaAsync(buscarTextBox.Text.Trim());
-                    }
+                    inscripciones = await InscripcionApiClient.GetByCriteriaAsync(buscarTextBox.Text.Trim());
                 }
 
                 inscripcionDataGridView.DataSource = inscripciones.ToList();

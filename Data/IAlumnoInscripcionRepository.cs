@@ -13,6 +13,7 @@ namespace Data
         Task<IEnumerable<AlumnoInscripcion>> GetAllAsync();
         Task<IEnumerable<AlumnoInscripcion>> GetByCursoAsync(int idCurso);
         Task<IEnumerable<AlumnoInscripcion>> GetByAlumnoAsync(int idAlumno);
+        Task<IEnumerable<AlumnoInscripcion>> GetByDocenteAsync(int idDocente);
         Task<int> CountInscriptosByCursoAsync(int idCurso);
         Task<bool> ExisteInscripcionAsync(int idAlumno, int idCurso);
         Task<IEnumerable<AlumnoInscripcion>> GetByCriteriaAsync(string texto);

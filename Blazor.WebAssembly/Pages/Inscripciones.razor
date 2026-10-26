@@ -137,53 +137,15 @@
         try
         {
             loading = true;
-            if (BaseApiClient.EsDocente)
+            if (string.IsNullOrWhiteSpace(filtro))
             {
-                // Traer cursos donde dicta clases este docente
-                var todosLosCursos = await CursoApiClient.GetAllAsync();
-                var misCursosIds = todosLosCursos
-                    .Where(c => c.IDDocente == BaseApiClient.IDPersonaActual)
-                    .Select(c => c.ID)
-                    .ToHashSet();
-
-                var todas = await InscripcionApiClient.GetAllAsync();
-                var misAlumnos = todas.Where(i => misCursosIds.Contains(i.IDCurso));
-
-                if (!string.IsNullOrWhiteSpace(filtro))
-                {
-                    misAlumnos = misAlumnos.Where(i =>
-                        i.AlumnoNombreCompleto.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
-                        i.MateriaDescripcion.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
-                        i.AlumnoLegajo.ToString().Contains(filtro));
-                }
-
-                lista = misAlumnos.ToList();
-            }
-            else if (BaseApiClient.EsAlumno)
-            {
-                var misInscripciones = await InscripcionApiClient.GetByAlumnoAsync(BaseApiClient.IDPersonaActual);
-                if (!string.IsNullOrWhiteSpace(filtro))
-                {
-                    misInscripciones = misInscripciones.Where(i =>
-                        i.MateriaDescripcion.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
-                        i.ComisionDescripcion.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
-                        i.DocenteNombreCompleto.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
-                        i.Condicion.Contains(filtro, StringComparison.OrdinalIgnoreCase));
-                }
-                lista = misInscripciones.ToList();
+                var res = await InscripcionApiClient.GetAllAsync();
+                lista = res?.ToList();
             }
             else
             {
-                if (string.IsNullOrWhiteSpace(filtro))
-                {
-                    var res = await InscripcionApiClient.GetAllAsync();
-                    lista = res?.ToList();
-                }
-                else
-                {
-                    var res = await InscripcionApiClient.GetByCriteriaAsync(filtro);
-                    lista = res?.ToList();
-                }
+                var res = await InscripcionApiClient.GetByCriteriaAsync(filtro.Trim());
+                lista = res?.ToList();
             }
         }
         catch (Exception ex)
