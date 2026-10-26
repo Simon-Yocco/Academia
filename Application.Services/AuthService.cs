@@ -3,6 +3,7 @@ using Data;
 using Entidades;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -54,9 +55,9 @@ namespace Application.Services
 
         private string GenerateJwtToken(Usuario usuario)
         {
-            // Lectura de configuraciones JWT desde appsettings.json o variables de entorno
+            // Lectura de configuraciones JWT desde appsettings.json
             var jwtSettings = _configuration.GetSection("Jwt");
-            var keyString = jwtSettings["Key"] ?? "TPI-JWT-Secret-Key-256-bits-long-for-development-only-never-use-in-production";
+            var keyString = jwtSettings["Key"] ?? throw new InvalidOperationException("La clave JWT no está configurada en appsettings.json.");
             var issuer = jwtSettings["Issuer"] ?? "TPI-API";
             var audience = jwtSettings["Audience"] ?? "TPI-Clients";
 

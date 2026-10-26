@@ -84,10 +84,11 @@ builder.Services.AddSwaggerGen(c =>
 // =========================================================================
 // 3. CONFIGURACIÓN DE SEGURIDAD (Autenticación y Autorización)
 // =========================================================================
-// Valores del "contrato" del Token. (En producción esto va en appsettings.json o User Secrets)
-var secretKey = "TPI-JWT-Secret-Key-256-bits-long-for-development-only-never-use-in-production"; // Firma digital
-var issuer = "TPI-API"; // Quién lo emite
-var audience = "TPI-Clients"; // Quién lo consume
+// Valores del "contrato" del Token desde appsettings.json
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var secretKey = jwtSettings["Key"] ?? throw new InvalidOperationException("La clave JWT no está configurada en appsettings.json.");
+var issuer = jwtSettings["Issuer"] ?? "TPI-API";
+var audience = jwtSettings["Audience"] ?? "TPI-Clients";
 
 // Enseñamos al servidor cómo leer, desencriptar y validar el token
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
