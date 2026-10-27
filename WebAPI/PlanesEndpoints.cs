@@ -78,6 +78,11 @@ namespace WebAPI
                     }
                     return Results.NoContent();
                 }
+                catch (InvalidOperationException ex)
+                {
+                    // devuelvo HTTP 400 si intentan poner materias de otro plan o dejar el plan vacio
+                    return Results.BadRequest(new { error = ex.Message });
+                }
                 catch (ArgumentException ex)
                 {
                     return Results.BadRequest(new { error = ex.Message });

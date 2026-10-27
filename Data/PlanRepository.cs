@@ -56,30 +56,40 @@ namespace Data
 
             if (existingPlan == null) return false;
 
+            //valido que las materias recibicdas no pertenezcan a otro plan
+            var materiasDeOtroPlan = plan.Materias
+                .Where(m => m.ID != 0 && !existingPlan.Materias.Any(em => em.ID == m.ID))
+                .ToList();
+            if (materiasDeOtroPlan.Any()) //si alguna materia pertenece a otro plan lanzamos una InvalidOperationException
+            {
+                throw new InvalidOperationException("Una o más materias enviadas no pertenecen a este plan de estudio.");
+            }
+
             // 2. Actualizamos la cabecera
             existingPlan.SetDescripcion(plan.Descripcion);
             existingPlan.SetIDEspecialidad(plan.IDEspecialidad);
 
             // 3. Sincronizamos las líneas (Materias)
             
-            // a. Eliminar materias que ya no están en la lista que vino de la pantalla
+            // busco las materias que no estan en la lista recibida
             var materiasParaBorrar = existingPlan.Materias
                 .Where(em => !plan.Materias.Any(m => m.ID == em.ID && m.ID != 0))
                 .ToList();
             
+            // elimino las materias que no estan en la lista
             foreach (var mat in materiasParaBorrar)
             {
                 existingPlan.QuitarMateria(mat);
                 _context.Materias.Remove(mat);
             }
 
-            // b. Agregar las materias nuevas (ID == 0)
+            // agrego las materias nuevas que vienen con el id == o
             foreach (var matNueva in plan.Materias.Where(m => m.ID == 0))
             {
                 existingPlan.AgregarMateria(matNueva);
             }
 
-            // c. Actualizar materias existentes (opcional si permiten editar desde la grilla)
+            // actualizamos las materias existentes, vienen con id != 0
             foreach (var matExistente in plan.Materias.Where(m => m.ID != 0))
             {
                 var matOriginal = existingPlan.Materias.FirstOrDefault(m => m.ID == matExistente.ID);
@@ -89,6 +99,13 @@ namespace Data
                     matOriginal.SetHSSemanales(matExistente.HSSemanales);
                     matOriginal.SetHSTotales(matExistente.HSTotales);
                 }
+            }
+            
+
+            // para que el plan no quede sin materias
+            if (!existingPlan.Materias.Any())
+            {
+                throw new InvalidOperationException("El plan de estudio debe contener al menos una materia.");
             }
 
             await _context.SaveChangesAsync();

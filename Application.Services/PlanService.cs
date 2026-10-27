@@ -132,7 +132,7 @@ namespace Application.Services
                 throw new ArgumentException($"La especialidad con ID {dto.IDEspecialidad} no existe.");
             }
 
-            // Convertimos de DTO a Entidad para pasárselo al Repositorio
+            // pasamos el dto a entidad para mandarle al repositorio
             var plan = new Plan(dto.ID, dto.Descripcion, dto.IDEspecialidad);
 
             foreach (var mDto in dto.Materias)

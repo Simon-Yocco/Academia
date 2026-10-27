@@ -93,11 +93,11 @@ namespace WebAPI
                 try
                 {
                     var deleted = await especialidadService.DeleteAsync(id);
-                    if (!deleted)
+                    if (!deleted) //si no lo encontramos entra 
                     {
                         return Results.NotFound();
                     }
-
+                    //si se borra correctamente se hace el return
                     return Results.NoContent();
                 }
                 catch (InvalidOperationException ex)

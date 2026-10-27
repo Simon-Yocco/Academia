@@ -61,7 +61,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-2 align-items-end mb-3">
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <label class="form-label small">Nombre de la Materia</label>
                                     <input type="text" class="form-control form-control-sm" placeholder="Ej: Álgebra" @bind="nuevaMateriaDesc" />
                                 </div>
@@ -73,10 +73,22 @@
                                     <label class="form-label small">Hs Totales</label>
                                     <input type="number" class="form-control form-control-sm" min="1" @bind="nuevaMateriaHsTotales" />
                                 </div>
-                                <div class="col-md-1">
-                                    <button type="button" class="btn btn-sm btn-success w-100" title="Agregar a la lista" @onclick="AgregarMateriaALista">
-                                        +
-                                    </button>
+                                <div class="col-md-2 d-flex gap-1">
+                                    @if (materiaEnEdicion == null)
+                                    {
+                                        <button type="button" class="btn btn-sm btn-success w-100" title="Agregar a la lista" @onclick="GuardarMateriaEnLista">
+                                            + Agregar
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-sm btn-primary w-50" title="Guardar cambios" @onclick="GuardarMateriaEnLista">
+                                            ✓
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-secondary w-50" title="Cancelar edición" @onclick="CancelarEdicionMateria">
+                                            ✕
+                                        </button>
+                                    }
                                 </div>
                             </div>
                             @if (!string.IsNullOrEmpty(materiaError))
@@ -105,18 +117,21 @@
                                                 <th>Materia</th>
                                                 <th style="width: 120px;">Hs Semanales</th>
                                                 <th style="width: 120px;">Hs Totales</th>
-                                                <th style="width: 80px;" class="text-center">Quitar</th>
+                                                <th style="width: 100px;" class="text-center">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach (var m in current.Materias)
                                             {
-                                                <tr>
+                                                <tr class="@(materiaEnEdicion == m ? "table-warning" : "")">
                                                     <td>@m.Descripcion</td>
                                                     <td>@m.HSSemanales</td>
                                                     <td>@m.HSTotales</td>
                                                     <td class="text-center">
-                                                        <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" @onclick="() => QuitarMateria(m)">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary py-0 px-2 me-1" title="Editar materia" @onclick="() => IniciarEdicionMateria(m)">
+                                                            ✏️
+                                                        </button>
+                                                        <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" title="Quitar materia" @onclick="() => QuitarMateria(m)">
                                                             &times;
                                                         </button>
                                                     </td>
@@ -161,7 +176,8 @@
 
     private List<EspecialidadDTO>? especialidades;
 
-    // Campos temporales para agregar materia
+    // Campos temporales para agregar/editar materia
+    private MateriaDTO? materiaEnEdicion = null;
     private string nuevaMateriaDesc = "";
     private int nuevaMateriaHsSemanales = 4;
     private int nuevaMateriaHsTotales = 64;
@@ -220,7 +236,7 @@
         }
     }
 
-    private void AgregarMateriaALista()
+    private void GuardarMateriaEnLista()
     {
         materiaError = string.Empty;
 
@@ -243,25 +259,58 @@
         }
 
         current.Materias ??= new List<MateriaDTO>();
-        current.Materias.Add(new MateriaDTO
-        {
-            ID = 0,
-            Descripcion = nuevaMateriaDesc.Trim(),
-            HSSemanales = nuevaMateriaHsSemanales,
-            HSTotales = nuevaMateriaHsTotales,
-            IDPlan = current.ID
-        });
 
+        if (materiaEnEdicion != null)
+        {
+            // Modificación en lugar: Conserva exactamente el mismo ID
+            materiaEnEdicion.Descripcion = nuevaMateriaDesc.Trim();
+            materiaEnEdicion.HSSemanales = nuevaMateriaHsSemanales;
+            materiaEnEdicion.HSTotales = nuevaMateriaHsTotales;
+            materiaEnEdicion = null;
+        }
+        else
+        {
+            // Alta: Nueva materia con ID = 0
+            current.Materias.Add(new MateriaDTO
+            {
+                ID = 0,
+                Descripcion = nuevaMateriaDesc.Trim(),
+                HSSemanales = nuevaMateriaHsSemanales,
+                HSTotales = nuevaMateriaHsTotales,
+                IDPlan = current.ID
+            });
+        }
+
+        ResetMateriaInputs();
+    }
+
+    private void IniciarEdicionMateria(MateriaDTO m)
+    {
+        materiaEnEdicion = m;
+        nuevaMateriaDesc = m.Descripcion;
+        nuevaMateriaHsSemanales = m.HSSemanales;
+        nuevaMateriaHsTotales = m.HSTotales;
+        materiaError = string.Empty;
+    }
+
+    private void CancelarEdicionMateria()
+    {
+        materiaEnEdicion = null;
         ResetMateriaInputs();
     }
 
     private void QuitarMateria(MateriaDTO m)
     {
+        if (materiaEnEdicion == m)
+        {
+            CancelarEdicionMateria();
+        }
         current.Materias?.Remove(m);
     }
 
     private void ResetMateriaInputs()
     {
+        materiaEnEdicion = null;
         nuevaMateriaDesc = "";
         nuevaMateriaHsSemanales = 4;
         nuevaMateriaHsTotales = 64;
