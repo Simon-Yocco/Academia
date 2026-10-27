@@ -199,10 +199,37 @@ namespace WebAPI
             .WithOpenApi()
             .RequireAuthorization("InscripcionesAgregar");
 
-            app.MapPut("/inscripciones", async (AlumnoInscripcionDTO dto, IAlumnoInscripcionService service) =>
+            app.MapPut("/inscripciones", async (AlumnoInscripcionDTO dto,ClaimsPrincipal user ,ICursoService cursoService , IAlumnoInscripcionService service) =>
             {
                 try
                 {
+                    var rol = user.FindFirst(ClaimTypes.Role)?.Value;
+                    var idPersonaString = user.FindFirst("id_persona")?.Value;
+                    int.TryParse(idPersonaString, out int idPersona);
+                    
+                    //un alumno no puede modificar inscripciones ni notas
+                    if (rol == "Alumno")
+                    {
+                        return Results.Forbid();
+                    }
+                    //busco la inscripción existente en la base de datos
+                    var existente = await service.GetByIdAsync(dto.ID);
+                    if (existente == null)
+                    {
+                        return Results.NotFound();
+                    }
+                    //si es Docente, valido que el curso sea suyo y bloquo cambio de alumno o curso
+                    if (rol == "Docente")
+                    {
+                        var curso = await cursoService.GetByIdAsync(existente.IDCurso);
+                        if (curso == null || curso.IDDocente != idPersona)
+                        {
+                            return Results.Forbid(); 
+                        }
+                        dto.IDAlumno = existente.IDAlumno;
+                        dto.IDCurso = existente.IDCurso;
+                    }
+                    
                     var ok = await service.UpdateAsync(dto);
                     if (!ok) return Results.NotFound();
                     return Results.NoContent();
