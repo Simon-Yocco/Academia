@@ -74,7 +74,8 @@ namespace Data
 
                 entity.HasOne(e => e.Especialidad)
                     .WithMany()
-                    .HasForeignKey(e => e.IDEspecialidad);
+                    .HasForeignKey(e => e.IDEspecialidad)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasMany(e => e.Materias)
                     .WithOne(m => m.Plan)

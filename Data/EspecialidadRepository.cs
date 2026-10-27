@@ -25,13 +25,19 @@ namespace Data
         public async Task<bool> DeleteAsync(int id)
         {
             var esp = await _context.Especialidades.FindAsync(id);
-            if (esp != null)
+            if (esp == null)
             {
-                _context.Especialidades.Remove(esp);
-                await _context.SaveChangesAsync();
-                return true;
+                return false;
             }
-            return false;
+            // chequeo si hay planes asociados a  la especialidad
+            bool tienePlanes = await _context.Planes.AnyAsync(p => p.IDEspecialidad == id);
+            if (tienePlanes)
+            {
+                throw new InvalidOperationException("No se puede eliminar la especialidad porque tiene planes de estudio asociados.");
+            }
+            _context.Especialidades.Remove(esp);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<Especialidad?> GetAsync(int id)

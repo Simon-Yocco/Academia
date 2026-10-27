@@ -100,6 +100,10 @@ namespace WebAPI
 
                     return Results.NoContent();
                 }
+                catch (InvalidOperationException ex)
+                {
+                    return Results.BadRequest(new { error = ex.Message });
+                }
                 catch (ArgumentException ex)
                 {
                     return Results.BadRequest(new { error = ex.Message });
