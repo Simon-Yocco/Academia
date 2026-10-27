@@ -65,8 +65,29 @@ namespace WebAPI
             .WithOpenApi()
             .RequireAuthorization("InscripcionesLeer");
 
-            app.MapGet("/inscripciones/curso/{idCurso:int}", async (int idCurso, IAlumnoInscripcionService service) =>
+            app.MapGet("/inscripciones/curso/{idCurso:int}", async (int idCurso, ClaimsPrincipal user, IAlumnoInscripcionService service, ICursoService cursoService) =>
             {
+                var rol = user.FindFirst(ClaimTypes.Role)?.Value;
+                var idPersonaString = user.FindFirst("id_persona")?.Value;
+                int.TryParse(idPersonaString, out int idPersona);
+
+                if (rol == "Alumno")
+                {
+                    return Results.Forbid();
+                }
+                if (rol == "Docente")
+                {
+                    var curso = await cursoService.GetByIdAsync(idCurso);
+                    if(curso == null)
+                    {
+                        return Results.Forbid();
+                    }
+                    if( curso.IDDocente != idPersona)
+                    {
+                        return Results.Forbid();
+                    }
+                }
+
                 var dtos = await service.GetByCursoAsync(idCurso);
                 return Results.Ok(dtos);
             })
