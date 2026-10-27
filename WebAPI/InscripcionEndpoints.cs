@@ -133,10 +133,29 @@ namespace WebAPI
             .WithOpenApi()
             .RequireAuthorization("InscripcionesLeer");
 
-            app.MapPost("/inscripciones", async (AlumnoInscripcionDTO dto, IAlumnoInscripcionService service) =>
+            app.MapPost("/inscripciones", async (AlumnoInscripcionDTO dto, ClaimsPrincipal user, IAlumnoInscripcionService service) =>
             {
+
                 try
                 {
+                    //agarro el rol y el id de quien hizo el llamado directamente del token JWT
+                    var rol = user.FindFirst(ClaimTypes.Role)?.Value;
+                    var idPersonaString = user.FindFirst("id_persona")?.Value;
+                    int.TryParse(idPersonaString, out int idPersona);
+
+                    if(rol == "Alumno")
+                    {
+                        //fuerzo a que sea inscripcion de el mismo y no inscriba a otro
+                        dto.IDAlumno = idPersona;
+                        dto.Condicion = "Inscripto";
+                        dto.Nota = null;
+                    }
+                    if(rol == "Docente")
+                    {
+                        //no tiene permitido hacer inscripciones
+                        return Results.Forbid();
+                    }
+                    //el admin no tiene if porque puede inscribir a cualquier alumno con los datos que quiera
                     var creada = await service.AddAsync(dto);
                     return Results.Created($"/inscripciones/{creada?.ID}", creada);
                 }
