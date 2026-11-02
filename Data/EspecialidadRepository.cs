@@ -54,6 +54,7 @@ namespace Data
 
         public async Task<IEnumerable<Especialidad>> GetByCriteriaAsync(string texto)
         {
+            // 1. Sentencia SQL pura parametrizada
             const string sql = @"
                 SELECT ID, Descripcion 
                 FROM Especialidades 
@@ -61,22 +62,29 @@ namespace Data
                 ORDER BY Descripcion";
 
             var especialidades = new List<Especialidad>();
+
+            // Se reutiliza la cadena de conexión configurada en el DbContext
             string connectionString = _context.Database.GetConnectionString() ?? throw new InvalidOperationException("Cadena de conexión no configurada.");
             
             string searchPattern = $"%{texto}%";
 
+            // 2. Conexión y comando de ADO.NET
             using var connection = new SqlConnection(connectionString);
             using var command = new SqlCommand(sql, connection);
+
+            // 3. SEGURIDAD: parámetro para prevenir SQL Injection
             command.Parameters.AddWithValue("@SearchTerm", searchPattern);
 
+            // 4. Apertura y ejecución asincrónica
             await connection.OpenAsync();
             using var reader = await command.ExecuteReaderAsync();
 
+            // 5. Lectura secuencial con SqlDataReader y mapeo manual
             while (await reader.ReadAsync())
             {
                 var especialidad = new Especialidad(
-                    reader.GetInt32(0),   // ID
-                    reader.GetString(1)   // Descripcion
+                    reader.GetInt32(0), // Columna 0: ID (int)
+                    reader.GetString(1) // Columna 1: Descripcion (string)
                 );
                 especialidades.Add(especialidad);
             }

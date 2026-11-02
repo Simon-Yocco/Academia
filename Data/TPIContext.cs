@@ -21,12 +21,14 @@ namespace Data
         {
             this.Database.EnsureCreated();
         }
-
+        
+        // Actualmente sin uso, ya que la creacion se hace en la web api
         internal TPIContext()
         {
             this.Database.EnsureCreated();
         }
 
+        // Actualmente sin uso, ya que la configuracion de la conexion se hace en la web api
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

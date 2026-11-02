@@ -12,7 +12,7 @@ namespace WebAPI
                 var dtos = await especialidadService.GetAllAsync();
                 return Results.Ok(dtos);
             })
-            .WithName("GetAllEspecialidades") // Le asigna un nombre Ãºnico interno a este endpoint
+            .WithName("GetAllEspecialidades") // Le asigna un nombre único interno a este endpoint
             .Produces<List<EspecialidadDTO>>(StatusCodes.Status200OK) // Codigo para Swagger
             .WithOpenApi().RequireAuthorization("Admin");
 
