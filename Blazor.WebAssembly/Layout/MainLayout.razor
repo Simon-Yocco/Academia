@@ -25,7 +25,7 @@
 @code {
     protected override void OnParametersSet()
     {
-        // Forzamos la redirección automática si no hay token (igual que el ejemplo)
+        // Forzamos la redirección automática si no hay token
         if (string.IsNullOrEmpty(BaseApiClient.Token) && !Navigation.Uri.EndsWith("/login"))
         {
             Navigation.NavigateTo("/login");
