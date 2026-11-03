@@ -56,7 +56,7 @@ namespace Data
 
             if (existingPlan == null) return false;
 
-            //valido que las materias recibicdas no pertenezcan a otro plan
+            //valido que las materias recibidas no pertenezcan a otro plan
             var materiasDeOtroPlan = plan.Materias
                 .Where(m => m.ID != 0 && !existingPlan.Materias.Any(em => em.ID == m.ID))
                 .ToList();

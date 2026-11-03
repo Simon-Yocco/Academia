@@ -91,17 +91,19 @@ namespace WindowsForms
         private void RefreshMateriasGrid()
         {
             materiaDataGridView.DataSource = null;
-            materiaDataGridView.DataSource = materiasLocales;
+            //materiaDataGridView.DataSource = materiasLocales;
+
+            materiaDataGridView.DataSource = materiasLocales.ToList();
 
             // Habilitar/deshabilitar botones según si hay materias
             bool hasItems = materiasLocales != null && materiasLocales.Count > 0;
             modificarButton.Enabled = hasItems;
             eliminarButton.Enabled = hasItems;
 
-            if (hasItems && materiaDataGridView.Rows.Count > 0)
-            {
-                materiaDataGridView.Rows[0].Selected = true;
-            }
+            //if (hasItems && materiaDataGridView.Rows.Count > 0)
+            //{
+            //    materiaDataGridView.Rows[0].Selected = true;
+            //}
         }
 
         private async Task CargarEspecialidades()
@@ -222,7 +224,7 @@ namespace WindowsForms
                 _plan.Descripcion = descripcionTextBox.Text.Trim();
                 _plan.IDEspecialidad = (int)especialidadComboBox.SelectedValue;
                 _plan.Materias = materiasLocales.ToList();
-
+                
                 if (_mode == FormMode.Add)
                 {
                     await PlanApiClient.AddAsync(_plan);
